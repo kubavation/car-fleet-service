@@ -4,8 +4,8 @@ import com.durys.jakub.carfleet.drivers.DriverId;
 import com.durys.jakub.carfleet.requests.Flowable;
 import com.durys.jakub.carfleet.requests.RequestId;
 import com.durys.jakub.carfleet.requests.RequesterId;
-import com.durys.jakub.carfleet.requests.drivertransfer.vo.RequestContent;
-import com.durys.jakub.carfleet.requests.drivertransfer.vo.RequestPurpose;
+import com.durys.jakub.carfleet.requests.vo.RequestContent;
+import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
 import lombok.Data;
 
 import java.time.LocalDateTime;

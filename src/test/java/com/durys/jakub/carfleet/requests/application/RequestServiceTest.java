@@ -5,7 +5,7 @@ import com.durys.jakub.carfleet.requests.drivertransfer.DriverTransferRequest;
 import com.durys.jakub.carfleet.requests.drivertransfer.DriverTransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.RequestId;
 import com.durys.jakub.carfleet.requests.RequesterId;
-import com.durys.jakub.carfleet.requests.drivertransfer.vo.RequestPurpose;
+import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -18,10 +18,10 @@ class RequestServiceTest {
     private final RequestService requestService = new RequestService(new DriverTransferRequestAssembler());
 
 
-    private RequesterId requesterId = new RequesterId(UUID.randomUUID());
-    private LocalDateTime from = LocalDateTime.now();
-    private LocalDateTime to = LocalDateTime.now();
-    private RequestPurpose purpose = new RequestPurpose("Content");
+    private final RequesterId requesterId = new RequesterId(UUID.randomUUID());
+    private final LocalDateTime from = LocalDateTime.now();
+    private final LocalDateTime to = LocalDateTime.now();
+    private final RequestPurpose purpose = new RequestPurpose("Content");
 
     @Test
     void shouldCreateRequestAndChangeStatusToNew() {
@@ -40,7 +40,6 @@ class RequestServiceTest {
 
         assertEquals("EDITED", driverTransferRequest.state());
     }
-
 
     @Test
     void shouldSaveRequestWithDriverAndChangeStatusToAccepted() {

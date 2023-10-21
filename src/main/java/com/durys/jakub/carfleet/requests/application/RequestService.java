@@ -9,12 +9,11 @@ import com.durys.jakub.carfleet.requests.drivertransfer.commands.ChangeDriverCom
 import com.durys.jakub.carfleet.requests.state.ChangeCommand;
 import com.durys.jakub.carfleet.requests.state.State;
 import com.durys.jakub.carfleet.requests.state.StateConfig;
-import com.durys.jakub.carfleet.requests.drivertransfer.vo.RequestPurpose;
+import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.UUID;
 
 @Component
@@ -51,7 +50,7 @@ public class RequestService {
     public DriverTransferRequest changeStatus(RequestId requestId, DriverId driverId) {
 
         DriverTransferRequest driverTransferRequest = new DriverTransferRequest(requestId, new RequesterId(UUID.randomUUID()),
-                LocalDateTime.now(), LocalDateTime.now() , new RequestPurpose("content"), "NEW"); //todo
+                LocalDateTime.now(), LocalDateTime.now() , new RequestPurpose("content"), "EDITED"); //todo
 
         StateConfig<DriverTransferRequest> config = assembler.assemble();
 
