@@ -1,11 +1,9 @@
-package com.durys.jakub.carfleet.requests.application;
+package com.durys.jakub.carfleet.requests.drivertransfer.application;
 
-import com.durys.jakub.carfleet.drivers.DriverId;
-import com.durys.jakub.carfleet.requests.drivertransfer.DriverTransferRequest;
-import com.durys.jakub.carfleet.requests.drivertransfer.DriverTransferRequestAssembler;
+import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequest;
+import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.RequestId;
 import com.durys.jakub.carfleet.requests.RequesterId;
-import com.durys.jakub.carfleet.requests.drivertransfer.commands.ChangeDriverCommand;
 import com.durys.jakub.carfleet.requests.state.ChangeCommand;
 import com.durys.jakub.carfleet.requests.state.State;
 import com.durys.jakub.carfleet.requests.state.StateConfig;
@@ -18,7 +16,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class RequestService {
+public class DriverTransferRequestService {
 
     private final DriverTransferRequestAssembler assembler;
 

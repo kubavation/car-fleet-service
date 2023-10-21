@@ -1,7 +1,7 @@
-package com.durys.jakub.carfleet.requests.drivertransfer.commands;
+package com.durys.jakub.carfleet.requests.drivertransfer.domain.commands;
 
 import com.durys.jakub.carfleet.drivers.DriverId;
-import com.durys.jakub.carfleet.requests.drivertransfer.DriverTransferRequestAssembler;
+import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.state.ChangeCommand;
 
 public class ChangeDriverCommand extends ChangeCommand {

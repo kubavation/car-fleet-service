@@ -1,4 +1,4 @@
-package com.durys.jakub.carfleet.requests.drivertransfer;
+package com.durys.jakub.carfleet.requests.drivertransfer.domain;
 
 import com.durys.jakub.carfleet.drivers.DriverId;
 import com.durys.jakub.carfleet.requests.Flowable;
