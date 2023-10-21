@@ -1,13 +1,12 @@
 package com.durys.jakub.carfleet.requests.drivertransfer.application;
 
-import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequest;
-import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.RequestId;
 import com.durys.jakub.carfleet.requests.RequesterId;
+import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequest;
+import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequestRepository;
 import com.durys.jakub.carfleet.requests.state.ChangeCommand;
 import com.durys.jakub.carfleet.requests.state.State;
-import com.durys.jakub.carfleet.requests.state.StateConfig;
 import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
