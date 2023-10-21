@@ -117,4 +117,9 @@ public class State {
     public String getName() {
         return name;
     }
+
+    public Request getRequest() {
+        return request;
+    }
+
 }

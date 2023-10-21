@@ -42,4 +42,8 @@ public class Request {
     public void setDriverId(DriverId driverId) {
         this.driverId = driverId;
     }
+
+    public RequestContent getContent() {
+        return content;
+    }
 }
