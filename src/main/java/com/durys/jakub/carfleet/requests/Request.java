@@ -9,7 +9,7 @@ public class Request {
 
     private final RequestId requestId;
     private final RequesterId requesterId;
-    private final RequestContent content;
+    private RequestContent content;
 
     private String state;
 
@@ -22,5 +22,9 @@ public class Request {
         this.requestId = requestId;
         this.requesterId = requesterId;
         this.content = new RequestContent(from, to, purpose);
+    }
+
+    public void changeCurrentContent(RequestContent content) {
+        this.content = new RequestContent(content.getFrom(), content.getTo(), content.getPurpose());
     }
 }
