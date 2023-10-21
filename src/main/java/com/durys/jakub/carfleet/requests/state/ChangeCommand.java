@@ -1,42 +1,19 @@
 package com.durys.jakub.carfleet.requests.state;
 
-import java.util.HashMap;
-import java.util.Map;
+public abstract class ChangeCommand {
 
-public class ChangeCommand {
-    private String desiredState;
-    private Map<String, Object> params;
+    private final String desiredState;
 
-    public ChangeCommand(String desiredState, Map<String, Object> params){
+    protected ChangeCommand(String desiredState) {
         this.desiredState = desiredState;
-        this.params = params;
     }
 
-    public ChangeCommand(String desiredState){
-        this(desiredState, new HashMap<>());
-    }
-
-    public ChangeCommand withParam(String name, Object value){
-        params.put(name, value);
-        return this;
+    protected ChangeCommand(Enum<?> desiredState) {
+        this.desiredState = desiredState.name();
     }
 
     public String getDesiredState() {
         return desiredState;
     }
-
-    public <T> T getParam(String name, Class<T> type){
-        return (T) params.get(name);
-    }
-
-    @Override
-    public String toString() {
-        return "ChangeCommand{" +
-                "desiredState='" + desiredState + '\'' +
-                '}';
-    }
-
-    public Map<String, Object> getParams() {
-        return params;
-    }
 }
+

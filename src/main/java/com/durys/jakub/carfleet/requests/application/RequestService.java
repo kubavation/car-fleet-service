@@ -5,6 +5,7 @@ import com.durys.jakub.carfleet.requests.drivertransfer.DriverTransferRequest;
 import com.durys.jakub.carfleet.requests.drivertransfer.DriverTransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.RequestId;
 import com.durys.jakub.carfleet.requests.RequesterId;
+import com.durys.jakub.carfleet.requests.drivertransfer.commands.ChangeDriverCommand;
 import com.durys.jakub.carfleet.requests.state.ChangeCommand;
 import com.durys.jakub.carfleet.requests.state.State;
 import com.durys.jakub.carfleet.requests.state.StateConfig;
@@ -57,7 +58,21 @@ public class RequestService {
         State<DriverTransferRequest> state = config.recreate(driverTransferRequest);
 
         //todo
-        State<DriverTransferRequest> changed = state.changeState(new ChangeCommand("ACCEPTED", Map.of("driverId", driverId)));
+        State<DriverTransferRequest> changed = state.changeState(new ChangeDriverCommand("ACCEPTED", driverId));
+        return changed.getObject();
+    }
+
+    public DriverTransferRequest changeStatus(RequestId requestId, ChangeCommand command) {
+
+        DriverTransferRequest driverTransferRequest = new DriverTransferRequest(requestId, new RequesterId(UUID.randomUUID()),
+                LocalDateTime.now(), LocalDateTime.now() , new RequestPurpose("content"), "NEW"); //todo
+
+        StateConfig<DriverTransferRequest> config = assembler.assemble();
+
+        State<DriverTransferRequest> state = config.recreate(driverTransferRequest);
+
+        //todo
+        State<DriverTransferRequest> changed = state.changeState(command);
         return changed.getObject();
     }
 }
