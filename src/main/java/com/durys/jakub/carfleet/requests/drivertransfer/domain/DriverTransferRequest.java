@@ -1,5 +1,6 @@
 package com.durys.jakub.carfleet.requests.drivertransfer.domain;
 
+import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.drivers.DriverId;
 import com.durys.jakub.carfleet.requests.Flowable;
 import com.durys.jakub.carfleet.requests.RequestId;
@@ -20,6 +21,7 @@ public class DriverTransferRequest implements Flowable<DriverTransferRequest> {
     private String state;
 
     private DriverId driverId;
+    private CarId carId;
 
     @Override
     public void setState(String state) {
@@ -41,10 +43,7 @@ public class DriverTransferRequest implements Flowable<DriverTransferRequest> {
         this.state = state;
     }
 
-    public void changeCurrentContent(RequestContent content) {
-        this.content = new RequestContent(content.getFrom(), content.getTo(), content.getPurpose());
-    }
-
+    @Override
     public String state() {
         return state;
     }
@@ -68,6 +67,14 @@ public class DriverTransferRequest implements Flowable<DriverTransferRequest> {
 
     public void setDriverId(DriverId driverId) {
         this.driverId = driverId;
+    }
+
+    public CarId getCarId() {
+        return carId;
+    }
+
+    public void setCarId(CarId carId) {
+        this.carId = carId;
     }
 
     public RequestContent getContent() {
