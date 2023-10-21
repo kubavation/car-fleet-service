@@ -1,5 +1,6 @@
 package com.durys.jakub.carfleet.requests;
 
+import com.durys.jakub.carfleet.drivers.DriverId;
 import com.durys.jakub.carfleet.requests.vo.RequestContent;
 import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
 
@@ -12,6 +13,8 @@ public class Request {
     private RequestContent content;
 
     private String state;
+
+    private DriverId driverId;
 
     public void setState(String state) {
         this.state = state;
@@ -30,5 +33,13 @@ public class Request {
 
     public String getState() {
         return state;
+    }
+
+    public DriverId getDriverId() {
+        return driverId;
+    }
+
+    public void setDriverId(DriverId driverId) {
+        this.driverId = driverId;
     }
 }
