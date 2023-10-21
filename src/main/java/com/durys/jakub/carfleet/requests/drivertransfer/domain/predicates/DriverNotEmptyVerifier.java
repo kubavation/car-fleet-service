@@ -1,8 +1,8 @@
-package com.durys.jakub.carfleet.requests.drivertransfer.predicates;
+package com.durys.jakub.carfleet.requests.drivertransfer.domain.predicates;
 
 
-import com.durys.jakub.carfleet.requests.drivertransfer.DriverTransferRequest;
-import com.durys.jakub.carfleet.requests.drivertransfer.commands.ChangeDriverCommand;
+import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequest;
+import com.durys.jakub.carfleet.requests.drivertransfer.domain.commands.ChangeTransportInformationCommand;
 import com.durys.jakub.carfleet.requests.state.ChangeCommand;
 import com.durys.jakub.carfleet.requests.state.State;
 
@@ -12,6 +12,6 @@ public class DriverNotEmptyVerifier implements BiFunction<State<DriverTransferRe
 
     @Override
     public Boolean apply(State<DriverTransferRequest> driverTransferRequestState, ChangeCommand changeDriverCommand) {
-        return ((ChangeDriverCommand) changeDriverCommand).getDriverId() != null;
+        return ((ChangeTransportInformationCommand) changeDriverCommand).getDriverId() != null;
     }
 }

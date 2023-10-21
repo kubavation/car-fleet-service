@@ -1,25 +1,18 @@
-package com.durys.jakub.carfleet.requests.drivertransfer;
+package com.durys.jakub.carfleet.requests.drivertransfer.domain;
 
 import com.durys.jakub.carfleet.requests.state.Assembler;
 import com.durys.jakub.carfleet.requests.state.StateBuilder;
 import com.durys.jakub.carfleet.requests.state.StateConfig;
-import com.durys.jakub.carfleet.requests.drivertransfer.actions.ChangeDriver;
-import com.durys.jakub.carfleet.requests.drivertransfer.predicates.DriverNotEmptyVerifier;
-import com.durys.jakub.carfleet.requests.drivertransfer.predicates.RequestContentValidVerifier;
+import com.durys.jakub.carfleet.requests.drivertransfer.domain.actions.ChangeTransportInformation;
+import com.durys.jakub.carfleet.requests.drivertransfer.domain.predicates.DriverNotEmptyVerifier;
+import com.durys.jakub.carfleet.requests.drivertransfer.domain.predicates.RequestContentValidVerifier;
 import org.springframework.stereotype.Component;
 
-import static com.durys.jakub.carfleet.requests.drivertransfer.DriverTransferRequestAssembler.Status.*;
+import static com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequestStatus.*;
+
 
 @Component
 public class DriverTransferRequestAssembler implements Assembler<DriverTransferRequest> {
-
-    public enum Status {
-        NEW,
-        EDITED,
-        ACCEPTED,
-        CANCELLED,
-        REJECTED,
-    }
 
     @Override
     public StateConfig<DriverTransferRequest> assemble() {
@@ -36,7 +29,12 @@ public class DriverTransferRequestAssembler implements Assembler<DriverTransferR
                 .from(NEW)
                     .check(new DriverNotEmptyVerifier())
                     .to(ACCEPTED)
-                    .action(new ChangeDriver())
+                    .action(new ChangeTransportInformation())
+                .and()
+                .from(EDITED)
+                    .check(new DriverNotEmptyVerifier())
+                    .to(ACCEPTED)
+                    .action(new ChangeTransportInformation())
                 .and()
                     .from(NEW).to(REJECTED)
                 .build();
