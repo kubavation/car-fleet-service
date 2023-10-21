@@ -39,10 +39,10 @@ public class RequestService {
         //todo find request
         Request request = new Request(requestId, new RequesterId(UUID.randomUUID()), from, to, purpose, "NEW");
 
-        StateConfig config = assembler.assemble();
+        StateConfig<Request> config = assembler.assemble();
 
-        State state = config.recreate(request);
-        State changed = state.changeContent(new RequestContent(from, to, purpose));
+        State<Request> state = config.recreate(request);
+        State<Request> changed = state.changeContent(new Request(request.getRequestId(), request.getRequesterId(), from, to, purpose));
 
         return (Request) changed.getObject();
     }

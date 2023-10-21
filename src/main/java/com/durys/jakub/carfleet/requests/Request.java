@@ -3,10 +3,12 @@ package com.durys.jakub.carfleet.requests;
 import com.durys.jakub.carfleet.drivers.DriverId;
 import com.durys.jakub.carfleet.requests.vo.RequestContent;
 import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
-public class Request implements Flowable {
+@Data
+public class Request implements Flowable<Request> {
 
     private final RequestId requestId;
     private final RequesterId requesterId;
@@ -42,6 +44,19 @@ public class Request implements Flowable {
 
     public String state() {
         return state;
+    }
+
+    @Override
+    public Request content() {
+        return this;
+    }
+
+    @Override
+    public void setContent(Request request) {
+        this.content = new RequestContent(
+                request.content.getFrom(),
+                request.content.getTo(),
+                request.content.getPurpose());
     }
 
     public DriverId getDriverId() {

@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-public class StateBuilder<T extends Flowable> implements StateConfig<T> {
+public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
 
-    public static class FinalStateConfig<T extends Flowable> {
+    public static class FinalStateConfig<T extends Flowable<T>> {
         private final State<T> state;
         //new
         private final StateBuilder<T> builder;

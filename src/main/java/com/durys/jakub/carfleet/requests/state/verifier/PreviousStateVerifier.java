@@ -6,7 +6,7 @@ import com.durys.jakub.carfleet.requests.state.State;
 
 import java.util.function.BiFunction;
 
-public class PreviousStateVerifier<T extends Flowable> implements BiFunction<State<T>, ChangeCommand, Boolean> {
+public class PreviousStateVerifier<T extends Flowable<T>> implements BiFunction<State<T>, ChangeCommand, Boolean> {
     private final String stateDescriptor;
 
     public PreviousStateVerifier(String stateDescriptor) {

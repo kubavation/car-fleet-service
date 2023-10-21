@@ -5,7 +5,7 @@ import com.durys.jakub.carfleet.requests.state.State;
 
 import java.util.function.Predicate;
 
-public class PositivePredicate<T extends Flowable> implements Predicate<State<T>> {
+public class PositivePredicate<T extends Flowable<T>> implements Predicate<State<T>> {
 
     @Override
     public boolean test(State state) {

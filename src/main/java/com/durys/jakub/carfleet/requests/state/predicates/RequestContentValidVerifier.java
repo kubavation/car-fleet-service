@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.function.BiFunction;
 
 @Slf4j
-public class RequestContentValidVerifier<T extends Flowable> implements BiFunction<State<T>, ChangeCommand, Boolean> {
+public class RequestContentValidVerifier<T extends Flowable<T>> implements BiFunction<State<T>, ChangeCommand, Boolean> {
 
     @Override
     public Boolean apply(State<T> state, ChangeCommand command) {
