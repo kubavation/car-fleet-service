@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Data
-public class PreBookingRequestContent {
+public class PreBookingTransferRequestContent {
     private LocalDateTime from;
     private LocalDateTime to;
     private RequestPurpose purpose;
