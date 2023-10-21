@@ -38,6 +38,11 @@ public class DriverTransferRequestAssembler implements Assembler<DriverTransferR
                     .to(ACCEPTED)
                     .action(new ChangeDriver())
                 .and()
+                .from(EDITED)
+                    .check(new DriverNotEmptyVerifier())
+                    .to(ACCEPTED)
+                    .action(new ChangeDriver())
+                .and()
                     .from(NEW).to(REJECTED)
                 .build();
     }
