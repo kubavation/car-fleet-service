@@ -47,19 +47,6 @@ public class RequestService {
         return changed.getObject();
     }
 
-    public DriverTransferRequest changeStatus(RequestId requestId, DriverId driverId) {
-
-        DriverTransferRequest driverTransferRequest = new DriverTransferRequest(requestId, new RequesterId(UUID.randomUUID()),
-                LocalDateTime.now(), LocalDateTime.now() , new RequestPurpose("content"), "EDITED"); //todo
-
-        StateConfig<DriverTransferRequest> config = assembler.assemble();
-
-        State<DriverTransferRequest> state = config.recreate(driverTransferRequest);
-
-        //todo
-        State<DriverTransferRequest> changed = state.changeState(new ChangeDriverCommand("ACCEPTED", driverId));
-        return changed.getObject();
-    }
 
     public DriverTransferRequest changeStatus(RequestId requestId, ChangeCommand command) {
 

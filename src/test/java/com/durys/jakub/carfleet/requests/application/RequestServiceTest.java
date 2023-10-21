@@ -5,6 +5,7 @@ import com.durys.jakub.carfleet.requests.drivertransfer.DriverTransferRequest;
 import com.durys.jakub.carfleet.requests.drivertransfer.DriverTransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.RequestId;
 import com.durys.jakub.carfleet.requests.RequesterId;
+import com.durys.jakub.carfleet.requests.drivertransfer.commands.ChangeDriverCommand;
 import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
 import org.junit.jupiter.api.Test;
 
@@ -47,7 +48,7 @@ class RequestServiceTest {
         RequestId requestId = new RequestId(UUID.randomUUID());
         DriverId driverId = new DriverId(UUID.randomUUID());
 
-        DriverTransferRequest driverTransferRequest = requestService.changeStatus(requestId, driverId);
+        DriverTransferRequest driverTransferRequest = requestService.changeStatus(requestId, new ChangeDriverCommand(driverId));
 
         assertEquals("ACCEPTED", driverTransferRequest.state());
         assertEquals(driverId, driverTransferRequest.getDriverId());
