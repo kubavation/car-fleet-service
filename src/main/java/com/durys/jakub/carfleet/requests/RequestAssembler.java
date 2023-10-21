@@ -1,5 +1,6 @@
 package com.durys.jakub.carfleet.requests;
 
+import com.durys.jakub.carfleet.requests.state.Assembler;
 import com.durys.jakub.carfleet.requests.state.StateBuilder;
 import com.durys.jakub.carfleet.requests.state.StateConfig;
 import com.durys.jakub.carfleet.requests.state.actions.ChangeDriver;
@@ -8,7 +9,7 @@ import com.durys.jakub.carfleet.requests.state.predicates.RequestContentValidVer
 import org.springframework.stereotype.Component;
 
 @Component
-public class RequestAssembler {
+public class RequestAssembler implements Assembler<Request> {
 
     private static final String NEW = "NEW";
     private static final String EDITED = "EDITED";
@@ -16,27 +17,11 @@ public class RequestAssembler {
     private static final String CANCELLED = "CANCELLED";
     private static final String REJECTED = "REJECTED";
 
-
-    public StateConfig assemble() {
-//        StateBuilder builder = new StateBuilder();
-//        builder
-//                .beginWith(NEW)
-//                .check(new RequestContentValidVerifier());
-//
-//        builder.from(NEW)
-//                .whenContentChanged().to(EDITED);
-//        builder.from(EDITED).whenContentChanged().to(EDITED);
-//        builder.from(ACCEPTED).to(CANCELLED);
-//        builder.from(NEW)
-//                .check(new DriverNotEmptyVerifier())
-//                .to(ACCEPTED)
-//                .action(new ChangeDriver())
-//        builder.from(NEW)
-//                .to(REJECTED);
-//
-//        return builder;
-        return new StateBuilder()
-                .beginWith(NEW).check(new RequestContentValidVerifier())
+    @Override
+    public StateConfig<Request> assemble() {
+        return new StateBuilder<Request>()
+                .beginWith(NEW)
+                .check(new RequestContentValidVerifier<>())
                 .and()
                     .from(NEW).whenContentChanged().to(EDITED)
                 .and()

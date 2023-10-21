@@ -1,6 +1,7 @@
 package com.durys.jakub.carfleet.requests.state;
 
 import com.durys.jakub.carfleet.requests.Request;
+import com.durys.jakub.carfleet.requests.WithState;
 import com.durys.jakub.carfleet.requests.state.predicates.PositivePredicate;
 import com.durys.jakub.carfleet.requests.state.verifier.PreviousStateVerifier;
 
@@ -10,28 +11,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-public class StateBuilder implements StateConfig {
+public class StateBuilder<T extends WithState> implements StateConfig<T> {
 
-    public static class FinalStateConfig{
-        private final State state;
+    public static class FinalStateConfig<T extends WithState> {
+        private final State<T> state;
         //new
-        private final StateBuilder builder;
+        private final StateBuilder<T> builder;
 
-        FinalStateConfig(State state, StateBuilder builder) {
+        FinalStateConfig(State<T> state, StateBuilder<T> builder) {
             this.state = state;
             this.builder = builder;
         }
 
-        public FinalStateConfig action(BiFunction<Request, ChangeCommand, Void> action) {
+        public FinalStateConfig<T> action(BiFunction<T, ChangeCommand, Void> action) {
             state.addAfterStateChangeAction(action);
             return this;
         }
 
-        public StateBuilder and() {
+        public StateBuilder<T> and() {
             return builder;
         }
 
-        public StateBuilder build() {
+        public StateBuilder<T> build() {
             return builder;
         }
 
@@ -44,36 +45,36 @@ public class StateBuilder implements StateConfig {
 
 
     private Mode mode;
-    private Map<String, State> states = new HashMap<>();
+    private final Map<String, State<T>> states = new HashMap<>();
 
-    private State fromState;
-    private State initialState;
-    private List<BiFunction<State, ChangeCommand, Boolean>> predicates;
+    private State<T> fromState;
+    private State<T> initialState;
+    private List<BiFunction<State<T>, ChangeCommand, Boolean>> predicates;
 
     @Override
-    public State begin(Request request) {
+    public State<T> begin(T request) {
         request.setState(initialState.getName());
         return recreate(request);
     }
 
     @Override
-    public State recreate(Request request) {
-        State state = states.get(request.getState());
+    public State<T> recreate(T request) {
+        State<T> state = states.get(request.getState());
         state.init(request);
         return state;
     }
 
 
-    public StateBuilder beginWith(String stateName) {
+    public StateBuilder<T> beginWith(String stateName) {
         if (initialState != null)
             throw new IllegalStateException("Initial state already set to: " + initialState.getName());
 
-        StateBuilder config = from(stateName);
+        StateBuilder<T> config = from(stateName);
         initialState = fromState;
         return config;
     }
 
-    public StateBuilder from(String stateName) {
+    public StateBuilder<T> from(String stateName) {
         mode = Mode.STATE_CHANGE;
         predicates = new ArrayList<>();
         fromState = getOrPut(stateName);
@@ -81,47 +82,47 @@ public class StateBuilder implements StateConfig {
     }
 
 
-    public StateBuilder check(BiFunction<State, ChangeCommand, Boolean> checkingFunction) {
+    public StateBuilder<T> check(BiFunction<State<T>, ChangeCommand, Boolean> checkingFunction) {
         mode = Mode.STATE_CHANGE;
         predicates.add(checkingFunction);
         return this;
     }
 
-    public FinalStateConfig to(String stateName) {
-        State toState = getOrPut(stateName);
+    public FinalStateConfig<T> to(String stateName) {
+        State<T> toState = getOrPut(stateName);
 
         switch (mode){
             case STATE_CHANGE:
-                predicates.add(new PreviousStateVerifier(fromState.getName()));
+                predicates.add(new PreviousStateVerifier<>(fromState.getName()));
                 fromState.addStateChangePredicates(toState, predicates);
                 break;
             case CONTENT_CHANGE:
                 fromState.setAfterContentChangeState(toState);
-                toState.setContentChangePredicate(new PositivePredicate());
+                toState.setContentChangePredicate(new PositivePredicate<>());
         }
 
         predicates = null;
         fromState = null;
         mode = null;
 
-        return new FinalStateConfig(toState, this);
+        return new FinalStateConfig<>(toState, this);
     }
 
     /**
      * Adds a rule of state change after a content change
      */
-    public StateBuilder whenContentChanged() {
+    public StateBuilder<T> whenContentChanged() {
         mode = Mode.CONTENT_CHANGE;
         return this;
     }
 
-    private State getOrPut(String stateName) {
+    private State<T> getOrPut(String stateName) {
         if (!states.containsKey(stateName))
-            states.put(stateName, new State(stateName));
+            states.put(stateName, new State<>(stateName));
         return states.get(stateName);
     }
 
-    public StateBuilder and() {
+    public StateBuilder<T> and() {
         return this;
     }
 }

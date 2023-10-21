@@ -4,10 +4,10 @@ import com.durys.jakub.carfleet.requests.state.State;
 
 import java.util.function.Predicate;
 
-public class NegativePredicate implements Predicate<State> {
+public class NegativePredicate<T> implements Predicate<T> {
 
     @Override
-    public boolean test(State state) {
+    public boolean test(T state) {
         return false;
     }
 }

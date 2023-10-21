@@ -28,8 +28,8 @@ public class RequestService {
 
         Request request = new Request(new RequestId(UUID.randomUUID()), requesterId, from, to, purpose);
 
-        StateConfig assemble = assembler.assemble();
-        State result = assemble.begin(request);
+        StateConfig<Request> assemble = assembler.assemble();
+        State<Request> result = assemble.begin(request);
         return request; //todo save
     }
 
@@ -44,7 +44,7 @@ public class RequestService {
         State state = config.recreate(request);
         State changed = state.changeContent(new RequestContent(from, to, purpose));
 
-        return changed.getRequest();
+        return (Request) changed.getRequest();
     }
 
     public Request changeStatus(RequestId requestId, DriverId driverId) {
@@ -52,12 +52,12 @@ public class RequestService {
         Request request = new Request(requestId, new RequesterId(UUID.randomUUID()),
                 LocalDateTime.now(), LocalDateTime.now() , new RequestPurpose("content"), "NEW"); //todo
 
-        StateConfig config = assembler.assemble();
+        StateConfig<Request> config = assembler.assemble();
 
-        State state = config.recreate(request);
+        State<Request> state = config.recreate(request);
 
         //todo
-        State changed = state.changeState(new ChangeCommand("ACCEPTED", Map.of("driverId", driverId)));
+        State<Request> changed = state.changeState(new ChangeCommand("ACCEPTED", Map.of("driverId", driverId)));
         return changed.getRequest();
     }
 }

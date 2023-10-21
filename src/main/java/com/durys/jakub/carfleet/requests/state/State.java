@@ -1,6 +1,7 @@
 package com.durys.jakub.carfleet.requests.state;
 
 import com.durys.jakub.carfleet.requests.Request;
+import com.durys.jakub.carfleet.requests.WithState;
 import com.durys.jakub.carfleet.requests.state.predicates.NegativePredicate;
 import com.durys.jakub.carfleet.requests.state.verifier.PositiveVerifier;
 import com.durys.jakub.carfleet.requests.vo.RequestContent;
@@ -9,40 +10,40 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
-public class State {
+public class State<T extends WithState> {
 
     private final String name;
 
-    private Request request;
+    private T request;
 
 
-    private Predicate<State> contentChangePredicate = new NegativePredicate();
+    private Predicate<State<T>> contentChangePredicate = new NegativePredicate<>();
 
-    private State afterContentChangeState;
+    private State<T> afterContentChangeState;
 
-    private final Map<State, List<BiFunction<State, ChangeCommand, Boolean>>> stateChangePredicates = new HashMap<>();
+    private final Map<State<T>, List<BiFunction<State<T>, ChangeCommand, Boolean>>> stateChangePredicates = new HashMap<>();
 
-    private final List<BiFunction<Request, ChangeCommand, Void>> afterStateChangeActions = new ArrayList<>();
+    private final List<BiFunction<T, ChangeCommand, Void>> afterStateChangeActions = new ArrayList<>();
 
     public State(String name) {
         this.name = name;
         addStateChangePredicates(this, List.of(new PositiveVerifier()));
     }
 
-    public void init(Request request) {
+    public void init(T request) {
         this.request = request;
         this.request.setState(name);
     }
 
 
-    public State changeContent(RequestContent content){
+    public State<T> changeContent(RequestContent content){
         if (!isContentEditable())
             return this;
 
-        State newState = afterContentChangeState;//local variable just to focus attention
+        State<T> newState = afterContentChangeState;//local variable just to focus attention
         if (newState.contentChangePredicate.test(this)){
             newState.init(request);
-            this.request.changeCurrentContent(content);
+           // this.request.changeCurrentContent(content);
             return newState;
         }
 
@@ -50,12 +51,12 @@ public class State {
     }
 
 
-    public State changeState(ChangeCommand command){
-        State desiredState = find(command.getDesiredState());
+    public State<T> changeState(ChangeCommand command){
+        State<T> desiredState = find(command.getDesiredState());
         if (desiredState == null)
             return this;
 
-        List<BiFunction<State, ChangeCommand, Boolean>> predicates = stateChangePredicates
+        List<BiFunction<State<T>, ChangeCommand, Boolean>> predicates = stateChangePredicates
                 .getOrDefault(desiredState, Collections.emptyList());
 
         if (predicates.stream().allMatch(e -> e.apply(this, command))) {
@@ -68,15 +69,15 @@ public class State {
     }
 
 
-    public Request request(){
+    public T request(){
         return request;
     }
 
-    public Map<State, List<BiFunction<State, ChangeCommand, Boolean>>> getStateChangePredicates() {
+    public Map<State<T>, List<BiFunction<State<T>, ChangeCommand, Boolean>>> getStateChangePredicates() {
         return stateChangePredicates;
     }
 
-    public Predicate<State> getContentChangePredicate() {
+    public Predicate<State<T>> getContentChangePredicate() {
         return contentChangePredicate;
     }
 
@@ -84,9 +85,11 @@ public class State {
         return afterContentChangeState != null;
     }
 
-    void addStateChangePredicates(State toState, List<BiFunction<State, ChangeCommand, Boolean>> predicatesToAdd) {
+    void addStateChangePredicates(State<T> toState, List<BiFunction<State<T>, ChangeCommand, Boolean>> predicatesToAdd) {
         if (stateChangePredicates.containsKey(toState)) {
-            List<BiFunction<State, ChangeCommand, Boolean>> predicates = stateChangePredicates.get(toState);
+            List<BiFunction<State<T>, ChangeCommand, Boolean>> predicates = stateChangePredicates.get(toState);
+            System.out.println(predicates);
+            System.out.println(predicatesToAdd);
             predicates.addAll(predicatesToAdd);
         }
         else {
@@ -94,15 +97,15 @@ public class State {
         }
     }
 
-    void addAfterStateChangeAction(BiFunction<Request, ChangeCommand, Void> action) {
+    void addAfterStateChangeAction(BiFunction<T, ChangeCommand, Void> action) {
         afterStateChangeActions.add(action);
     }
 
-    void setAfterContentChangeState(State toState) {
+    void setAfterContentChangeState(State<T> toState) {
         afterContentChangeState = toState;
     }
 
-    void setContentChangePredicate(Predicate<State> predicate) {
+    void setContentChangePredicate(Predicate<State<T>> predicate) {
         contentChangePredicate = predicate;
     }
 
@@ -118,7 +121,7 @@ public class State {
         return name;
     }
 
-    public Request getRequest() {
+    public T getRequest() {
         return request;
     }
 

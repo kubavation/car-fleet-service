@@ -1,11 +1,12 @@
 package com.durys.jakub.carfleet.requests.state.verifier;
 
+import com.durys.jakub.carfleet.requests.WithState;
 import com.durys.jakub.carfleet.requests.state.ChangeCommand;
 import com.durys.jakub.carfleet.requests.state.State;
 
 import java.util.function.BiFunction;
 
-public class PreviousStateVerifier implements BiFunction<State, ChangeCommand, Boolean> {
+public class PreviousStateVerifier<T extends WithState> implements BiFunction<State<T>, ChangeCommand, Boolean> {
     private final String stateDescriptor;
 
     public PreviousStateVerifier(String stateDescriptor) {
@@ -13,7 +14,7 @@ public class PreviousStateVerifier implements BiFunction<State, ChangeCommand, B
     }
 
     @Override
-    public Boolean apply(State state, ChangeCommand command) {
+    public Boolean apply(State<T> state, ChangeCommand command) {
         return state.getName().equals(stateDescriptor);
     }
 }

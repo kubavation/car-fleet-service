@@ -6,7 +6,7 @@ import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
 
 import java.time.LocalDateTime;
 
-public class Request {
+public class Request implements WithState {
 
     private final RequestId requestId;
     private final RequesterId requesterId;
@@ -16,6 +16,7 @@ public class Request {
 
     private DriverId driverId;
 
+    @Override
     public void setState(String state) {
         this.state = state;
     }
