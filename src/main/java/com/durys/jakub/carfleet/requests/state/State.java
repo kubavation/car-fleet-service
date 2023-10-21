@@ -1,20 +1,18 @@
 package com.durys.jakub.carfleet.requests.state;
 
-import com.durys.jakub.carfleet.requests.Request;
-import com.durys.jakub.carfleet.requests.WithState;
+import com.durys.jakub.carfleet.requests.Flowable;
 import com.durys.jakub.carfleet.requests.state.predicates.NegativePredicate;
 import com.durys.jakub.carfleet.requests.state.verifier.PositiveVerifier;
-import com.durys.jakub.carfleet.requests.vo.RequestContent;
 
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
-public class State<T extends WithState> {
+public class State<T extends Flowable<T>> {
 
     private final String name;
 
-    private T request;
+    private T object;
 
 
     private Predicate<State<T>> contentChangePredicate = new NegativePredicate<>();
@@ -27,23 +25,23 @@ public class State<T extends WithState> {
 
     public State(String name) {
         this.name = name;
-        addStateChangePredicates(this, List.of(new PositiveVerifier()));
+        addStateChangePredicates(this, List.of(new PositiveVerifier<T>()));
     }
 
     public void init(T request) {
-        this.request = request;
-        this.request.setState(name);
+        this.object = request;
+        this.object.setState(name);
     }
 
 
-    public State<T> changeContent(RequestContent content){
+    public State<T> changeContent(T content){
         if (!isContentEditable())
             return this;
 
         State<T> newState = afterContentChangeState;//local variable just to focus attention
         if (newState.contentChangePredicate.test(this)){
-            newState.init(request);
-           // this.request.changeCurrentContent(content);
+            newState.init(object);
+            this.object.setContent(content);
             return newState;
         }
 
@@ -60,18 +58,14 @@ public class State<T extends WithState> {
                 .getOrDefault(desiredState, Collections.emptyList());
 
         if (predicates.stream().allMatch(e -> e.apply(this, command))) {
-            desiredState.init(request);
-            desiredState.afterStateChangeActions.forEach(e -> e.apply(request, command));
+            desiredState.init(object);
+            desiredState.afterStateChangeActions.forEach(e -> e.apply(object, command));
             return desiredState;
         }
 
         return this;
     }
 
-
-    public T request(){
-        return request;
-    }
 
     public Map<State<T>, List<BiFunction<State<T>, ChangeCommand, Boolean>>> getStateChangePredicates() {
         return stateChangePredicates;
@@ -88,8 +82,6 @@ public class State<T extends WithState> {
     void addStateChangePredicates(State<T> toState, List<BiFunction<State<T>, ChangeCommand, Boolean>> predicatesToAdd) {
         if (stateChangePredicates.containsKey(toState)) {
             List<BiFunction<State<T>, ChangeCommand, Boolean>> predicates = stateChangePredicates.get(toState);
-            System.out.println(predicates);
-            System.out.println(predicatesToAdd);
             predicates.addAll(predicatesToAdd);
         }
         else {
@@ -109,7 +101,7 @@ public class State<T extends WithState> {
         contentChangePredicate = predicate;
     }
 
-    private State find(String desiredState) {
+    private State<T> find(String desiredState) {
         return stateChangePredicates.keySet()
                 .stream()
                 .filter(e -> e.name.equals(desiredState))
@@ -121,8 +113,8 @@ public class State<T extends WithState> {
         return name;
     }
 
-    public T getRequest() {
-        return request;
+    public T getObject() {
+        return object;
     }
 
 }

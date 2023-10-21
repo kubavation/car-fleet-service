@@ -6,7 +6,7 @@ import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
 
 import java.time.LocalDateTime;
 
-public class Request implements WithState {
+public class Request implements Flowable {
 
     private final RequestId requestId;
     private final RequesterId requesterId;
@@ -40,7 +40,7 @@ public class Request implements WithState {
         this.content = new RequestContent(content.getFrom(), content.getTo(), content.getPurpose());
     }
 
-    public String getState() {
+    public String state() {
         return state;
     }
 

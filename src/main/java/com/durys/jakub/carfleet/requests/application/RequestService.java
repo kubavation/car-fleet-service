@@ -44,7 +44,7 @@ public class RequestService {
         State state = config.recreate(request);
         State changed = state.changeContent(new RequestContent(from, to, purpose));
 
-        return (Request) changed.getRequest();
+        return (Request) changed.getObject();
     }
 
     public Request changeStatus(RequestId requestId, DriverId driverId) {
@@ -58,6 +58,6 @@ public class RequestService {
 
         //todo
         State<Request> changed = state.changeState(new ChangeCommand("ACCEPTED", Map.of("driverId", driverId)));
-        return changed.getRequest();
+        return changed.getObject();
     }
 }

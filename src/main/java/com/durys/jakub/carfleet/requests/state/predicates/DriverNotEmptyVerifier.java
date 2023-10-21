@@ -2,7 +2,6 @@ package com.durys.jakub.carfleet.requests.state.predicates;
 
 
 import com.durys.jakub.carfleet.requests.Request;
-import com.durys.jakub.carfleet.requests.WithState;
 import com.durys.jakub.carfleet.requests.state.ChangeCommand;
 import com.durys.jakub.carfleet.requests.state.State;
 

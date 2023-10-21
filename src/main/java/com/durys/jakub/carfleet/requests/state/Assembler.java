@@ -1,8 +1,7 @@
 package com.durys.jakub.carfleet.requests.state;
 
-import com.durys.jakub.carfleet.requests.Request;
-import com.durys.jakub.carfleet.requests.WithState;
+import com.durys.jakub.carfleet.requests.Flowable;
 
-public interface Assembler<T extends WithState> {
+public interface Assembler<T extends Flowable> {
     StateConfig<T> assemble();
 }

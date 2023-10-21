@@ -1,12 +1,12 @@
 package com.durys.jakub.carfleet.requests.state.verifier;
 
-import com.durys.jakub.carfleet.requests.WithState;
+import com.durys.jakub.carfleet.requests.Flowable;
 import com.durys.jakub.carfleet.requests.state.ChangeCommand;
 import com.durys.jakub.carfleet.requests.state.State;
 
 import java.util.function.BiFunction;
 
-public class PreviousStateVerifier<T extends WithState> implements BiFunction<State<T>, ChangeCommand, Boolean> {
+public class PreviousStateVerifier<T extends Flowable> implements BiFunction<State<T>, ChangeCommand, Boolean> {
     private final String stateDescriptor;
 
     public PreviousStateVerifier(String stateDescriptor) {

@@ -28,7 +28,7 @@ class RequestServiceTest {
 
         Request request = requestService.create(requesterId, from, to, purpose);
 
-        assertEquals("NEW", request.getState());
+        assertEquals("NEW", request.state());
     }
 
     @Test
@@ -38,7 +38,7 @@ class RequestServiceTest {
 
         Request request = requestService.change(requestId, from, to, purpose);
 
-        assertEquals("EDITED", request.getState());
+        assertEquals("EDITED", request.state());
     }
 
 
@@ -50,7 +50,7 @@ class RequestServiceTest {
 
         Request request = requestService.changeStatus(requestId, driverId);
 
-        assertEquals("ACCEPTED", request.getState());
+        assertEquals("ACCEPTED", request.state());
         assertEquals(driverId, request.getDriverId());
     }
 

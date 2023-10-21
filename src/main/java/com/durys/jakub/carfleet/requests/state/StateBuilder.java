@@ -1,7 +1,6 @@
 package com.durys.jakub.carfleet.requests.state;
 
-import com.durys.jakub.carfleet.requests.Request;
-import com.durys.jakub.carfleet.requests.WithState;
+import com.durys.jakub.carfleet.requests.Flowable;
 import com.durys.jakub.carfleet.requests.state.predicates.PositivePredicate;
 import com.durys.jakub.carfleet.requests.state.verifier.PreviousStateVerifier;
 
@@ -11,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-public class StateBuilder<T extends WithState> implements StateConfig<T> {
+public class StateBuilder<T extends Flowable> implements StateConfig<T> {
 
-    public static class FinalStateConfig<T extends WithState> {
+    public static class FinalStateConfig<T extends Flowable> {
         private final State<T> state;
         //new
         private final StateBuilder<T> builder;
@@ -59,7 +58,7 @@ public class StateBuilder<T extends WithState> implements StateConfig<T> {
 
     @Override
     public State<T> recreate(T request) {
-        State<T> state = states.get(request.getState());
+        State<T> state = states.get(request.state());
         state.init(request);
         return state;
     }
