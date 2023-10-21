@@ -27,6 +27,14 @@ public class Request {
         this.content = new RequestContent(from, to, purpose);
     }
 
+    public Request(RequestId requestId, RequesterId requesterId,
+                   LocalDateTime from, LocalDateTime to, RequestPurpose purpose, String state) {
+        this.requestId = requestId;
+        this.requesterId = requesterId;
+        this.content = new RequestContent(from, to, purpose);
+        this.state = state;
+    }
+
     public void changeCurrentContent(RequestContent content) {
         this.content = new RequestContent(content.getFrom(), content.getTo(), content.getPurpose());
     }

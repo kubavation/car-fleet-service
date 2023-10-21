@@ -2,6 +2,7 @@ package com.durys.jakub.carfleet.requests.application;
 
 import com.durys.jakub.carfleet.requests.Request;
 import com.durys.jakub.carfleet.requests.RequestAssembler;
+import com.durys.jakub.carfleet.requests.RequestId;
 import com.durys.jakub.carfleet.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
 import org.junit.jupiter.api.Test;
@@ -28,5 +29,16 @@ class RequestServiceTest {
 
         assertEquals("NEW", request.getState());
     }
+
+    @Test
+    void shouldChangeRequestContentAndChangeStatusToEdited() {
+
+        RequestId requestId = new RequestId(UUID.randomUUID());
+
+        Request request = requestService.change(requestId, from, to, purpose);
+
+        assertEquals("EDITED", request.getState());
+    }
+
 
 }
