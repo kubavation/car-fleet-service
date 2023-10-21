@@ -13,8 +13,29 @@ public class PreBookingTransferRequestAssembler implements Assembler<PreBookingT
 
     @Override
     public StateConfig<PreBookingTransferRequest> assemble() {
-        //return new StateBuilder
 
-        return new StateBuilder<PreBookingTransferRequest>();
+        return new StateBuilder<PreBookingTransferRequest>()
+                .beginWith(NEW)
+                .and()
+                    .from(NEW)
+                    .whenContentChanged()
+                    .to(EDITED)
+                .and()
+                    .from(EDITED)
+                    .whenContentChanged()
+                    .to(EDITED)
+                .and()
+                    .from(NEW).to(CLOSED) //todo action
+                .and()
+                    .from(EDITED).to(CLOSED) //todo action
+                .and()
+                    .from(NEW).to(ARCHIVED) //todo action
+                .and()
+                    .from(EDITED).to(ARCHIVED) //todo action
+                .and()
+                    .from(CLOSED).to(OPEN) //todo action
+                .and()
+                    .from(OPEN).to(ARCHIVED) //todo action
+                .build();
     }
 }
