@@ -18,22 +18,37 @@ public class RequestAssembler {
 
 
     public StateConfig assemble() {
-        StateBuilder builder = new StateBuilder();
-        builder
-                .beginWith(NEW)
-                .check(new RequestContentValidVerifier());
-
-        builder.from(NEW)
-                .whenContentChanged().to(EDITED);
-        builder.from(EDITED).whenContentChanged().to(EDITED);
-        builder.from(ACCEPTED).to(CANCELLED);
-        builder.from(NEW)
-                .check(new DriverNotEmptyVerifier())
-                .to(ACCEPTED)
-                .action(new ChangeDriver());
-        builder.from(NEW)
-                .to(REJECTED);
-
-        return builder;
+//        StateBuilder builder = new StateBuilder();
+//        builder
+//                .beginWith(NEW)
+//                .check(new RequestContentValidVerifier());
+//
+//        builder.from(NEW)
+//                .whenContentChanged().to(EDITED);
+//        builder.from(EDITED).whenContentChanged().to(EDITED);
+//        builder.from(ACCEPTED).to(CANCELLED);
+//        builder.from(NEW)
+//                .check(new DriverNotEmptyVerifier())
+//                .to(ACCEPTED)
+//                .action(new ChangeDriver())
+//        builder.from(NEW)
+//                .to(REJECTED);
+//
+//        return builder;
+        return new StateBuilder()
+                .beginWith(NEW).check(new RequestContentValidVerifier())
+                .and()
+                    .from(NEW).whenContentChanged().to(EDITED)
+                .and()
+                    .from(EDITED).whenContentChanged().to(EDITED)
+                .and()
+                    .from(ACCEPTED).to(CANCELLED)
+                .and()
+                .from(NEW)
+                    .check(new DriverNotEmptyVerifier())
+                    .to(ACCEPTED)
+                    .action(new ChangeDriver())
+                .and()
+                    .from(NEW).to(REJECTED).build();
     }
 }

@@ -14,15 +14,27 @@ public class StateBuilder implements StateConfig {
 
     public static class FinalStateConfig{
         private final State state;
+        //new
+        private final StateBuilder builder;
 
-        FinalStateConfig(State state){
+        FinalStateConfig(State state, StateBuilder builder) {
             this.state = state;
+            this.builder = builder;
         }
 
         public FinalStateConfig action(BiFunction<Request, ChangeCommand, Void> action) {
             state.addAfterStateChangeAction(action);
             return this;
         }
+
+        public StateBuilder and() {
+            return builder;
+        }
+
+        public StateBuilder build() {
+            return builder;
+        }
+
     }
 
     private enum Mode {
@@ -68,6 +80,7 @@ public class StateBuilder implements StateConfig {
         return this;
     }
 
+
     public StateBuilder check(BiFunction<State, ChangeCommand, Boolean> checkingFunction) {
         mode = Mode.STATE_CHANGE;
         predicates.add(checkingFunction);
@@ -91,7 +104,7 @@ public class StateBuilder implements StateConfig {
         fromState = null;
         mode = null;
 
-        return new FinalStateConfig(toState);
+        return new FinalStateConfig(toState, this);
     }
 
     /**
@@ -106,5 +119,9 @@ public class StateBuilder implements StateConfig {
         if (!states.containsKey(stateName))
             states.put(stateName, new State(stateName));
         return states.get(stateName);
+    }
+
+    public StateBuilder and() {
+        return this;
     }
 }
