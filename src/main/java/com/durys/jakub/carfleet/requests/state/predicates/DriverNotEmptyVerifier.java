@@ -10,6 +10,6 @@ public class DriverNotEmptyVerifier implements BiFunction<State, ChangeCommand, 
 
     @Override
     public Boolean apply(State state, ChangeCommand command) {
-        return state.getRequest().getDriverId() != null;
+        return command.getParams() != null; //todo check if driver is not null
     }
 }

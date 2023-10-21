@@ -2,6 +2,7 @@ package com.durys.jakub.carfleet.requests;
 
 import com.durys.jakub.carfleet.requests.state.StateBuilder;
 import com.durys.jakub.carfleet.requests.state.StateConfig;
+import com.durys.jakub.carfleet.requests.state.actions.ChangeDriver;
 import com.durys.jakub.carfleet.requests.state.predicates.DriverNotEmptyVerifier;
 import com.durys.jakub.carfleet.requests.state.predicates.RequestContentValidVerifier;
 import org.springframework.stereotype.Component;
@@ -29,7 +30,7 @@ public class RequestAssembler {
         builder.from(NEW)
                 .check(new DriverNotEmptyVerifier())
                 .to(ACCEPTED)
-                .action(null);
+                .action(new ChangeDriver());
         builder.from(NEW)
                 .to(REJECTED);
 

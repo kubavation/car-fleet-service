@@ -35,4 +35,8 @@ public class ChangeCommand {
                 "desiredState='" + desiredState + '\'' +
                 '}';
     }
+
+    public Map<String, Object> getParams() {
+        return params;
+    }
 }

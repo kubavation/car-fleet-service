@@ -1,5 +1,6 @@
 package com.durys.jakub.carfleet.requests.application;
 
+import com.durys.jakub.carfleet.drivers.DriverId;
 import com.durys.jakub.carfleet.requests.Request;
 import com.durys.jakub.carfleet.requests.RequestAssembler;
 import com.durys.jakub.carfleet.requests.RequestId;
@@ -38,6 +39,19 @@ class RequestServiceTest {
         Request request = requestService.change(requestId, from, to, purpose);
 
         assertEquals("EDITED", request.getState());
+    }
+
+
+    @Test
+    void shouldSaveRequestWithDriverAndChangeStatusToAccepted() {
+
+        RequestId requestId = new RequestId(UUID.randomUUID());
+        DriverId driverId = new DriverId(UUID.randomUUID());
+
+        Request request = requestService.changeStatus(requestId, driverId);
+
+        assertEquals("ACCEPTED", request.getState());
+        assertEquals(driverId, request.getDriverId());
     }
 
 

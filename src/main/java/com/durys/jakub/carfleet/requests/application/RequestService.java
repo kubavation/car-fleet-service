@@ -1,9 +1,11 @@
 package com.durys.jakub.carfleet.requests.application;
 
+import com.durys.jakub.carfleet.drivers.DriverId;
 import com.durys.jakub.carfleet.requests.Request;
 import com.durys.jakub.carfleet.requests.RequestAssembler;
 import com.durys.jakub.carfleet.requests.RequestId;
 import com.durys.jakub.carfleet.requests.RequesterId;
+import com.durys.jakub.carfleet.requests.state.ChangeCommand;
 import com.durys.jakub.carfleet.requests.state.State;
 import com.durys.jakub.carfleet.requests.state.StateConfig;
 import com.durys.jakub.carfleet.requests.vo.RequestContent;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.UUID;
 
 @Component
@@ -30,6 +33,7 @@ public class RequestService {
         return request; //todo save
     }
 
+
     public Request change(RequestId requestId, LocalDateTime from, LocalDateTime to, RequestPurpose purpose) {
 
         //todo find request
@@ -40,6 +44,20 @@ public class RequestService {
         State state = config.recreate(request);
         State changed = state.changeContent(new RequestContent(from, to, purpose));
 
+        return changed.getRequest();
+    }
+
+    public Request changeStatus(RequestId requestId, DriverId driverId) {
+
+        Request request = new Request(requestId, new RequesterId(UUID.randomUUID()),
+                LocalDateTime.now(), LocalDateTime.now() , new RequestPurpose("content"), "NEW"); //todo
+
+        StateConfig config = assembler.assemble();
+
+        State state = config.recreate(request);
+
+        //todo
+        State changed = state.changeState(new ChangeCommand("ACCEPTED", Map.of("driverId", driverId)));
         return changed.getRequest();
     }
 }
