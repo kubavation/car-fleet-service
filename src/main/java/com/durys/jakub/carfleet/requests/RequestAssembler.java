@@ -24,7 +24,7 @@ public class RequestAssembler {
 
         builder.from(NEW)
                 .whenContentChanged().to(EDITED);
-        builder.from(EDITED).to(EDITED);
+       // builder.from(EDITED).to(EDITED);
         builder.from(ACCEPTED).to(CANCELLED);
         builder.from(NEW)
                 .check(new DriverNotEmptyVerifier())
