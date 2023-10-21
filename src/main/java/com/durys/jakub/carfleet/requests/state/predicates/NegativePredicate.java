@@ -1,7 +1,5 @@
 package com.durys.jakub.carfleet.requests.state.predicates;
 
-import com.durys.jakub.carfleet.requests.state.State;
-
 import java.util.function.Predicate;
 
 public class NegativePredicate<T> implements Predicate<T> {

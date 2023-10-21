@@ -14,13 +14,9 @@ public class State<T extends Flowable<T>> {
 
     private T object;
 
-
     private Predicate<State<T>> contentChangePredicate = new NegativePredicate<>();
-
     private State<T> afterContentChangeState;
-
     private final Map<State<T>, List<BiFunction<State<T>, ChangeCommand, Boolean>>> stateChangePredicates = new HashMap<>();
-
     private final List<BiFunction<T, ChangeCommand, Void>> afterStateChangeActions = new ArrayList<>();
 
     public State(String name) {
