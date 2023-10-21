@@ -8,6 +8,7 @@ import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferReq
 import com.durys.jakub.carfleet.requests.RequestId;
 import com.durys.jakub.carfleet.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.commands.ChangeTransportInformationCommand;
+import com.durys.jakub.carfleet.requests.drivertransfer.infrastructure.MockedDriverTransferRequestRepository;
 import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +19,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DriverTransferRequestServiceTest {
 
-    private final DriverTransferRequestService driverTransferRequestService = new DriverTransferRequestService(new DriverTransferRequestAssembler());
+    private final DriverTransferRequestService driverTransferRequestService
+            = new DriverTransferRequestService(new DriverTransferRequestAssembler(), new MockedDriverTransferRequestRepository());
 
 
     private final RequesterId requesterId = new RequesterId(UUID.randomUUID());
@@ -37,9 +39,9 @@ class DriverTransferRequestServiceTest {
     @Test
     void shouldChangeRequestContentAndChangeStatusToEdited() {
 
-        RequestId requestId = new RequestId(UUID.randomUUID());
+        DriverTransferRequest result = driverTransferRequestService.create(requesterId, from, to, purpose);
 
-        DriverTransferRequest driverTransferRequest = driverTransferRequestService.change(requestId, from, to, purpose);
+        DriverTransferRequest driverTransferRequest = driverTransferRequestService.change(result.getRequestId(), from, to, purpose);
 
         assertEquals("EDITED", driverTransferRequest.state());
     }
@@ -51,7 +53,9 @@ class DriverTransferRequestServiceTest {
         DriverId driverId = new DriverId(UUID.randomUUID());
         CarId carId = new CarId(UUID.randomUUID());
 
-        DriverTransferRequest driverTransferRequest = driverTransferRequestService.changeStatus(requestId,
+        DriverTransferRequest result = driverTransferRequestService.create(requesterId, from, to, purpose);
+
+        DriverTransferRequest driverTransferRequest = driverTransferRequestService.changeStatus(result.getRequestId(),
                 new ChangeTransportInformationCommand(driverId, carId));
 
         assertEquals("ACCEPTED", driverTransferRequest.state());
