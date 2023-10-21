@@ -7,8 +7,10 @@ import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferReq
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.RequestId;
 import com.durys.jakub.carfleet.requests.RequesterId;
+import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequestStatus;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.commands.ChangeTransportInformationCommand;
 import com.durys.jakub.carfleet.requests.drivertransfer.infrastructure.MockedDriverTransferRequestRepository;
+import com.durys.jakub.carfleet.requests.state.ChangeCommand;
 import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
 import org.junit.jupiter.api.Test;
 
@@ -63,5 +65,33 @@ class DriverTransferRequestServiceTest {
         assertEquals(carId, driverTransferRequest.getCarId());
     }
 
+    @Test
+    void shouldSaveRequestAndChangeStatusToRejected() {
+
+        DriverTransferRequest result = driverTransferRequestService.create(requesterId, from, to, purpose);
+
+        DriverTransferRequest driverTransferRequest = driverTransferRequestService.changeStatus(result.getRequestId(),
+                new ChangeCommand(DriverTransferRequestStatus.REJECTED));
+
+        assertEquals("REJECTED", driverTransferRequest.state());
+    }
+
+    @Test
+    void shouldSaveRequestAndChangeStatusToCanceled() {
+
+        DriverId driverId = new DriverId(UUID.randomUUID());
+        CarId carId = new CarId(UUID.randomUUID());
+        DriverTransferRequest result = driverTransferRequestService.create(requesterId, from, to, purpose);
+
+        DriverTransferRequest saved = driverTransferRequestService.changeStatus(result.getRequestId(),
+                new ChangeTransportInformationCommand(driverId, carId));
+
+
+
+        DriverTransferRequest driverTransferRequest = driverTransferRequestService.changeStatus(saved.getRequestId(),
+                new ChangeCommand(DriverTransferRequestStatus.CANCELLED));
+
+        assertEquals("CANCELLED", driverTransferRequest.state());
+    }
 
 }
