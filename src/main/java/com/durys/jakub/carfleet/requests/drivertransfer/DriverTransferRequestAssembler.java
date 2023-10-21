@@ -8,14 +8,18 @@ import com.durys.jakub.carfleet.requests.drivertransfer.predicates.DriverNotEmpt
 import com.durys.jakub.carfleet.requests.drivertransfer.predicates.RequestContentValidVerifier;
 import org.springframework.stereotype.Component;
 
+import static com.durys.jakub.carfleet.requests.drivertransfer.DriverTransferRequestAssembler.Status.*;
+
 @Component
 public class DriverTransferRequestAssembler implements Assembler<DriverTransferRequest> {
 
-    private static final String NEW = "NEW";
-    private static final String EDITED = "EDITED";
-    private static final String ACCEPTED = "ACCEPTED";
-    private static final String CANCELLED = "CANCELLED";
-    private static final String REJECTED = "REJECTED";
+    public enum Status {
+        NEW,
+        EDITED,
+        ACCEPTED,
+        CANCELLED,
+        REJECTED,
+    }
 
     @Override
     public StateConfig<DriverTransferRequest> assemble() {

@@ -41,9 +41,10 @@ public class RequestService {
         StateConfig<DriverTransferRequest> config = assembler.assemble();
 
         State<DriverTransferRequest> state = config.recreate(driverTransferRequest);
-        State<DriverTransferRequest> changed = state.changeContent(new DriverTransferRequest(driverTransferRequest.getRequestId(), driverTransferRequest.getRequesterId(), from, to, purpose));
+        State<DriverTransferRequest> changed = state.changeContent(
+                new DriverTransferRequest(driverTransferRequest.getRequestId(), driverTransferRequest.getRequesterId(), from, to, purpose));
 
-        return (DriverTransferRequest) changed.getObject();
+        return changed.getObject();
     }
 
     public DriverTransferRequest changeStatus(RequestId requestId, DriverId driverId) {

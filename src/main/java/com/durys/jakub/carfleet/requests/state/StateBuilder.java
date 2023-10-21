@@ -13,8 +13,8 @@ import java.util.function.BiFunction;
 public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
 
     public static class FinalStateConfig<T extends Flowable<T>> {
+
         private final State<T> state;
-        //new
         private final StateBuilder<T> builder;
 
         FinalStateConfig(State<T> state, StateBuilder<T> builder) {
@@ -73,11 +73,20 @@ public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
         return config;
     }
 
+    public StateBuilder<T> beginWith(Enum<?> state) {
+        return beginWith(state.name());
+    }
+
+
     public StateBuilder<T> from(String stateName) {
         mode = Mode.STATE_CHANGE;
         predicates = new ArrayList<>();
         fromState = getOrPut(stateName);
         return this;
+    }
+
+    public StateBuilder<T> from(Enum<?> stateName) {
+        return from(stateName.name());
     }
 
 
@@ -107,6 +116,10 @@ public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
         return new FinalStateConfig<>(toState, this);
     }
 
+    public FinalStateConfig<T> to(Enum<?> state) {
+        return to(state.name());
+    }
+
     /**
      * Adds a rule of state change after a content change
      */
@@ -119,6 +132,10 @@ public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
         if (!states.containsKey(stateName))
             states.put(stateName, new State<>(stateName));
         return states.get(stateName);
+    }
+
+    private State<T> getOrPut(Enum<?> state) {
+        return getOrPut(state.name());
     }
 
     public StateBuilder<T> and() {
