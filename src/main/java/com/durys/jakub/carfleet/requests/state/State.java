@@ -2,6 +2,7 @@ package com.durys.jakub.carfleet.requests.state;
 
 import com.durys.jakub.carfleet.requests.Request;
 import com.durys.jakub.carfleet.requests.state.predicates.NegativePredicate;
+import com.durys.jakub.carfleet.requests.state.verifier.PositiveVerifier;
 import com.durys.jakub.carfleet.requests.vo.RequestContent;
 
 import java.util.*;
@@ -25,7 +26,7 @@ public class State {
 
     public State(String name) {
         this.name = name;
-        //addStateChangePredicates(this, List.of(new PositiveVerifier()));
+        addStateChangePredicates(this, List.of(new PositiveVerifier()));
     }
 
     public void init(Request request) {
