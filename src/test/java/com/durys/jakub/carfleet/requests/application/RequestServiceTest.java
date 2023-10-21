@@ -1,11 +1,11 @@
 package com.durys.jakub.carfleet.requests.application;
 
 import com.durys.jakub.carfleet.drivers.DriverId;
-import com.durys.jakub.carfleet.requests.Request;
-import com.durys.jakub.carfleet.requests.RequestAssembler;
+import com.durys.jakub.carfleet.requests.drivertransfer.DriverTransferRequest;
+import com.durys.jakub.carfleet.requests.drivertransfer.DriverTransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.RequestId;
 import com.durys.jakub.carfleet.requests.RequesterId;
-import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
+import com.durys.jakub.carfleet.requests.drivertransfer.vo.RequestPurpose;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RequestServiceTest {
 
-    private final RequestService requestService = new RequestService(new RequestAssembler());
+    private final RequestService requestService = new RequestService(new DriverTransferRequestAssembler());
 
 
     private RequesterId requesterId = new RequesterId(UUID.randomUUID());
@@ -26,9 +26,9 @@ class RequestServiceTest {
     @Test
     void shouldCreateRequestAndChangeStatusToNew() {
 
-        Request request = requestService.create(requesterId, from, to, purpose);
+        DriverTransferRequest driverTransferRequest = requestService.create(requesterId, from, to, purpose);
 
-        assertEquals("NEW", request.state());
+        assertEquals("NEW", driverTransferRequest.state());
     }
 
     @Test
@@ -36,9 +36,9 @@ class RequestServiceTest {
 
         RequestId requestId = new RequestId(UUID.randomUUID());
 
-        Request request = requestService.change(requestId, from, to, purpose);
+        DriverTransferRequest driverTransferRequest = requestService.change(requestId, from, to, purpose);
 
-        assertEquals("EDITED", request.state());
+        assertEquals("EDITED", driverTransferRequest.state());
     }
 
 
@@ -48,10 +48,10 @@ class RequestServiceTest {
         RequestId requestId = new RequestId(UUID.randomUUID());
         DriverId driverId = new DriverId(UUID.randomUUID());
 
-        Request request = requestService.changeStatus(requestId, driverId);
+        DriverTransferRequest driverTransferRequest = requestService.changeStatus(requestId, driverId);
 
-        assertEquals("ACCEPTED", request.state());
-        assertEquals(driverId, request.getDriverId());
+        assertEquals("ACCEPTED", driverTransferRequest.state());
+        assertEquals(driverId, driverTransferRequest.getDriverId());
     }
 
 

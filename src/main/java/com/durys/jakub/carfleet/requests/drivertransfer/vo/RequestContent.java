@@ -1,4 +1,4 @@
-package com.durys.jakub.carfleet.requests.vo;
+package com.durys.jakub.carfleet.requests.drivertransfer.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.durys.jakub.carfleet.requests.state.predicates;
+package com.durys.jakub.carfleet.requests.drivertransfer.predicates;
 
 
 import com.durys.jakub.carfleet.requests.Flowable;

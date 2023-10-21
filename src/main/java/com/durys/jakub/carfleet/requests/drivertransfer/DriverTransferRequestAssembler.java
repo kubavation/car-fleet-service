@@ -1,15 +1,15 @@
-package com.durys.jakub.carfleet.requests;
+package com.durys.jakub.carfleet.requests.drivertransfer;
 
 import com.durys.jakub.carfleet.requests.state.Assembler;
 import com.durys.jakub.carfleet.requests.state.StateBuilder;
 import com.durys.jakub.carfleet.requests.state.StateConfig;
-import com.durys.jakub.carfleet.requests.state.actions.ChangeDriver;
-import com.durys.jakub.carfleet.requests.state.predicates.DriverNotEmptyVerifier;
-import com.durys.jakub.carfleet.requests.state.predicates.RequestContentValidVerifier;
+import com.durys.jakub.carfleet.requests.drivertransfer.actions.ChangeDriver;
+import com.durys.jakub.carfleet.requests.drivertransfer.predicates.DriverNotEmptyVerifier;
+import com.durys.jakub.carfleet.requests.drivertransfer.predicates.RequestContentValidVerifier;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RequestAssembler implements Assembler<Request> {
+public class DriverTransferRequestAssembler implements Assembler<DriverTransferRequest> {
 
     private static final String NEW = "NEW";
     private static final String EDITED = "EDITED";
@@ -18,8 +18,8 @@ public class RequestAssembler implements Assembler<Request> {
     private static final String REJECTED = "REJECTED";
 
     @Override
-    public StateConfig<Request> assemble() {
-        return new StateBuilder<Request>()
+    public StateConfig<DriverTransferRequest> assemble() {
+        return new StateBuilder<DriverTransferRequest>()
                 .beginWith(NEW)
                 .check(new RequestContentValidVerifier<>())
                 .and()

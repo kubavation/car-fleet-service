@@ -1,14 +1,17 @@
-package com.durys.jakub.carfleet.requests;
+package com.durys.jakub.carfleet.requests.drivertransfer;
 
 import com.durys.jakub.carfleet.drivers.DriverId;
-import com.durys.jakub.carfleet.requests.vo.RequestContent;
-import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
+import com.durys.jakub.carfleet.requests.Flowable;
+import com.durys.jakub.carfleet.requests.RequestId;
+import com.durys.jakub.carfleet.requests.RequesterId;
+import com.durys.jakub.carfleet.requests.drivertransfer.vo.RequestContent;
+import com.durys.jakub.carfleet.requests.drivertransfer.vo.RequestPurpose;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class Request implements Flowable<Request> {
+public class DriverTransferRequest implements Flowable<DriverTransferRequest> {
 
     private final RequestId requestId;
     private final RequesterId requesterId;
@@ -23,15 +26,15 @@ public class Request implements Flowable<Request> {
         this.state = state;
     }
 
-    public Request(RequestId requestId, RequesterId requesterId,
-                   LocalDateTime from, LocalDateTime to, RequestPurpose purpose) {
+    public DriverTransferRequest(RequestId requestId, RequesterId requesterId,
+                                 LocalDateTime from, LocalDateTime to, RequestPurpose purpose) {
         this.requestId = requestId;
         this.requesterId = requesterId;
         this.content = new RequestContent(from, to, purpose);
     }
 
-    public Request(RequestId requestId, RequesterId requesterId,
-                   LocalDateTime from, LocalDateTime to, RequestPurpose purpose, String state) {
+    public DriverTransferRequest(RequestId requestId, RequesterId requesterId,
+                                 LocalDateTime from, LocalDateTime to, RequestPurpose purpose, String state) {
         this.requestId = requestId;
         this.requesterId = requesterId;
         this.content = new RequestContent(from, to, purpose);
@@ -47,16 +50,16 @@ public class Request implements Flowable<Request> {
     }
 
     @Override
-    public Request content() {
+    public DriverTransferRequest content() {
         return this;
     }
 
     @Override
-    public void setContent(Request request) {
+    public void setContent(DriverTransferRequest driverTransferRequest) {
         this.content = new RequestContent(
-                request.content.getFrom(),
-                request.content.getTo(),
-                request.content.getPurpose());
+                driverTransferRequest.content.getFrom(),
+                driverTransferRequest.content.getTo(),
+                driverTransferRequest.content.getPurpose());
     }
 
     public DriverId getDriverId() {
