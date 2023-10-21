@@ -20,8 +20,7 @@ public class DriverTransferRequestService {
 
     private final DriverTransferRequestAssembler assembler;
 
-    public DriverTransferRequest create(RequesterId requesterId,
-                                        LocalDateTime from, LocalDateTime to, RequestPurpose purpose) {
+    public DriverTransferRequest create(RequesterId requesterId, LocalDateTime from, LocalDateTime to, RequestPurpose purpose) {
 
         DriverTransferRequest driverTransferRequest = new DriverTransferRequest(new RequestId(UUID.randomUUID()), requesterId, from, to, purpose);
 
