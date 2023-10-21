@@ -27,4 +27,8 @@ public class Request {
     public void changeCurrentContent(RequestContent content) {
         this.content = new RequestContent(content.getFrom(), content.getTo(), content.getPurpose());
     }
+
+    public String getState() {
+        return state;
+    }
 }

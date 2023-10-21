@@ -112,4 +112,8 @@ public class State {
                     .findFirst()
                     .orElse(null);
     }
+
+    public String getName() {
+        return name;
+    }
 }
