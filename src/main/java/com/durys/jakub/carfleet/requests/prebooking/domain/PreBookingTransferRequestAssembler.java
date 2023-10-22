@@ -1,6 +1,7 @@
 package com.durys.jakub.carfleet.requests.prebooking.domain;
 
 import com.durys.jakub.carfleet.events.Events;
+import com.durys.jakub.carfleet.requests.prebooking.domain.action.RealizePreBookingRequest;
 import com.durys.jakub.carfleet.requests.state.Assembler;
 import com.durys.jakub.carfleet.requests.state.StateBuilder;
 import com.durys.jakub.carfleet.requests.state.StateConfig;
@@ -34,7 +35,9 @@ public class PreBookingTransferRequestAssembler implements Assembler<PreBookingT
                 .and()
                     .from(EDITED).to(CLOSED) //todo action
                 .and()
-                    .from(NEW).to(ARCHIVED) //todo action
+                    .from(NEW)
+                    .to(ARCHIVED)
+                    .action(new RealizePreBookingRequest(events))
                 .and()
                     .from(EDITED).to(ARCHIVED) //todo action
                 .and()

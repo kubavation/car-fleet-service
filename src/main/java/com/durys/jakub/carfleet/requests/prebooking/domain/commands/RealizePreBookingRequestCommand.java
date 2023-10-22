@@ -1,19 +1,19 @@
 package com.durys.jakub.carfleet.requests.prebooking.domain.commands;
 
-import com.durys.jakub.carfleet.requests.RequestId;
+import com.durys.jakub.carfleet.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.prebooking.domain.PreBookingTransferRequestStatus;
 import com.durys.jakub.carfleet.requests.state.ChangeCommand;
 
 public class RealizePreBookingRequestCommand extends ChangeCommand {
 
-    private final RequestId requestId;
+    private final RequesterId requesterId; //todo
 
-    public RealizePreBookingRequestCommand(RequestId requestId) {
+    public RealizePreBookingRequestCommand(RequesterId requesterId) {
         super(PreBookingTransferRequestStatus.ARCHIVED);
-        this.requestId = requestId;
+        this.requesterId = requesterId;
     }
 
-    public RequestId getRequestId() {
-        return requestId;
+    public RequesterId getRequesterId() {
+        return requesterId;
     }
 }
