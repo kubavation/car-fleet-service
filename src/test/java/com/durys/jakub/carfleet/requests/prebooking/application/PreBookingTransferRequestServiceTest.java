@@ -19,7 +19,9 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 class PreBookingTransferRequestServiceTest {
 
@@ -54,6 +56,7 @@ class PreBookingTransferRequestServiceTest {
                 .changeStatus(request.getRequestId(), new RealizePreBookingRequestCommand(request.getRequesterId()));
 
         assertEquals("ARCHIVED", result.state());
+        verify(events).publish(any());
     }
 
 }
