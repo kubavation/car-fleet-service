@@ -35,15 +35,16 @@ public class PreBookingTransferRequestAssembler implements Assembler<PreBookingT
                 .and()
                     .from(EDITED).to(CLOSED) //todo action
                 .and()
-                    .from(NEW)
-                    .to(ARCHIVED)
+                    .from(NEW).to(ARCHIVED)
                     .action(new RealizePreBookingRequest(events))
                 .and()
-                    .from(EDITED).to(ARCHIVED) //todo action
+                    .from(EDITED).to(ARCHIVED)
+                    .action(new RealizePreBookingRequest(events))
                 .and()
-                    .from(CLOSED).to(OPEN) //todo action
+                    .from(CLOSED).to(OPEN)
                 .and()
                     .from(OPEN).to(ARCHIVED)
+                    .action(new RealizePreBookingRequest(events))
                 .build();
     }
 }
