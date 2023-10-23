@@ -80,10 +80,7 @@ public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
 
 
     private State<T> getOrPut(String stateName) {
-        if (!configuredStates.containsKey(stateName)) {
-            configuredStates.put(stateName, new State<>(stateName));
-        }
-        return configuredStates.get(stateName);
+        return configuredStates.computeIfAbsent(stateName, State::new);
     }
 
     public Map<String, State<T>> getConfiguredStates() {
