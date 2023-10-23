@@ -18,6 +18,11 @@ public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
             this.builder = builder;
         }
 
+        public TransitionBuilder<T> check(BiFunction<State<T>, ChangeCommand, Boolean> checkingFunction) {
+            transition.addPredicate(checkingFunction);
+            return this; //todo
+        }
+
         public TransitionBuilder<T> to(Enum<?> to) {
 
             State<T> state = builder.getOrPut(to.name());

@@ -21,7 +21,7 @@ public class PreBookingTransferRequestAssembler implements Assembler<PreBookingT
     public StateConfig<PreBookingTransferRequest> assemble() {
 
         return new StateBuilder<PreBookingTransferRequest>()
-                .from(NEW).to(ARCHIVED)
+                .beginWith(NEW).to(ARCHIVED)
                 .execute(new RealizePreBookingRequest(events))
                 .and()
                     .from(NEW).to(EDITED)

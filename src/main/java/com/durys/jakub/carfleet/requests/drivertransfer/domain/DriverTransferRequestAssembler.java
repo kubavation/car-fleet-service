@@ -20,23 +20,23 @@ public class DriverTransferRequestAssembler implements Assembler<DriverTransferR
                 .beginWith(NEW)
                 .check(new RequestContentValidVerifier<>())
                 .and()
-                    .from(NEW).whenContentChanged().to(EDITED)
+                    .from(NEW).to(EDITED)  //todo.whenContentChanged().to(EDITED)
                 .and()
-                    .from(EDITED).whenContentChanged().to(EDITED)
+                    .from(EDITED).to(EDITED)
                 .and()
                     .from(ACCEPTED).to(CANCELLED)
                 .and()
                 .from(NEW)
                     .check(new DriverNotEmptyVerifier())
                     .to(ACCEPTED)
-                    .action(new ChangeTransportInformation())
+                    .execute(new ChangeTransportInformation())
                 .and()
                 .from(EDITED)
                     .check(new DriverNotEmptyVerifier())
                     .to(ACCEPTED)
-                    .action(new ChangeTransportInformation())
+                    .execute(new ChangeTransportInformation())
                 .and()
                     .from(NEW).to(REJECTED)
-                .build();
+                .and();
     }
 }
