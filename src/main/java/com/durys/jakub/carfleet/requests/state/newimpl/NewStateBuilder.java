@@ -1,41 +1,17 @@
 package com.durys.jakub.carfleet.requests.state.newimpl;
 
+import com.durys.jakub.carfleet.requests.Flowable;
 import com.durys.jakub.carfleet.requests.state.ChangeCommand;
+import com.durys.jakub.carfleet.requests.state.StateConfig;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-public class NewStateBuilder<T> {
+public class NewStateBuilder<T extends Flowable<T>> implements StateConfig<T> {
 
-//    public static class FinalStateConfig<T extends Flowable<T>> {
-//
-//        private final State<T> state;
-//        private final StateBuilder<T> builder;
-//
-//        FinalStateConfig(State<T> state, StateBuilder<T> builder) {
-//            this.state = state;
-//            this.builder = builder;
-//        }
-//
-//        public StateBuilder.FinalStateConfig<T> action(BiFunction<T, ChangeCommand, Void> action) {
-//            System.out.println(state.getName());
-//            System.out.println(action.getClass());
-//            state.addAfterStateChangeAction(action);
-//            return this;
-//        }
-//
-//        public StateBuilder<T> and() {
-//            return builder;
-//        }
-//
-//        public StateBuilder<T> build() {
-//            return builder;
-//        }
-//
-//    }
 
-    public static class TransitionBuilder<T> {
+    public static class TransitionBuilder<T extends Flowable<T>> {
 
         private final NewStateBuilder<T> builder;
         private StateTransition<T> transition;
@@ -67,14 +43,35 @@ public class NewStateBuilder<T> {
     private final Map<String, NewState<T>> configuredStates = new HashMap<>();
 
     private NewState<T> currentState;
+    private NewState<T> initialState;
 
     public NewStateBuilder() {
     }
 
+    @Override
+    public NewState<T> begin(T request) {
+        request.setState(initialState.name());
+        return recreate(request);
+    }
+
+    @Override
+    public NewState<T> recreate(T request) {
+        NewState<T> state = configuredStates.get(request.state());
+        state.init(request);
+        return state;
+    }
+
+
+    public TransitionBuilder<T> beginWith(Enum<?> state) {
+        if (initialState != null)
+            throw new IllegalStateException("Initial state already set to: " + initialState.name());
+
+        initialState = getOrPut(state.name());
+        return from(state);
+    }
+
     public TransitionBuilder<T> from(Enum<?> from) {
-
         this.currentState = getOrPut(from.name());
-
         return new TransitionBuilder<>(this);
     }
 

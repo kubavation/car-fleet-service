@@ -1,5 +1,6 @@
 package com.durys.jakub.carfleet.requests.state.newimpl;
 
+import com.durys.jakub.carfleet.requests.Flowable;
 import com.durys.jakub.carfleet.requests.state.ChangeCommand;
 import com.durys.jakub.carfleet.requests.state.State;
 import com.durys.jakub.carfleet.requests.state.predicates.NegativePredicate;
@@ -8,7 +9,7 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
-public class StateTransition<T> {
+public class StateTransition<T extends Flowable<T>> {
 
     private NewState<T> from;
     private NewState<T> to;
@@ -48,5 +49,9 @@ public class StateTransition<T> {
 
      public Set<BiFunction<T, ChangeCommand, Void>> getAfterStateChangeActions() {
         return afterStateChangeActions;
+    }
+
+    public Set<BiFunction<NewState<T>, ChangeCommand, Boolean>> getStateChangePredicates() {
+        return stateChangePredicates;
     }
 }

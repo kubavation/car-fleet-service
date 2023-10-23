@@ -1,5 +1,6 @@
 package com.durys.jakub.carfleet.requests.state.newimpl;
 
+import com.durys.jakub.carfleet.requests.Flowable;
 import com.durys.jakub.carfleet.requests.state.ChangeCommand;
 import com.durys.jakub.carfleet.requests.state.State;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +13,9 @@ import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class NewState<T> {
+public class NewState<T extends Flowable<T>> {
 
+    private T object;
     private final String name;
     private final Set<StateTransition<T>> possibleTransitions;
 
@@ -22,29 +24,44 @@ public class NewState<T> {
         this.possibleTransitions = new HashSet<>();
     }
 
+    public void init(T object) {
+        this.object = object;
+        this.object.setState(name);
+    }
+
+
     public NewState<T> changeState(ChangeCommand command){
 
         log.info("chaning state to {}", command.getDesiredState());
 
-        NewState<T> desiredState = find(command.getDesiredState());
+        StateTransition<T> transition = findTransition(command.getDesiredState());
 
-        System.out.println(desiredState.getName());
+        if (transition == null) {
+            throw new RuntimeException("Invalid transition");
+        }
 
-        if (desiredState == null)
-            return this;
-
-        List<BiFunction<State<T>, ChangeCommand, Boolean>> predicates = stateChangePredicates
-                .getOrDefault(desiredState, Collections.emptyList());
-
-        predicates.stream()
-                .forEach(c -> System.out.println(c));
+        Set<BiFunction<NewState<T>, ChangeCommand, Boolean>> predicates = transition.getStateChangePredicates();
 
         if (predicates.stream().allMatch(e -> e.apply(this, command))) {
-            desiredState.init(object);
-            desiredState.afterStateChangeActions.forEach(c -> System.out.println(c));
-            desiredState.afterStateChangeActions.forEach(e -> e.apply(object, command));
-            return desiredState;
+            transition.getTo().init(object);
+            transition.getAfterStateChangeActions().forEach(e -> e.apply(object, command));
+            return transition.getTo();
         }
+
+        return this;
+    }
+
+
+    public NewState<T> changeContent(T content){
+//        if (!isContentEditable())
+//            return this;
+//
+//        State<T> newState = afterContentChangeState;//local variable just to focus attention
+//        if (newState.contentChangePredicate.test(this)){
+//            newState.init(object);
+//            this.object.setContent(content);
+//            return newState;
+//        }
 
         return this;
     }
@@ -68,10 +85,10 @@ public class NewState<T> {
                 .collect(Collectors.toSet());
     }
 
-    private NewState<T> find(String desiredState) {
-        return stateChangePredicates.keySet()
+    private StateTransition<T> findTransition(String desiredState) {
+        return getPossibleTransitions()
                 .stream()
-                .filter(e -> e.name.equals(desiredState))
+                .filter(transition -> transition.getFrom().name.equals(desiredState))
                 .findFirst()
                 .orElse(null);
     }
