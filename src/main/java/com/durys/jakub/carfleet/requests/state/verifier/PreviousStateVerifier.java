@@ -15,6 +15,6 @@ public class PreviousStateVerifier<T extends Flowable<T>> implements BiFunction<
 
     @Override
     public Boolean apply(State<T> state, ChangeCommand command) {
-        return state.getName().equals(stateDescriptor);
+        return state.name().equals(stateDescriptor);
     }
 }

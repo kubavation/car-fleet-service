@@ -28,7 +28,7 @@ class PreBookingTransferRequestServiceTest {
     private final Events events = mock(Events.class);
 
     private final PreBookingTransferRequestService preBookingTransferRequestService = new PreBookingTransferRequestService(
-            new PreBookingTransferRequestAssembler(events), new MockedPreBookingTransferRequestRepository());
+            new PreBookingTransferRequestAssembler(events), new MockedPreBookingTransferRequestRepository(), events);
 
     private final RequesterId requesterId = new RequesterId(UUID.randomUUID());
     private final LocalDateTime from = LocalDateTime.now();

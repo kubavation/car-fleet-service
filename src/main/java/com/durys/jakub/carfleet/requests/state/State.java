@@ -89,4 +89,7 @@ public class State<T extends Flowable<T>> {
                 .orElse(null);
     }
 
+    public T getObject() {
+        return object;
+    }
 }
