@@ -84,7 +84,7 @@ public class State<T extends Flowable<T>> {
     private StateTransition<T> findTransition(String desiredState) {
         return getPossibleTransitions()
                 .stream()
-                .filter(transition -> transition.getFrom().name.equals(desiredState))
+                .filter(transition -> transition.getTo().name.equals(desiredState))
                 .findFirst()
                 .orElse(null);
     }
