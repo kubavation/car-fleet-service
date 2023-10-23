@@ -43,6 +43,7 @@ public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
         }
 
 
+        @Override
         public StateBuilder<T> and() {
             builder.currentState.addTransition(transition);
             return builder;
@@ -50,13 +51,17 @@ public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
 
     }
 
-    public interface StateTransitionDestinationBuilder<T extends Flowable<T>> {
+    public interface StateTransitionDestinationBuilder<T extends Flowable<T>> extends DefaultBuilder<T> {
         StateTransitionActionBuilder<T> to(Enum<?> to);
     }
 
-    public interface StateTransitionActionBuilder<T extends Flowable<T>> {
+    public interface StateTransitionActionBuilder<T extends Flowable<T>> extends DefaultBuilder<T> {
         StateTransitionActionBuilder<T> execute(BiFunction<T, ChangeCommand, Void> action);
         StateTransitionActionBuilder<T> check(BiFunction<State<T>, ChangeCommand, Boolean> predicate);
+    }
+
+    public interface DefaultBuilder<T extends Flowable<T>> {
+        StateBuilder<T> and();
     }
 
     private final Map<String, State<T>> configuredStates = new HashMap<>();
