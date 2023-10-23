@@ -1,25 +1,21 @@
-package com.durys.jakub.carfleet.requests.state.newimpl;
+package com.durys.jakub.carfleet.requests.state;
 
 import com.durys.jakub.carfleet.requests.Flowable;
-import com.durys.jakub.carfleet.requests.state.ChangeCommand;
-import com.durys.jakub.carfleet.requests.state.State;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class NewState<T extends Flowable<T>> {
+public class State<T extends Flowable<T>> {
 
     private T object;
     private final String name;
     private final Set<StateTransition<T>> possibleTransitions;
 
-    NewState(String name) {
+    State(String name) {
         this.name = name;
         this.possibleTransitions = new HashSet<>();
     }
@@ -30,7 +26,7 @@ public class NewState<T extends Flowable<T>> {
     }
 
 
-    public NewState<T> changeState(ChangeCommand command){
+    public State<T> changeState(ChangeCommand command){
 
         log.info("chaning state to {}", command.getDesiredState());
 
@@ -40,7 +36,7 @@ public class NewState<T extends Flowable<T>> {
             throw new RuntimeException("Invalid transition");
         }
 
-        Set<BiFunction<NewState<T>, ChangeCommand, Boolean>> predicates = transition.getStateChangePredicates();
+        Set<BiFunction<State<T>, ChangeCommand, Boolean>> predicates = transition.getStateChangePredicates();
 
         if (predicates.stream().allMatch(e -> e.apply(this, command))) {
             transition.getTo().init(object);
@@ -52,7 +48,7 @@ public class NewState<T extends Flowable<T>> {
     }
 
 
-    public NewState<T> changeContent(T content){
+    public State<T> changeContent(T content){
 //        if (!isContentEditable())
 //            return this;
 //

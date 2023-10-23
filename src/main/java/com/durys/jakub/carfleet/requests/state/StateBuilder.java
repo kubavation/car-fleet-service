@@ -1,28 +1,26 @@
-package com.durys.jakub.carfleet.requests.state.newimpl;
+package com.durys.jakub.carfleet.requests.state;
 
 import com.durys.jakub.carfleet.requests.Flowable;
-import com.durys.jakub.carfleet.requests.state.ChangeCommand;
-import com.durys.jakub.carfleet.requests.state.StateConfig;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-public class NewStateBuilder<T extends Flowable<T>> implements StateConfig<T> {
+public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
 
 
     public static class TransitionBuilder<T extends Flowable<T>> {
 
-        private final NewStateBuilder<T> builder;
+        private final StateBuilder<T> builder;
         private StateTransition<T> transition;
 
-        public TransitionBuilder(NewStateBuilder<T> builder) {
+        public TransitionBuilder(StateBuilder<T> builder) {
             this.builder = builder;
         }
 
         public TransitionBuilder<T> to(Enum<?> to) {
 
-            NewState<T> state = builder.getOrPut(to.name());
+            State<T> state = builder.getOrPut(to.name());
 
             transition = new StateTransition<>(builder.currentState, state);
             return this;
@@ -34,29 +32,29 @@ public class NewStateBuilder<T extends Flowable<T>> implements StateConfig<T> {
             return this;
         }
 
-        public NewStateBuilder<T> and() {
+        public StateBuilder<T> and() {
             builder.currentState.addTransition(transition);
             return builder;
         }
     }
 
-    private final Map<String, NewState<T>> configuredStates = new HashMap<>();
+    private final Map<String, State<T>> configuredStates = new HashMap<>();
 
-    private NewState<T> currentState;
-    private NewState<T> initialState;
+    private State<T> currentState;
+    private State<T> initialState;
 
-    public NewStateBuilder() {
+    public StateBuilder() {
     }
 
     @Override
-    public NewState<T> begin(T request) {
+    public State<T> begin(T request) {
         request.setState(initialState.name());
         return recreate(request);
     }
 
     @Override
-    public NewState<T> recreate(T request) {
-        NewState<T> state = configuredStates.get(request.state());
+    public State<T> recreate(T request) {
+        State<T> state = configuredStates.get(request.state());
         state.init(request);
         return state;
     }
@@ -76,14 +74,14 @@ public class NewStateBuilder<T extends Flowable<T>> implements StateConfig<T> {
     }
 
 
-    private NewState<T> getOrPut(String stateName) {
+    private State<T> getOrPut(String stateName) {
         if (!configuredStates.containsKey(stateName)) {
-            configuredStates.put(stateName, new NewState<>(stateName));
+            configuredStates.put(stateName, new State<>(stateName));
         }
         return configuredStates.get(stateName);
     }
 
-    public Map<String, NewState<T>> getConfiguredStates() {
+    public Map<String, State<T>> getConfiguredStates() {
         return configuredStates;
     }
 }

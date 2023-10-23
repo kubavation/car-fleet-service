@@ -1,27 +1,23 @@
-package com.durys.jakub.carfleet.requests.state.newimpl;
+package com.durys.jakub.carfleet.requests.state;
 
 import com.durys.jakub.carfleet.requests.Flowable;
-import com.durys.jakub.carfleet.requests.state.ChangeCommand;
-import com.durys.jakub.carfleet.requests.state.State;
-import com.durys.jakub.carfleet.requests.state.predicates.NegativePredicate;
 
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.function.Predicate;
 
 public class StateTransition<T extends Flowable<T>> {
 
-    private NewState<T> from;
-    private NewState<T> to;
+    private State<T> from;
+    private State<T> to;
 
     private final Set<BiFunction<T, ChangeCommand, Void>> afterStateChangeActions = new HashSet<>();
-    private final Set<BiFunction<NewState<T>, ChangeCommand, Boolean>> stateChangePredicates = new HashSet<>();
+    private final Set<BiFunction<State<T>, ChangeCommand, Boolean>> stateChangePredicates = new HashSet<>();
 //
 //    private final Map<com.durys.jakub.carfleet.requests.state.State<T>, List<BiFunction<com.durys.jakub.carfleet.requests.state.State<T>, ChangeCommand, Boolean>>> stateChangePredicates = new HashMap<>();
 //    private final Set<BiFunction<T, ChangeCommand, Void>> afterStateChangeActions = new HashSet<>();
 
 
-    public StateTransition(NewState<T> from, NewState<T> to) {
+    public StateTransition(State<T> from, State<T> to) {
         this.from = from;
         this.to = to;
     }
@@ -30,20 +26,20 @@ public class StateTransition<T extends Flowable<T>> {
         afterStateChangeActions.add(action);
     }
 
-    public void addPredicate(BiFunction<NewState<T>, ChangeCommand, Boolean> predicate) {
+    public void addPredicate(BiFunction<State<T>, ChangeCommand, Boolean> predicate) {
         stateChangePredicates.add(predicate);
     }
 
 
-    public void setTo(NewState<T> to) {
+    public void setTo(State<T> to) {
         this.to = to;
     }
 
-    public NewState<T> getFrom() {
+    public State<T> getFrom() {
         return from;
     }
 
-    public NewState<T> getTo() {
+    public State<T> getTo() {
         return to;
     }
 
@@ -51,7 +47,7 @@ public class StateTransition<T extends Flowable<T>> {
         return afterStateChangeActions;
     }
 
-    public Set<BiFunction<NewState<T>, ChangeCommand, Boolean>> getStateChangePredicates() {
+    public Set<BiFunction<State<T>, ChangeCommand, Boolean>> getStateChangePredicates() {
         return stateChangePredicates;
     }
 }
