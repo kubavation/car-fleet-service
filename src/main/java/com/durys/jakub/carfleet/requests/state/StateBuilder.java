@@ -9,7 +9,9 @@ import java.util.function.BiFunction;
 public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
 
 
-    public static class TransitionBuilder<T extends Flowable<T>> {
+    public static class TransitionBuilder<T extends Flowable<T>>
+            implements StateTransitionDestinationBuilder<T>,
+                       StateTransitionActionBuilder<T> {
 
         private final StateBuilder<T> builder;
         private StateTransition<T> transition;
@@ -18,12 +20,8 @@ public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
             this.builder = builder;
         }
 
-        public TransitionBuilder<T> check(BiFunction<State<T>, ChangeCommand, Boolean> checkingFunction) {
-            transition.addPredicate(checkingFunction);
-            return this; //todo
-        }
-
-        public TransitionBuilder<T> to(Enum<?> to) {
+        @Override
+        public StateTransitionActionBuilder<T> to(Enum<?> to) {
 
             State<T> state = builder.getOrPut(to.name());
 
@@ -31,16 +29,34 @@ public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
             return this;
         }
 
-        public TransitionBuilder<T> execute(BiFunction<T, ChangeCommand, Void> action) {
+        @Override
+        public StateTransitionActionBuilder<T> execute(BiFunction<T, ChangeCommand, Void> action) {
             transition.addAction(action);
             builder.currentState.addTransition(transition);
             return this;
         }
 
+        @Override
+        public StateTransitionActionBuilder<T> check(BiFunction<State<T>, ChangeCommand, Boolean> checkingFunction) {
+            transition.addPredicate(checkingFunction);
+            return this; //todo
+        }
+
+
         public StateBuilder<T> and() {
             builder.currentState.addTransition(transition);
             return builder;
         }
+
+    }
+
+    public interface StateTransitionDestinationBuilder<T extends Flowable<T>> {
+        StateTransitionActionBuilder<T> to(Enum<?> to);
+    }
+
+    public interface StateTransitionActionBuilder<T extends Flowable<T>> {
+        StateTransitionActionBuilder<T> execute(BiFunction<T, ChangeCommand, Void> action);
+        StateTransitionActionBuilder<T> check(BiFunction<State<T>, ChangeCommand, Boolean> predicate);
     }
 
     private final Map<String, State<T>> configuredStates = new HashMap<>();
@@ -65,7 +81,7 @@ public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
     }
 
 
-    public TransitionBuilder<T> beginWith(Enum<?> state) {
+    public StateTransitionDestinationBuilder<T> beginWith(Enum<?> state) {
         if (initialState != null)
             throw new IllegalStateException("Initial state already set to: " + initialState.name());
 
@@ -73,7 +89,7 @@ public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
         return from(state);
     }
 
-    public TransitionBuilder<T> from(Enum<?> from) {
+    public StateTransitionDestinationBuilder<T> from(Enum<?> from) {
         this.currentState = getOrPut(from.name());
         return new TransitionBuilder<>(this);
     }
