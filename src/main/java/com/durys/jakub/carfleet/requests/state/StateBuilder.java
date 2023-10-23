@@ -1,144 +1,110 @@
 package com.durys.jakub.carfleet.requests.state;
 
 import com.durys.jakub.carfleet.requests.Flowable;
-import com.durys.jakub.carfleet.requests.state.predicates.PositivePredicate;
-import com.durys.jakub.carfleet.requests.state.verifier.PreviousStateVerifier;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
 public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
 
-    public static class FinalStateConfig<T extends Flowable<T>> {
 
-        private final State<T> state;
+    public static class TransitionBuilder<T extends Flowable<T>>
+            implements StateTransitionDestinationBuilder<T>,
+                       StateTransitionActionBuilder<T> {
+
         private final StateBuilder<T> builder;
+        private StateTransition<T> transition;
 
-        FinalStateConfig(State<T> state, StateBuilder<T> builder) {
-            this.state = state;
+        public TransitionBuilder(StateBuilder<T> builder) {
             this.builder = builder;
         }
 
-        public FinalStateConfig<T> action(BiFunction<T, ChangeCommand, Void> action) {
-            state.addAfterStateChangeAction(action);
+        @Override
+        public StateTransitionActionBuilder<T> to(Enum<?> to) {
+
+            State<T> state = builder.getOrPut(to.name());
+
+            transition = new StateTransition<>(builder.currentState, state);
             return this;
         }
 
+        @Override
+        public StateTransitionActionBuilder<T> execute(BiFunction<T, ChangeCommand, Void> action) {
+            transition.addAction(action);
+            builder.currentState.addTransition(transition);
+            return this;
+        }
+
+        @Override
+        public StateTransitionActionBuilder<T> check(BiFunction<State<T>, ChangeCommand, Boolean> checkingFunction) {
+            transition.addPredicate(checkingFunction);
+            return this; //todo
+        }
+
+
+        @Override
         public StateBuilder<T> and() {
-            return builder;
-        }
-
-        public StateBuilder<T> build() {
+            builder.currentState.addTransition(transition);
             return builder;
         }
 
     }
 
-    private enum Mode {
-        CONTENT_CHANGE,
-        STATE_CHANGE
+    public interface StateTransitionDestinationBuilder<T extends Flowable<T>> extends DefaultBuilder<T> {
+        StateTransitionActionBuilder<T> to(Enum<?> to);
     }
 
+    public interface StateTransitionActionBuilder<T extends Flowable<T>> extends DefaultBuilder<T> {
+        StateTransitionActionBuilder<T> execute(BiFunction<T, ChangeCommand, Void> action);
+        StateTransitionActionBuilder<T> check(BiFunction<State<T>, ChangeCommand, Boolean> predicate);
+    }
 
-    private Mode mode;
-    private final Map<String, State<T>> states = new HashMap<>();
+    public interface DefaultBuilder<T extends Flowable<T>> {
+        StateBuilder<T> and();
+    }
 
-    private State<T> fromState;
+    private final Map<String, State<T>> configuredStates = new HashMap<>();
+
+    private State<T> currentState;
     private State<T> initialState;
-    private List<BiFunction<State<T>, ChangeCommand, Boolean>> predicates;
+
+    public StateBuilder() {
+    }
 
     @Override
     public State<T> begin(T request) {
-        request.setState(initialState.getName());
+        request.setState(initialState.name());
         return recreate(request);
     }
 
     @Override
     public State<T> recreate(T request) {
-        State<T> state = states.get(request.state());
+        State<T> state = configuredStates.get(request.state());
         state.init(request);
         return state;
     }
 
 
-    public StateBuilder<T> beginWith(String stateName) {
+    public StateTransitionDestinationBuilder<T> beginWith(Enum<?> state) {
         if (initialState != null)
-            throw new IllegalStateException("Initial state already set to: " + initialState.getName());
+            throw new IllegalStateException("Initial state already set to: " + initialState.name());
 
-        StateBuilder<T> config = from(stateName);
-        initialState = fromState;
-        return config;
+        initialState = getOrPut(state.name());
+        return from(state);
     }
 
-    public StateBuilder<T> beginWith(Enum<?> state) {
-        return beginWith(state.name());
+    public StateTransitionDestinationBuilder<T> from(Enum<?> from) {
+        this.currentState = getOrPut(from.name());
+        return new TransitionBuilder<>(this);
     }
 
-
-    public StateBuilder<T> from(String stateName) {
-        mode = Mode.STATE_CHANGE;
-        predicates = new ArrayList<>();
-        fromState = getOrPut(stateName);
-        return this;
-    }
-
-    public StateBuilder<T> from(Enum<?> stateName) {
-        return from(stateName.name());
-    }
-
-
-    public StateBuilder<T> check(BiFunction<State<T>, ChangeCommand, Boolean> checkingFunction) {
-        mode = Mode.STATE_CHANGE;
-        predicates.add(checkingFunction);
-        return this;
-    }
-
-    public FinalStateConfig<T> to(String stateName) {
-        State<T> toState = getOrPut(stateName);
-
-        switch (mode){
-            case STATE_CHANGE:
-                predicates.add(new PreviousStateVerifier<>(fromState.getName()));
-                fromState.addStateChangePredicates(toState, predicates);
-                break;
-            case CONTENT_CHANGE:
-                fromState.setAfterContentChangeState(toState);
-                toState.setContentChangePredicate(new PositivePredicate<>());
-        }
-
-        predicates = null;
-        fromState = null;
-        mode = null;
-
-        return new FinalStateConfig<>(toState, this);
-    }
-
-    public FinalStateConfig<T> to(Enum<?> state) {
-        return to(state.name());
-    }
-
-    /**
-     * Adds a rule of state change after a content change
-     */
-    public StateBuilder<T> whenContentChanged() {
-        mode = Mode.CONTENT_CHANGE;
-        return this;
-    }
 
     private State<T> getOrPut(String stateName) {
-        if (!states.containsKey(stateName))
-            states.put(stateName, new State<>(stateName));
-        return states.get(stateName);
+        return configuredStates.computeIfAbsent(stateName, State::new);
     }
 
-    private State<T> getOrPut(Enum<?> state) {
-        return getOrPut(state.name());
-    }
-
-    public StateBuilder<T> and() {
-        return this;
+    public Map<String, State<T>> getConfiguredStates() {
+        return configuredStates;
     }
 }

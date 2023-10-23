@@ -18,25 +18,22 @@ public class DriverTransferRequestAssembler implements Assembler<DriverTransferR
     public StateConfig<DriverTransferRequest> assemble() {
         return new StateBuilder<DriverTransferRequest>()
                 .beginWith(NEW)
-                .check(new RequestContentValidVerifier<>())
+                .to(ACCEPTED)
+                .check(new DriverNotEmptyVerifier())
+                .execute(new ChangeTransportInformation())
                 .and()
-                    .from(NEW).whenContentChanged().to(EDITED)
+                    .from(NEW).to(EDITED)  //todo.whenContentChanged().to(EDITED)
                 .and()
-                    .from(EDITED).whenContentChanged().to(EDITED)
+                    .from(EDITED).to(EDITED)
                 .and()
                     .from(ACCEPTED).to(CANCELLED)
                 .and()
-                .from(NEW)
-                    .check(new DriverNotEmptyVerifier())
-                    .to(ACCEPTED)
-                    .action(new ChangeTransportInformation())
-                .and()
                 .from(EDITED)
-                    .check(new DriverNotEmptyVerifier())
+                    //.check(new DriverNotEmptyVerifier())
                     .to(ACCEPTED)
-                    .action(new ChangeTransportInformation())
+                    .execute(new ChangeTransportInformation())
                 .and()
                     .from(NEW).to(REJECTED)
-                .build();
+                .and();
     }
 }
