@@ -25,7 +25,7 @@ public class DriverTransferRequestService {
 
         DriverTransferRequest driverTransferRequest = new DriverTransferRequest(new RequestId(UUID.randomUUID()), requesterId, from, to, purpose);
 
-        State<DriverTransferRequest> result = assembler.assemble().begin(driverTransferRequest);
+        State<DriverTransferRequest> result = assembler.configuration().begin(driverTransferRequest);
         return repository.save(result.getObject());
     }
 
@@ -35,7 +35,7 @@ public class DriverTransferRequestService {
         DriverTransferRequest driverTransferRequest = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);
 
-        State<DriverTransferRequest> result = assembler.assemble()
+        State<DriverTransferRequest> result = assembler.configuration()
                 .recreate(driverTransferRequest)
                 .changeContent(
                         new DriverTransferRequest(driverTransferRequest.getRequestId(), driverTransferRequest.getRequesterId(), from, to, purpose));
@@ -49,7 +49,7 @@ public class DriverTransferRequestService {
         DriverTransferRequest driverTransferRequest = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);
 
-        State<DriverTransferRequest> result = assembler.assemble()
+        State<DriverTransferRequest> result = assembler.configuration()
                 .recreate(driverTransferRequest)
                 .changeState(command);
 
