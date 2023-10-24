@@ -69,4 +69,17 @@ public class StateTransition<T extends Flowable<T>> {
     public Set<BiFunction<State<T>, ChangeCommand, Boolean>> getStateChangePredicates() {
         return stateChangePredicates;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StateTransition<?> that = (StateTransition<?>) o;
+        return Objects.equals(from, that.from) && Objects.equals(to, that.to) && mode == that.mode;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(from, to, mode);
+    }
 }

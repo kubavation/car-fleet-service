@@ -3,7 +3,9 @@ package com.durys.jakub.carfleet.requests.state;
 import com.durys.jakub.carfleet.requests.Flowable;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -13,11 +15,11 @@ public class State<T extends Flowable<T>> {
 
     private T object;
     private final String name;
-    private final Set<StateTransition<T>> possibleTransitions;
+    private final List<StateTransition<T>> possibleTransitions;
 
     public State(String name) {
         this.name = name;
-        this.possibleTransitions = new HashSet<>();
+        this.possibleTransitions = new ArrayList<>();
     }
 
     public void init(T object) {
@@ -75,7 +77,7 @@ public class State<T extends Flowable<T>> {
         possibleTransitions.add(transition);
     }
 
-    public Set<StateTransition<T>> getPossibleTransitions() {
+    public List<StateTransition<T>> getPossibleTransitions() {
         return possibleTransitions;
     }
 
