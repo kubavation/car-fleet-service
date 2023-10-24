@@ -12,7 +12,6 @@ import java.util.function.BiFunction;
 
 public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
 
-
     public static class TransitionBuilder<T extends Flowable<T>>
             implements StateTransitionDestinationBuilder<T>,
                        StateTransitionActionBuilder<T> {
@@ -108,7 +107,15 @@ public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
         return configuredStates.computeIfAbsent(stateName, State::new);
     }
 
+    private State<T> get(String state) {
+        return configuredStates.get(state);
+    }
+
     public Map<String, State<T>> getConfiguredStates() {
         return configuredStates;
+    }
+
+    public State<T> getInitialState() {
+        return initialState;
     }
 }
