@@ -23,14 +23,14 @@ public class StateBuilder<T extends Flowable<T>> implements InitialStateBuilder<
         @Override
         public StateTransitionActionBuilder<T> to(Enum<?> to) {
             State<T> state = builder.getOrPut(to.name());
-            transition = new StateTransition<>(builder.currentState, state);
+            transition = StateTransition.onStatusChange(builder.currentState, state);
             return this;
         }
 
         @Override
         public StateTransitionActionBuilder<T> whenContentChangesTo(Enum<?> to) {
             State<T> state = builder.getOrPut(to.name());
-            transition = new StateTransition<>(builder.currentState, state, StateTransition.Mode.ContentChanges);
+            transition = StateTransition.onContentChange(builder.currentState, state);
             return this;
         }
 
