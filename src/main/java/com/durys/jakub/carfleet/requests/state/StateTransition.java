@@ -54,6 +54,14 @@ public class StateTransition<T extends Flowable<T>> {
         return to;
     }
 
+    public boolean statusChangedTransition() {
+        return mode == StatusChanges;
+    }
+
+    public boolean contentChangedTransition() {
+        return mode == ContentChanges;
+    }
+
     public Set<BiFunction<T, ChangeCommand, Void>> getAfterStateChangeActions() {
         return afterStateChangeActions;
     }

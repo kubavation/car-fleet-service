@@ -4,6 +4,7 @@ import com.durys.jakub.carfleet.requests.Flowable;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -30,7 +31,7 @@ public class State<T extends Flowable<T>> {
 
         log.info("chaning state to {}", command.getDesiredState());
 
-        StateTransition<T> transition = findTransition(command.getDesiredState());
+        StateTransition<T> transition = findStatusChangedTransition(command.getDesiredState());
 
         if (transition == null) {
             throw new RuntimeException("Invalid transition");
@@ -48,22 +49,27 @@ public class State<T extends Flowable<T>> {
     }
 
 
-    public State<T> changeContent(T content){
-//        if (!isContentEditable())
-//            return this;
-//
-//        State<T> newState = afterContentChangeState;//local variable just to focus attention
-//        if (newState.contentChangePredicate.test(this)){
-//            newState.init(object);
-//            this.object.setContent(content);
-//            return newState;
-//        }
+    public State<T> changeContent(T content) {
 
-        return this;
+        StateTransition<T> contentChangedTransition = findContentChangedTransition(content.state());
+
+        if (contentChangedTransition == null) {
+            throw new RuntimeException("Content change not possible");
+        }
+
+        //todo validation (predicates)
+        State<T> state = contentChangedTransition.getTo();
+        state.init(object);
+        this.object.setContent(content);
+        return state;
     }
 
     public String name() {
         return name;
+    }
+
+    public T getObject() {
+        return object;
     }
 
     public void addTransition(StateTransition<T> transition) {
@@ -81,15 +87,23 @@ public class State<T extends Flowable<T>> {
                 .collect(Collectors.toSet());
     }
 
-    private StateTransition<T> findTransition(String desiredState) {
+    private StateTransition<T> findStatusChangedTransition(String desiredState) {
         return getPossibleTransitions()
                 .stream()
                 .filter(transition -> transition.getTo().name.equals(desiredState))
+                .filter(StateTransition::statusChangedTransition)
                 .findFirst()
                 .orElse(null);
     }
 
-    public T getObject() {
-        return object;
+
+    private StateTransition<T> findContentChangedTransition(String currentState) {
+        return getPossibleTransitions()
+                .stream()
+                .filter(transition -> transition.getFrom().name.equals(currentState))
+                .filter(StateTransition::contentChangedTransition)
+                .findFirst()
+                .orElse(null);
     }
+
 }
