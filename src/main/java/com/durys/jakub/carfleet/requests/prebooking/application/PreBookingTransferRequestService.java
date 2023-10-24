@@ -31,7 +31,7 @@ public class PreBookingTransferRequestService {
         PreBookingTransferRequest request = new PreBookingTransferRequest(new RequestId(UUID.randomUUID()),
                 requesterId, from, to, purpose, carId, driverId);
 
-        State<PreBookingTransferRequest> result = assembler.assemble().begin(request);
+        State<PreBookingTransferRequest> result = assembler.configuration().begin(request);
         return repository.save(result.getObject());
     }
 
@@ -42,7 +42,7 @@ public class PreBookingTransferRequestService {
         PreBookingTransferRequest request = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);
 
-        State<PreBookingTransferRequest> result = assembler.assemble()
+        State<PreBookingTransferRequest> result = assembler.configuration()
                 .recreate(request)
                 .changeContent(
                         new PreBookingTransferRequest(
@@ -57,7 +57,7 @@ public class PreBookingTransferRequestService {
         PreBookingTransferRequest request = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);
 
-        State<PreBookingTransferRequest> result = assembler.assemble()
+        State<PreBookingTransferRequest> result = assembler.configuration()
                 .recreate(request)
                 .changeState(command);
 

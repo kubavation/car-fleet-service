@@ -15,7 +15,7 @@ public class State<T extends Flowable<T>> {
     private final String name;
     private final Set<StateTransition<T>> possibleTransitions;
 
-    State(String name) {
+    public State(String name) {
         this.name = name;
         this.possibleTransitions = new HashSet<>();
     }
@@ -66,7 +66,7 @@ public class State<T extends Flowable<T>> {
         return name;
     }
 
-    void addTransition(StateTransition<T> transition) {
+    public void addTransition(StateTransition<T> transition) {
         possibleTransitions.add(transition);
     }
 

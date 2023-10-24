@@ -1,11 +1,10 @@
 package com.durys.jakub.carfleet.requests.drivertransfer.domain;
 
-import com.durys.jakub.carfleet.requests.state.Assembler;
-import com.durys.jakub.carfleet.requests.state.StateBuilder;
-import com.durys.jakub.carfleet.requests.state.StateConfig;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.actions.ChangeTransportInformation;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.predicates.DriverNotEmptyVerifier;
-import com.durys.jakub.carfleet.requests.drivertransfer.domain.predicates.RequestContentValidVerifier;
+import com.durys.jakub.carfleet.requests.state.Assembler;
+import com.durys.jakub.carfleet.requests.state.builder.StateBuilder;
+import com.durys.jakub.carfleet.requests.state.StateConfig;
 import org.springframework.stereotype.Component;
 
 import static com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequestStatus.*;
@@ -14,9 +13,20 @@ import static com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTran
 @Component
 public class DriverTransferRequestAssembler implements Assembler<DriverTransferRequest> {
 
+    private final StateConfig<DriverTransferRequest> configuration;
+
+    public DriverTransferRequestAssembler() {
+        this.configuration = assemble();
+    }
+
+    @Override
+    public StateConfig<DriverTransferRequest> configuration() {
+        return configuration;
+    }
+
     @Override
     public StateConfig<DriverTransferRequest> assemble() {
-        return new StateBuilder<DriverTransferRequest>()
+        return StateBuilder.builderForClass(DriverTransferRequest.class)
                 .beginWith(NEW)
                 .to(ACCEPTED)
                 .check(new DriverNotEmptyVerifier())
@@ -34,6 +44,6 @@ public class DriverTransferRequestAssembler implements Assembler<DriverTransferR
                     .execute(new ChangeTransportInformation())
                 .and()
                     .from(NEW).to(REJECTED)
-                .and();
+                .build();
     }
 }
