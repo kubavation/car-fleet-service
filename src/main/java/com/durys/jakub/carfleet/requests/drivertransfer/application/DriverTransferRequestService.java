@@ -38,7 +38,8 @@ public class DriverTransferRequestService {
         State<DriverTransferRequest> result = assembler.configuration()
                 .recreate(driverTransferRequest)
                 .changeContent(
-                        new DriverTransferRequest(driverTransferRequest.getRequestId(), driverTransferRequest.getRequesterId(), from, to, purpose));
+                        new DriverTransferRequest(driverTransferRequest.getRequestId(), driverTransferRequest.getRequesterId(),
+                                from, to, purpose, driverTransferRequest.state()));
 
         return repository.save(result.getObject());
     }

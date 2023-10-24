@@ -32,7 +32,7 @@ public class DriverTransferRequestAssembler implements Assembler<DriverTransferR
                 .check(new DriverNotEmptyVerifier())
                 .execute(new ChangeTransportInformation())
                 .and()
-                    .from(NEW).to(EDITED)  //todo.whenContentChanged().to(EDITED)
+                    .from(NEW).whenContentChangesTo(EDITED)  //todo.whenContentChanged().to(EDITED)
                 .and()
                     .from(EDITED).to(EDITED)
                 .and()
