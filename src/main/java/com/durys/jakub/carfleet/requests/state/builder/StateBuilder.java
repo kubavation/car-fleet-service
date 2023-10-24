@@ -1,16 +1,13 @@
 package com.durys.jakub.carfleet.requests.state.builder;
 
 import com.durys.jakub.carfleet.requests.Flowable;
-import com.durys.jakub.carfleet.requests.state.ChangeCommand;
-import com.durys.jakub.carfleet.requests.state.State;
-import com.durys.jakub.carfleet.requests.state.StateConfig;
-import com.durys.jakub.carfleet.requests.state.StateTransition;
+import com.durys.jakub.carfleet.requests.state.*;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
+public class StateBuilder<T extends Flowable<T>> {
 
     public static class TransitionBuilder<T extends Flowable<T>>
             implements StateTransitionDestinationBuilder<T>,
@@ -45,6 +42,12 @@ public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
             return this; //todo
         }
 
+        @Override
+        public StateConfig<T> build() {
+            builder.currentState.addTransition(transition);
+            return builder.build();
+        }
+
 
         @Override
         public StateBuilder<T> and() {
@@ -61,6 +64,7 @@ public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
     public interface StateTransitionActionBuilder<T extends Flowable<T>> extends DefaultBuilder<T> {
         StateTransitionActionBuilder<T> execute(BiFunction<T, ChangeCommand, Void> action);
         StateTransitionActionBuilder<T> check(BiFunction<State<T>, ChangeCommand, Boolean> predicate);
+        StateConfig<T> build();
     }
 
     public interface DefaultBuilder<T extends Flowable<T>> {
@@ -72,22 +76,11 @@ public class StateBuilder<T extends Flowable<T>> implements StateConfig<T> {
     private State<T> currentState;
     private State<T> initialState;
 
-    public StateBuilder() {
-    }
+    public StateBuilder() {}
 
-    @Override
-    public State<T> begin(T request) {
-        request.setState(initialState.name());
-        return recreate(request);
+    private StateConfig<T> build() {
+        return new DefaultStateConfig<>(this);
     }
-
-    @Override
-    public State<T> recreate(T request) {
-        State<T> state = configuredStates.get(request.state());
-        state.init(request);
-        return state;
-    }
-
 
     public StateTransitionDestinationBuilder<T> beginWith(Enum<?> state) {
         if (initialState != null)

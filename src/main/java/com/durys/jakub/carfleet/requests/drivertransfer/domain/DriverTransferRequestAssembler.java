@@ -33,6 +33,6 @@ public class DriverTransferRequestAssembler implements Assembler<DriverTransferR
                     .execute(new ChangeTransportInformation())
                 .and()
                     .from(NEW).to(REJECTED)
-                .and();
+                .build();
     }
 }

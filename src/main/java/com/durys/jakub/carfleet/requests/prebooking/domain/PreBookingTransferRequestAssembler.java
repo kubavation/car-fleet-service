@@ -26,7 +26,7 @@ public class PreBookingTransferRequestAssembler implements Assembler<PreBookingT
                 .and()
                     .from(NEW).to(EDITED)
                 .and()
-                    .from(ARCHIVED).to(ARCHIVED).and();
+                    .from(ARCHIVED).to(ARCHIVED).build();
 
 //        return new StateBuilder<PreBookingTransferRequest>()
 //                .beginWith(NEW)
