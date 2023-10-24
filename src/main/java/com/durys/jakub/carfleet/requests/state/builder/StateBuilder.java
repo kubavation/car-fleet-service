@@ -22,9 +22,7 @@ public class StateBuilder<T extends Flowable<T>> {
 
         @Override
         public StateTransitionActionBuilder<T> to(Enum<?> to) {
-
             State<T> state = builder.getOrPut(to.name());
-
             transition = new StateTransition<>(builder.currentState, state);
             return this;
         }
@@ -32,7 +30,6 @@ public class StateBuilder<T extends Flowable<T>> {
         @Override
         public StateTransitionActionBuilder<T> execute(BiFunction<T, ChangeCommand, Void> action) {
             transition.addAction(action);
-            builder.currentState.addTransition(transition);
             return this;
         }
 
@@ -44,15 +41,19 @@ public class StateBuilder<T extends Flowable<T>> {
 
         @Override
         public StateConfig<T> build() {
-            builder.currentState.addTransition(transition);
+            addTransition();
             return builder.build();
         }
 
 
         @Override
         public StateBuilder<T> and() {
-            builder.currentState.addTransition(transition);
+            addTransition();
             return builder;
+        }
+
+        private void addTransition() {
+            builder.currentState.addTransition(transition);
         }
 
     }
