@@ -28,6 +28,7 @@ public class DefaultStateConfig<T extends Flowable<T>> implements StateConfig<T>
     }
 
     private void validateStateConfiguration() {
+        
         if (stateBuilder == null) {
             throw new RuntimeException("Invalid state configuration. Provided empty state builder");
         }
@@ -41,7 +42,11 @@ public class DefaultStateConfig<T extends Flowable<T>> implements StateConfig<T>
                 .toList();
 
         if (!duplicateTransitions.isEmpty()) {
-            throw new RuntimeException("Duplicate transition");
+
+            var duplicateTransition = duplicateTransitions.get(0);
+
+            throw new RuntimeException("Duplicate transition between %s -> %s"
+                    .formatted(duplicateTransition.getFrom(), duplicateTransition.getTo()));
         }
 
     }

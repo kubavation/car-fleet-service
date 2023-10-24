@@ -4,7 +4,6 @@ import com.durys.jakub.carfleet.requests.Flowable;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiFunction;
@@ -107,4 +106,8 @@ public class State<T extends Flowable<T>> {
                 .orElse(null);
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
 }
