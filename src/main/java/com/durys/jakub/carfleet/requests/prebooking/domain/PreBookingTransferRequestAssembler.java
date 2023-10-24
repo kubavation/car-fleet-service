@@ -4,7 +4,7 @@ import com.durys.jakub.carfleet.events.Events;
 import com.durys.jakub.carfleet.requests.prebooking.domain.action.RealizePreBookingRequest;
 import com.durys.jakub.carfleet.requests.state.Assembler;
 import com.durys.jakub.carfleet.requests.state.StateConfig;
-import com.durys.jakub.carfleet.requests.state.StateBuilder;
+import com.durys.jakub.carfleet.requests.state.builder.StateBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -1,6 +1,10 @@
-package com.durys.jakub.carfleet.requests.state;
+package com.durys.jakub.carfleet.requests.state.builder;
 
 import com.durys.jakub.carfleet.requests.Flowable;
+import com.durys.jakub.carfleet.requests.state.ChangeCommand;
+import com.durys.jakub.carfleet.requests.state.State;
+import com.durys.jakub.carfleet.requests.state.StateConfig;
+import com.durys.jakub.carfleet.requests.state.StateTransition;
 
 import java.util.HashMap;
 import java.util.Map;
