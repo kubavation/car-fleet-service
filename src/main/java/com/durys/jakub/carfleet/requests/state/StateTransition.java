@@ -5,18 +5,31 @@ import com.durys.jakub.carfleet.requests.Flowable;
 import java.util.*;
 import java.util.function.BiFunction;
 
+import static com.durys.jakub.carfleet.requests.state.StateTransition.Mode.StatusChanges;
+
 public class StateTransition<T extends Flowable<T>> {
 
+    public enum Mode {
+        StatusChanges,
+        ContentChanges
+    }
+
     private final State<T> from;
-    private State<T> to;
+    private final State<T> to;
+    private final Mode mode;
 
     private final Set<BiFunction<T, ChangeCommand, Void>> afterStateChangeActions = new HashSet<>();
     private final Set<BiFunction<State<T>, ChangeCommand, Boolean>> stateChangePredicates = new HashSet<>();
 
 
     public StateTransition(State<T> from, State<T> to) {
+        this(from, to, StatusChanges);
+    }
+
+    public StateTransition(State<T> from, State<T> to, Mode mode) {
         this.from = from;
         this.to = to;
+        this.mode = mode;
     }
 
     public void addAction(BiFunction<T, ChangeCommand, Void> action) {
@@ -28,10 +41,6 @@ public class StateTransition<T extends Flowable<T>> {
     }
 
 
-    public void setTo(State<T> to) {
-        this.to = to;
-    }
-
     public State<T> getFrom() {
         return from;
     }
@@ -40,7 +49,7 @@ public class StateTransition<T extends Flowable<T>> {
         return to;
     }
 
-     public Set<BiFunction<T, ChangeCommand, Void>> getAfterStateChangeActions() {
+    public Set<BiFunction<T, ChangeCommand, Void>> getAfterStateChangeActions() {
         return afterStateChangeActions;
     }
 

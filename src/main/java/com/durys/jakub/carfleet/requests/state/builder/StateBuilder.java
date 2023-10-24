@@ -28,6 +28,13 @@ public class StateBuilder<T extends Flowable<T>> implements InitialStateBuilder<
         }
 
         @Override
+        public StateTransitionActionBuilder<T> whenContentChangesTo(Enum<?> to) {
+            State<T> state = builder.getOrPut(to.name());
+            transition = new StateTransition<>(builder.currentState, state, StateTransition.Mode.ContentChanges);
+            return this;
+        }
+
+        @Override
         public StateTransitionActionBuilder<T> execute(BiFunction<T, ChangeCommand, Void> action) {
             transition.addAction(action);
             return this;
@@ -93,10 +100,6 @@ public class StateBuilder<T extends Flowable<T>> implements InitialStateBuilder<
         return configuredStates.computeIfAbsent(stateName, State::new);
     }
 
-    private State<T> get(String state) {
-        return configuredStates.get(state);
-    }
-
     public Map<String, State<T>> getConfiguredStates() {
         return configuredStates;
     }
@@ -108,6 +111,7 @@ public class StateBuilder<T extends Flowable<T>> implements InitialStateBuilder<
 
     public interface StateTransitionDestinationBuilder<T extends Flowable<T>> extends DefaultBuilder<T> {
         StateTransitionActionBuilder<T> to(Enum<?> to);
+        StateTransitionActionBuilder<T> whenContentChangesTo(Enum<?> to);
     }
 
     public interface StateTransitionActionBuilder<T extends Flowable<T>> extends DefaultBuilder<T> {
