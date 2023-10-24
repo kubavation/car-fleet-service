@@ -12,15 +12,26 @@ import static com.durys.jakub.carfleet.requests.prebooking.domain.PreBookingTran
 
 
 @Component
-@RequiredArgsConstructor
 public class PreBookingTransferRequestAssembler implements Assembler<PreBookingTransferRequest> {
 
     private final Events events;
+    private final StateConfig<PreBookingTransferRequest> configuration;
+
+    public PreBookingTransferRequestAssembler(Events events) {
+        this.events = events;
+        this.configuration = assemble();
+    }
+
+    @Override
+    public StateConfig<PreBookingTransferRequest> configuration() {
+        return configuration;
+    }
 
     @Override
     public StateConfig<PreBookingTransferRequest> assemble() {
 
-        return new StateBuilder<PreBookingTransferRequest>()
+
+        return StateBuilder.builderForClass(PreBookingTransferRequest.class)
                 .beginWith(NEW).to(ARCHIVED)
                 .execute(new RealizePreBookingRequest(events))
                 .and()

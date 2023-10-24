@@ -13,9 +13,20 @@ import static com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTran
 @Component
 public class DriverTransferRequestAssembler implements Assembler<DriverTransferRequest> {
 
+    private final StateConfig<DriverTransferRequest> configuration;
+
+    public DriverTransferRequestAssembler() {
+        this.configuration = assemble();
+    }
+
+    @Override
+    public StateConfig<DriverTransferRequest> configuration() {
+        return configuration;
+    }
+
     @Override
     public StateConfig<DriverTransferRequest> assemble() {
-        return new StateBuilder<DriverTransferRequest>()
+        return StateBuilder.builderForClass(DriverTransferRequest.class)
                 .beginWith(NEW)
                 .to(ACCEPTED)
                 .check(new DriverNotEmptyVerifier())
