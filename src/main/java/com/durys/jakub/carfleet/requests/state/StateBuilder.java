@@ -1,7 +1,6 @@
-package com.durys.jakub.carfleet.requests.state.builder;
+package com.durys.jakub.carfleet.requests.state;
 
 import com.durys.jakub.carfleet.requests.Flowable;
-import com.durys.jakub.carfleet.requests.state.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +22,14 @@ public class StateBuilder<T extends Flowable<T>> implements InitialStateBuilder<
         @Override
         public StateTransitionActionBuilder<T> to(Enum<?> to) {
             State<T> state = builder.getOrPut(to.name());
-            transition = new StateTransition<>(builder.currentState, state);
+            transition = StateTransition.onStatusChange(builder.currentState, state);
+            return this;
+        }
+
+        @Override
+        public StateTransitionActionBuilder<T> whenContentChangesTo(Enum<?> to) {
+            State<T> state = builder.getOrPut(to.name());
+            transition = StateTransition.onContentChange(builder.currentState, state);
             return this;
         }
 
@@ -93,10 +99,6 @@ public class StateBuilder<T extends Flowable<T>> implements InitialStateBuilder<
         return configuredStates.computeIfAbsent(stateName, State::new);
     }
 
-    private State<T> get(String state) {
-        return configuredStates.get(state);
-    }
-
     public Map<String, State<T>> getConfiguredStates() {
         return configuredStates;
     }
@@ -108,6 +110,7 @@ public class StateBuilder<T extends Flowable<T>> implements InitialStateBuilder<
 
     public interface StateTransitionDestinationBuilder<T extends Flowable<T>> extends DefaultBuilder<T> {
         StateTransitionActionBuilder<T> to(Enum<?> to);
+        StateTransitionActionBuilder<T> whenContentChangesTo(Enum<?> to);
     }
 
     public interface StateTransitionActionBuilder<T extends Flowable<T>> extends DefaultBuilder<T> {

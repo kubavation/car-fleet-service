@@ -3,7 +3,7 @@ package com.durys.jakub.carfleet.requests.drivertransfer.domain;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.actions.ChangeTransportInformation;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.predicates.DriverNotEmptyVerifier;
 import com.durys.jakub.carfleet.requests.state.Assembler;
-import com.durys.jakub.carfleet.requests.state.builder.StateBuilder;
+import com.durys.jakub.carfleet.requests.state.StateBuilder;
 import com.durys.jakub.carfleet.requests.state.StateConfig;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +32,7 @@ public class DriverTransferRequestAssembler implements Assembler<DriverTransferR
                 .check(new DriverNotEmptyVerifier())
                 .execute(new ChangeTransportInformation())
                 .and()
-                    .from(NEW).to(EDITED)  //todo.whenContentChanged().to(EDITED)
+                    .from(NEW).whenContentChangesTo(EDITED)  //todo.whenContentChanged().to(EDITED)
                 .and()
                     .from(EDITED).to(EDITED)
                 .and()
