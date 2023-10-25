@@ -2,7 +2,9 @@ package com.durys.jakub.carfleet.requests.state;
 
 import com.durys.jakub.carfleet.requests.Flowable;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiFunction;
 
 import static com.durys.jakub.carfleet.requests.state.StateTransition.Mode.ContentChanges;
@@ -21,7 +23,6 @@ public class StateTransition<T extends Flowable<T>> {
 
     private final Set<BiFunction<T, ChangeCommand, Void>> afterStateChangeActions = new HashSet<>();
     private final Set<BiFunction<State<T>, ChangeCommand, Boolean>> stateChangePredicates = new HashSet<>();
-
 
     private StateTransition(State<T> from, State<T> to, Mode mode) {
         this.from = from;
