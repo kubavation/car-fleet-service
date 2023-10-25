@@ -16,6 +16,12 @@ class DefaultDriverAvailabilityService implements DriverAvailabilityService {
     @Override
     public boolean available(DriverId carId, LocalDateTime from, LocalDateTime to) {
         //todo
+        return availableInWork();
+    }
+
+
+    private boolean availableInWork() {
+        //cal to external service
         return true;
     }
 
