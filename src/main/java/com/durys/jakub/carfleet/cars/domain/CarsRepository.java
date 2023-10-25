@@ -4,4 +4,5 @@ import java.util.Optional;
 
 public interface CarsRepository {
     Optional<Car> load(CarId id);
+    void save(Car car);
 }
