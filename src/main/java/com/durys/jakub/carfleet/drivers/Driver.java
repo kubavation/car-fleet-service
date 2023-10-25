@@ -8,7 +8,6 @@ public class Driver {
     private final DriverPersonalInformation driverInformation;
     private final Status status;
 
-
     public Driver(DriverId driverId, DriverPersonalInformation driverPersonalInformation, Status status) {
         this.driverId = driverId;
         this.driverInformation = driverPersonalInformation;
