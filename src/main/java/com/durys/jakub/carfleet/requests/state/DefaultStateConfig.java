@@ -28,7 +28,7 @@ public class DefaultStateConfig<T extends Flowable<T>> implements StateConfig<T>
     }
 
     private void validateStateConfiguration() {
-        
+
         if (stateBuilder == null) {
             throw new RuntimeException("Invalid state configuration. Provided empty state builder");
         }
