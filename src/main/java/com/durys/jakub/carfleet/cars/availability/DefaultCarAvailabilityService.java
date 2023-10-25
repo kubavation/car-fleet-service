@@ -16,12 +16,17 @@ class DefaultCarAvailabilityService implements CarAvailabilityService {
     @Override
     public boolean available(CarId carId, LocalDateTime from, LocalDateTime to) {
 
-        return carInExistingTransfer(carId, from, to);
+        return !carInExistingTransfer(carId, from, to) && !needsCarOverview(carId, from, to);
 
     }
 
 
     private boolean carInExistingTransfer(CarId carId, LocalDateTime from, LocalDateTime to) {
+        //todo
+        return false;
+    }
+
+    private boolean needsCarOverview(CarId carId, LocalDateTime from, LocalDateTime to) {
         //todo
         return false;
     }
