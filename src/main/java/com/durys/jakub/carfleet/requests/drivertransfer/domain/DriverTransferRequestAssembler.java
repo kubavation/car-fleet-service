@@ -1,6 +1,8 @@
 package com.durys.jakub.carfleet.requests.drivertransfer.domain;
 
+import com.durys.jakub.carfleet.cars.availability.CarAvailabilityService;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.actions.ChangeTransportInformation;
+import com.durys.jakub.carfleet.requests.drivertransfer.domain.predicates.CarAvailablePredicate;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.predicates.DriverNotEmptyVerifier;
 import com.durys.jakub.carfleet.requests.state.Assembler;
 import com.durys.jakub.carfleet.requests.state.StateBuilder;
@@ -14,8 +16,10 @@ import static com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTran
 public class DriverTransferRequestAssembler implements Assembler<DriverTransferRequest> {
 
     private final StateConfig<DriverTransferRequest> configuration;
+    private final CarAvailabilityService carAvailabilityService;
 
-    public DriverTransferRequestAssembler() {
+    public DriverTransferRequestAssembler(CarAvailabilityService carAvailabilityService) {
+        this.carAvailabilityService = carAvailabilityService;
         this.configuration = assemble();
     }
 
@@ -30,6 +34,7 @@ public class DriverTransferRequestAssembler implements Assembler<DriverTransferR
                 .beginWith(NEW)
                 .to(ACCEPTED)
                 .check(new DriverNotEmptyVerifier())
+                .check(new CarAvailablePredicate(carAvailabilityService))
                 .execute(new ChangeTransportInformation())
                 .and()
                     .from(NEW).whenContentChangesTo(EDITED)  //todo.whenContentChanged().to(EDITED)
