@@ -50,15 +50,15 @@ public class CarFactory {
 
     }
 
-    interface BasicInformationFactory {
+    public interface BasicInformationFactory {
         FinalStepFactory withBasicInformation(String registrationNumber, String vin, FuelType fuelType);
     }
 
-    interface InitialFactory {
+    public interface InitialFactory {
         BasicInformationFactory with(CarId carId, CarType carType);
     }
 
-    interface FinalStepFactory {
+    public interface FinalStepFactory {
         Car construct();
     }
 
