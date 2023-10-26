@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DriverTransferRequestServiceTest {
 
     private final DriverTransferRequestService driverTransferRequestService
-            = new DriverTransferRequestService(new DriverTransferRequestAssembler(), new MockedDriverTransferRequestRepository());
+            = new DriverTransferRequestService(new DriverTransferRequestAssembler(null), new MockedDriverTransferRequestRepository());
 
 
     private final RequesterId requesterId = new RequesterId(UUID.randomUUID());
