@@ -1,6 +1,9 @@
 package com.durys.jakub.carfleet.cars.domain.basicinformation;
 
 
+import com.durys.jakub.carfleet.common.errors.ValidationErrorHandler;
+import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
+
 public class CarBasicInformation {
 
     private final RegistrationNumber registrationNumber;
@@ -12,4 +15,15 @@ public class CarBasicInformation {
         this.vin = vin;
         this.fuelType = fuelType;
     }
+
+    public CarBasicInformation(String registrationNumber, String vin, FuelType fuelType, ValidationErrorHandler handler) {
+        this.registrationNumber = new RegistrationNumber(registrationNumber, handler);
+        this.vin = new Vin(vin);
+        this.fuelType = fuelType;
+    }
+
+    public CarBasicInformation(String registrationNumber, String vin, FuelType fuelType) {
+        this(registrationNumber, vin, fuelType, ValidationErrorHandlers.throwingValidationErrorHandler());
+    }
+
 }

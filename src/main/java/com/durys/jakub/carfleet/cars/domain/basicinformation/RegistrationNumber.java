@@ -11,8 +11,12 @@ public class RegistrationNumber {
     private final String value;
 
     public RegistrationNumber(String value) {
+        this(value, ValidationErrorHandlers.throwingValidationErrorHandler());
+    }
+
+    public RegistrationNumber(String value, ValidationErrorHandler errorHandler) {
         this.value = value;
-        test(value, ValidationErrorHandlers.throwingValidationErrorHandler());
+        test(value, errorHandler);
     }
 
     static void test(String number, ValidationErrorHandler handler) {
