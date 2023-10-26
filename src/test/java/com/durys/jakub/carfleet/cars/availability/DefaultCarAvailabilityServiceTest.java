@@ -10,6 +10,7 @@ import com.durys.jakub.carfleet.cars.domain.basicinformation.Vin;
 import com.durys.jakub.carfleet.cars.domain.tenchicalinspection.Mileage;
 import com.durys.jakub.carfleet.cars.domain.tenchicalinspection.TechnicalInspection;
 import com.durys.jakub.carfleet.cars.infrastructure.MockedCarsRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,6 +33,7 @@ class DefaultCarAvailabilityServiceTest {
 
     private final Car car = new Car(carId, CarType.Passenger,
             new RegistrationNumber("123"), new Vin("123"), FuelType.GASOLINE, new HashSet<>());
+
 
     @Test
     void shouldReturnCarAvailable() {
@@ -74,6 +76,9 @@ class DefaultCarAvailabilityServiceTest {
 
         assertTrue(available);
     }
+
+
+
 
     private static void addTechnicalInspection(Car car, LocalDate nextInspectionAt) {
 
