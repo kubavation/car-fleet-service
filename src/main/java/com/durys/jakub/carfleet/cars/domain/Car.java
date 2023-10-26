@@ -40,4 +40,8 @@ public class Car {
                 .map(TechnicalInspection::nextAt)
                 .orElse(null);
     }
+
+    public void undergoTechnicalInspection(TechnicalInspection inspection) {
+        technicalInspections.add(inspection);
+    }
 }
