@@ -7,7 +7,7 @@ public class CarBasicInformation {
     private final Vin vin;
     private final FuelType fuelType;
 
-    CarBasicInformation(RegistrationNumber registrationNumber, Vin vin, FuelType fuelType) {
+    public CarBasicInformation(RegistrationNumber registrationNumber, Vin vin, FuelType fuelType) {
         this.registrationNumber = registrationNumber;
         this.vin = vin;
         this.fuelType = fuelType;

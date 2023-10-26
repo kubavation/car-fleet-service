@@ -1,3 +1,3 @@
 package com.durys.jakub.carfleet.cars.domain.basicinformation;
 
-record Vin(String value) {}
+public record Vin(String value) {}
