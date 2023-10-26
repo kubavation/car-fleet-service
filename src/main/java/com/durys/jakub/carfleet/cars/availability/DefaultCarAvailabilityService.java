@@ -35,10 +35,14 @@ class DefaultCarAvailabilityService implements CarAvailabilityService {
         Car car = carsRepository.load(carId)
                 .orElseThrow(RuntimeException::new);
 
-        if (Objects.isNull(car.nextTechnicalInspectionAt()) || to.toLocalDate().isAfter(car.nextTechnicalInspectionAt())) {
+        if (Objects.isNull(car.nextTechnicalInspectionAt())) {
             return false;
         }
 
-        return true;
+        if (!to.toLocalDate().isBefore(car.nextTechnicalInspectionAt())) {
+            return true;
+        }
+
+        return false;
     }
 }
