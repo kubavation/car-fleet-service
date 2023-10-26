@@ -12,7 +12,7 @@ import java.util.HashSet;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CarFactory {
 
-    public static CarBuilder withValidationErrorHandler(ValidationErrorHandler handler) {
+    public static InitialFactory withValidationErrorHandler(ValidationErrorHandler handler) {
         return new CarBuilder(handler);
     }
 
@@ -38,7 +38,7 @@ public class CarFactory {
         }
 
         @Override
-        public CarBuilder withBasicInformation(String registrationNumber, String vin, FuelType fuelType) {
+        public FinalStepFactory withBasicInformation(String registrationNumber, String vin, FuelType fuelType) {
             this.carBasicInformation = new CarBasicInformation(registrationNumber, vin, fuelType, errorHandler);
             return this;
         }
@@ -51,7 +51,7 @@ public class CarFactory {
     }
 
     interface BasicInformationFactory {
-        CarBuilder withBasicInformation(String registrationNumber, String vin, FuelType fuelType);
+        FinalStepFactory withBasicInformation(String registrationNumber, String vin, FuelType fuelType);
     }
 
     interface InitialFactory {
