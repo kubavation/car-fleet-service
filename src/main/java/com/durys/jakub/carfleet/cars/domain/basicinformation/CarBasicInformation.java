@@ -18,7 +18,7 @@ public class CarBasicInformation {
 
     public CarBasicInformation(String registrationNumber, String vin, FuelType fuelType, ValidationErrorHandler handler) {
         this.registrationNumber = new RegistrationNumber(registrationNumber, handler);
-        this.vin = new Vin(vin);
+        this.vin = new Vin(vin, handler);
         this.fuelType = fuelType;
     }
 
