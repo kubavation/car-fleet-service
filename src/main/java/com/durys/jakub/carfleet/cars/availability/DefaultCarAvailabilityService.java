@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -34,10 +35,14 @@ class DefaultCarAvailabilityService implements CarAvailabilityService {
         Car car = carsRepository.load(carId)
                 .orElseThrow(RuntimeException::new);
 
-        if (to.toLocalDate().isAfter(car.nextTechnicalInspectionAt())) {
+        if (Objects.isNull(car.nextTechnicalInspectionAt())) {
             return false;
         }
 
-        return true;
+        if (!to.toLocalDate().isBefore(car.nextTechnicalInspectionAt())) {
+            return true;
+        }
+
+        return false;
     }
 }
