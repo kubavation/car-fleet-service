@@ -2,11 +2,14 @@ package com.durys.jakub.carfleet.cars.domain.application;
 
 import com.durys.jakub.carfleet.cars.domain.*;
 import com.durys.jakub.carfleet.cars.domain.basicinformation.FuelType;
+import com.durys.jakub.carfleet.cars.domain.tenchicalinspection.Mileage;
 import com.durys.jakub.carfleet.cars.infrastructure.MockedCarsRepository;
 import com.durys.jakub.carfleet.common.OperationResult;
 import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,6 +60,22 @@ class CarsApplicationServiceTest {
 
         assertEquals(OperationResult.Status.Success, result.status());
         assertEquals(Car.CarStatus.Unregistered, find(carId).status());
+    }
+
+    @Test
+    void shouldSuccessfullyUndergoTechnicalInspection() {
+
+        CarId carId = addCar();
+
+        LocalDate at = LocalDate.now();
+        String description = "technical inspection";
+        BigDecimal mileage = BigDecimal.TEN;
+        LocalDate nextAt = LocalDate.of(2024, 1 , 1);
+
+        OperationResult result = carsApplicationService.undergoTechnicalInspection(carId, at, description, mileage, nextAt);
+
+        assertEquals(OperationResult.Status.Success, result.status());
+        assertEquals(nextAt, find(carId).nextTechnicalInspectionAt());
     }
 
 
