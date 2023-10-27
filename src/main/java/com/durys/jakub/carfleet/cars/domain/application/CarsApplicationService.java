@@ -39,6 +39,14 @@ public class CarsApplicationService {
     }
 
     public OperationResult unregister(CarId carId) {
+
+        Car car = carsRepository.load(carId)
+                .orElseThrow(RuntimeException::new);//todo
+
+        car.unregister();
+
+        carsRepository.save(car);
+
         return OperationResult.success();
     }
 }

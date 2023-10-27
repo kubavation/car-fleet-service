@@ -56,9 +56,9 @@ class CarsApplicationServiceTest {
         OperationResult result = carsApplicationService.unregister(carId);
 
         assertEquals(OperationResult.Status.Success, result.status());
-        assertTrue(CarStatus.UNREGISTERED, find(carId).status());
+        assertEquals(Car.CarStatus.Unregistered, find(carId).status());
     }
-    
+
 
     private CarId addCar() {
 
