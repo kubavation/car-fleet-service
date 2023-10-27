@@ -2,11 +2,14 @@ package com.durys.jakub.carfleet.cars.domain.application;
 
 import com.durys.jakub.carfleet.cars.domain.*;
 import com.durys.jakub.carfleet.cars.domain.basicinformation.FuelType;
+import com.durys.jakub.carfleet.cars.domain.tenchicalinspection.Mileage;
+import com.durys.jakub.carfleet.cars.domain.tenchicalinspection.TechnicalInspection;
 import com.durys.jakub.carfleet.common.OperationResult;
-import com.durys.jakub.carfleet.common.errors.ValidationErrorHandler;
 import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Component
@@ -17,7 +20,6 @@ public class CarsApplicationService {
     public CarsApplicationService(CarsRepository carsRepository) {
         this.carsRepository = carsRepository;
     }
-
 
     public OperationResult register(CarType carType, String registrationNumber, String vin, FuelType fuelType) {
 
@@ -38,6 +40,7 @@ public class CarsApplicationService {
         return OperationResult.success();
     }
 
+
     public OperationResult unregister(CarId carId) {
 
         Car car = carsRepository.load(carId)
@@ -49,4 +52,18 @@ public class CarsApplicationService {
 
         return OperationResult.success();
     }
+
+    public OperationResult undergoTechnicalInspection(CarId carId, LocalDate at, String description, BigDecimal mileage, LocalDate nextAt) {
+
+        Car car = carsRepository.load(carId)
+                .orElseThrow(RuntimeException::new);//todo
+
+        car.undergoTechnicalInspection(new TechnicalInspection(at, description, new Mileage(mileage), nextAt));
+
+        carsRepository.save(car);
+
+        return OperationResult.success();
+    }
+
+
 }
