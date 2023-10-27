@@ -2,6 +2,7 @@ package com.durys.jakub.carfleet.cars.domain.application;
 
 import com.durys.jakub.carfleet.cars.domain.*;
 import com.durys.jakub.carfleet.cars.domain.basicinformation.FuelType;
+import com.durys.jakub.carfleet.common.OperationResult;
 import com.durys.jakub.carfleet.common.errors.ValidationErrorHandler;
 import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ public class CarsApplicationService {
     }
 
 
-    public void register(CarType carType, String registrationNumber, String vin, FuelType fuelType) {
+    public OperationResult register(CarType carType, String registrationNumber, String vin, FuelType fuelType) {
 
         var validationErrorHandler = ValidationErrorHandlers.aggregatingValidationErrorHandler();
 
@@ -29,5 +30,15 @@ public class CarsApplicationService {
                 .construct();
 
         carsRepository.save(registeredCar);
+
+        if (validationErrorHandler.hasErrors()) {
+            return OperationResult.failure(validationErrorHandler.errorMessages());
+        }
+
+        return OperationResult.success();
+    }
+
+    public OperationResult unregister(CarId carId) {
+        return OperationResult.success();
     }
 }
