@@ -1,7 +1,5 @@
 package com.durys.jakub.carfleet.common;
 
-import com.durys.jakub.carfleet.common.errors.ValidationError;
-
 import java.util.Set;
 
 public class OperationResult {
@@ -11,7 +9,7 @@ public class OperationResult {
         Failure
     }
 
-    private final Set<ValidationError> validationErrors;
+    private final Set<String> errorMessages;
     private final Status status;
 
 
@@ -19,20 +17,20 @@ public class OperationResult {
         return new OperationResult(Status.Success, Set.of());
     }
 
-    public static OperationResult failure(Set<ValidationError> validationErrors) {
-        return new OperationResult(Status.Failure, validationErrors);
+    public static OperationResult failure( Set<String> errorMessages) {
+        return new OperationResult(Status.Failure, errorMessages);
     }
 
-    private OperationResult(Status status, Set<ValidationError> validationErrors) {
+    private OperationResult(Status status, Set<String> errorMessages) {
         this.status = status;
-        this.validationErrors = validationErrors;
+        this.errorMessages = errorMessages;
     }
 
     public Status status() {
         return status;
     }
 
-    public Set<ValidationError> validationErrors() {
-        return validationErrors;
+    public Set<String> errorMessages() {
+        return errorMessages;
     }
 }
