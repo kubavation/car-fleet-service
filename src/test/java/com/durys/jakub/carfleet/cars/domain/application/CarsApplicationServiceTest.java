@@ -66,7 +66,7 @@ class CarsApplicationServiceTest {
 
         Car registeredCar = CarFactory
                 .withValidationErrorHandler(ValidationErrorHandlers.aggregatingValidationErrorHandler())
-                .with(new CarId(UUID.randomUUID()), CarType.Passenger)
+                .with(carId, CarType.Passenger)
                 .withBasicInformation("123", "123", FuelType.GASOLINE)
                 .construct();
 
