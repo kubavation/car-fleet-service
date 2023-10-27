@@ -14,6 +14,11 @@ import java.util.Set;
 @Getter
 public class Car {
 
+    public enum CarStatus {
+        Registered,
+        Unregistered
+    }
+
     private final CarId carId;
     private final CarType carType;
 
@@ -21,17 +26,30 @@ public class Car {
 
     private final Set<TechnicalInspection> technicalInspections;
 
+    private CarStatus status;
+
     public Car(CarId carId, CarType carType, CarBasicInformation basicInformation,
                Set<TechnicalInspection> technicalInspections) {
         this.carId = carId;
         this.carType = carType;
         this.basicInformation = basicInformation;
         this.technicalInspections = technicalInspections;
+        this.status = CarStatus.Registered;
     }
 
     public Car(CarId id, CarType carType, RegistrationNumber number, Vin vin, FuelType fuelType,
                Set<TechnicalInspection> technicalInspections) {
         this(id, carType, new CarBasicInformation(number, vin, fuelType), technicalInspections);
+    }
+
+
+    public void unregister() {
+        this.status = CarStatus.Unregistered;
+    }
+
+
+    public void undergoTechnicalInspection(TechnicalInspection inspection) {
+        technicalInspections.add(inspection);
     }
 
     public LocalDate nextTechnicalInspectionAt() {
@@ -41,7 +59,8 @@ public class Car {
                 .orElse(null);
     }
 
-    public void undergoTechnicalInspection(TechnicalInspection inspection) {
-        technicalInspections.add(inspection);
+    public CarStatus status() {
+        return status;
     }
+
 }
