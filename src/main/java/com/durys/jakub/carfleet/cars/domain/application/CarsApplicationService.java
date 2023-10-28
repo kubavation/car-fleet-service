@@ -31,21 +31,20 @@ public class CarsApplicationService {
                 .withBasicInformation(registrationNumber, vin, fuelType)
                 .construct();
 
-        carsRepository.save(registeredCar);
 
         if (validationErrorHandler.hasErrors()) {
             return OperationResult.failure(validationErrorHandler.errorMessages());
         }
 
+        carsRepository.save(registeredCar);
         return OperationResult.success();
     }
 
 
     public OperationResult unregister(CarId carId) {
 
-        Car car = carsRepository.load(carId);
-
-        car.unregister();
+        Car car = carsRepository.load(carId)
+                .unregister();
 
         carsRepository.save(car);
 

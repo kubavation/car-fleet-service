@@ -53,22 +53,24 @@ public class Car {
     }
 
 
-    public void unregister() {
+    public Car unregister() {
 
         if (status != CarStatus.Registered) {
             throw new ValidationError("Car cannot be unregistered");
         }
 
         status = CarStatus.Unregistered;
+        return this;
     }
 
-    public void register() {
+    public Car register() {
 
         if (status != CarStatus.Unregistered) {
             throw new ValidationError("Car cannot be registered");
         }
 
         status = CarStatus.Registered;
+        return this;
     }
 
 
