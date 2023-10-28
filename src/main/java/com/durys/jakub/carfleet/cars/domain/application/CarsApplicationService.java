@@ -29,7 +29,8 @@ public class CarsApplicationService {
                 .withValidationErrorHandler(validationErrorHandler)
                 .with(new CarId(UUID.randomUUID()), carType)
                 .withBasicInformation(registrationNumber, vin, fuelType)
-                .construct();
+                .construct()
+                    .register();
 
 
         if (validationErrorHandler.hasErrors()) {

@@ -1,6 +1,10 @@
 package com.durys.jakub.carfleet.requests.application;
 
+import com.durys.jakub.carfleet.cars.availability.CarAvailabilityService;
+import com.durys.jakub.carfleet.cars.availability.DefaultCarAvailabilityService;
 import com.durys.jakub.carfleet.cars.domain.CarId;
+import com.durys.jakub.carfleet.cars.domain.CarsRepository;
+import com.durys.jakub.carfleet.cars.infrastructure.MockedCarsRepository;
 import com.durys.jakub.carfleet.drivers.DriverId;
 import com.durys.jakub.carfleet.requests.drivertransfer.application.DriverTransferRequestService;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequest;
@@ -13,6 +17,8 @@ import com.durys.jakub.carfleet.requests.drivertransfer.infrastructure.MockedDri
 import com.durys.jakub.carfleet.requests.state.ChangeCommand;
 import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -21,8 +27,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DriverTransferRequestServiceTest {
 
+    private final CarsRepository carsRepository = new MockedCarsRepository();
+
+    @Mock
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    private final CarAvailabilityService carAvailabilityService = new DefaultCarAvailabilityService(namedParameterJdbcTemplate, carsRepository);
+
     private final DriverTransferRequestService driverTransferRequestService
-            = new DriverTransferRequestService(new DriverTransferRequestAssembler(null), new MockedDriverTransferRequestRepository());
+            = new DriverTransferRequestService(new DriverTransferRequestAssembler(carAvailabilityService), new MockedDriverTransferRequestRepository());
 
 
     private final RequesterId requesterId = new RequesterId(UUID.randomUUID());

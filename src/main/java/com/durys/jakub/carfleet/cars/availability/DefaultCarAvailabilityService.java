@@ -12,7 +12,7 @@ import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
-class DefaultCarAvailabilityService implements CarAvailabilityService {
+public class DefaultCarAvailabilityService implements CarAvailabilityService {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final CarsRepository carsRepository;
