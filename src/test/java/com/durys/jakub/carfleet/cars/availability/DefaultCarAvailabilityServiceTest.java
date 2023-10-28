@@ -10,16 +10,16 @@ import com.durys.jakub.carfleet.cars.domain.basicinformation.Vin;
 import com.durys.jakub.carfleet.cars.domain.tenchicalinspection.Mileage;
 import com.durys.jakub.carfleet.cars.domain.tenchicalinspection.TechnicalInspection;
 import com.durys.jakub.carfleet.cars.infrastructure.MockedCarsRepository;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DefaultCarAvailabilityServiceTest {
 
@@ -32,7 +32,7 @@ class DefaultCarAvailabilityServiceTest {
     private final CarId carId = new CarId(UUID.randomUUID());
 
     private final Car car = new Car(carId, CarType.Passenger,
-            new RegistrationNumber("123"), new Vin("123"), FuelType.GASOLINE, new HashSet<>());
+            new RegistrationNumber("123"), new Vin("123"), FuelType.GASOLINE, new HashSet<>(), Car.CarStatus.Registered);
 
 
     @Test
@@ -83,8 +83,7 @@ class DefaultCarAvailabilityServiceTest {
     private static void addTechnicalInspection(Car car, LocalDate nextInspectionAt) {
 
         TechnicalInspection inspection = new TechnicalInspection(
-                LocalDate.of(2022, 1, 3), "Description",
-                new Mileage(BigDecimal.valueOf(2000)), nextInspectionAt);
+                LocalDate.of(2022, 1, 3), "Description", BigDecimal.valueOf(2000), nextInspectionAt);
 
         car.undergoTechnicalInspection(inspection);
     }

@@ -29,14 +29,15 @@ public class CarsApplicationService {
                 .withValidationErrorHandler(validationErrorHandler)
                 .with(new CarId(UUID.randomUUID()), carType)
                 .withBasicInformation(registrationNumber, vin, fuelType)
-                .construct();
+                .construct()
+                    .register();
 
-        carsRepository.save(registeredCar);
 
         if (validationErrorHandler.hasErrors()) {
             return OperationResult.failure(validationErrorHandler.errorMessages());
         }
 
+        carsRepository.save(registeredCar);
         return OperationResult.success();
     }
 
@@ -44,9 +45,7 @@ public class CarsApplicationService {
     public OperationResult unregister(CarId carId) {
 
         Car car = carsRepository.load(carId)
-                .orElseThrow(RuntimeException::new);//todo
-
-        car.unregister();
+                .unregister();
 
         carsRepository.save(car);
 
@@ -55,10 +54,9 @@ public class CarsApplicationService {
 
     public OperationResult undergoTechnicalInspection(CarId carId, LocalDate at, String description, BigDecimal mileage, LocalDate nextAt) {
 
-        Car car = carsRepository.load(carId)
-                .orElseThrow(RuntimeException::new);//todo
+        Car car = carsRepository.load(carId);
 
-        car.undergoTechnicalInspection(new TechnicalInspection(at, description, new Mileage(mileage), nextAt));
+        car.undergoTechnicalInspection(new TechnicalInspection(at, description, mileage, nextAt));
 
         carsRepository.save(car);
 

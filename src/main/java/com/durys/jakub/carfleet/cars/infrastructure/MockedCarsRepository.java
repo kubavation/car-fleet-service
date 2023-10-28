@@ -6,7 +6,7 @@ import com.durys.jakub.carfleet.cars.domain.CarsRepository;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
 
 public class MockedCarsRepository implements CarsRepository {
 
@@ -18,8 +18,14 @@ public class MockedCarsRepository implements CarsRepository {
     }
 
     @Override
-    public Optional<Car> load(CarId id) {
-        return Optional.ofNullable(DB.get(id));
+    public Car load(CarId id) {
+        Car car = DB.get(id);
+
+        if (Objects.isNull(car)) {
+            throw new RuntimeException("Car not found");
+        }
+
+        return car;
     }
 
 }

@@ -1,6 +1,11 @@
 package com.durys.jakub.carfleet.requests.application;
 
-import com.durys.jakub.carfleet.cars.domain.CarId;
+import com.durys.jakub.carfleet.cars.availability.CarAvailabilityService;
+import com.durys.jakub.carfleet.cars.availability.DefaultCarAvailabilityService;
+import com.durys.jakub.carfleet.cars.domain.*;
+import com.durys.jakub.carfleet.cars.domain.basicinformation.FuelType;
+import com.durys.jakub.carfleet.cars.infrastructure.MockedCarsRepository;
+import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
 import com.durys.jakub.carfleet.drivers.DriverId;
 import com.durys.jakub.carfleet.requests.drivertransfer.application.DriverTransferRequestService;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequest;
@@ -13,6 +18,9 @@ import com.durys.jakub.carfleet.requests.drivertransfer.infrastructure.MockedDri
 import com.durys.jakub.carfleet.requests.state.ChangeCommand;
 import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -21,8 +29,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DriverTransferRequestServiceTest {
 
+    private final CarsRepository carsRepository = new MockedCarsRepository();
+
+    @Mock
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    private final CarAvailabilityService carAvailabilityService = new DefaultCarAvailabilityService(namedParameterJdbcTemplate, carsRepository);
+
     private final DriverTransferRequestService driverTransferRequestService
-            = new DriverTransferRequestService(new DriverTransferRequestAssembler(null), new MockedDriverTransferRequestRepository());
+            = new DriverTransferRequestService(new DriverTransferRequestAssembler(carAvailabilityService), new MockedDriverTransferRequestRepository());
 
 
     private final RequesterId requesterId = new RequesterId(UUID.randomUUID());
@@ -53,7 +68,7 @@ class DriverTransferRequestServiceTest {
 
         RequestId requestId = new RequestId(UUID.randomUUID());
         DriverId driverId = new DriverId(UUID.randomUUID());
-        CarId carId = new CarId(UUID.randomUUID());
+        CarId carId = addCar();
 
         DriverTransferRequest result = driverTransferRequestService.create(requesterId, from, to, purpose);
 
@@ -80,18 +95,34 @@ class DriverTransferRequestServiceTest {
     void shouldSaveRequestAndChangeStatusToCanceled() {
 
         DriverId driverId = new DriverId(UUID.randomUUID());
-        CarId carId = new CarId(UUID.randomUUID());
+        CarId carId = addCar();
+
+
         DriverTransferRequest result = driverTransferRequestService.create(requesterId, from, to, purpose);
 
         DriverTransferRequest saved = driverTransferRequestService.changeStatus(result.getRequestId(),
                 new ChangeTransportInformationCommand(driverId, carId));
 
 
-
         DriverTransferRequest driverTransferRequest = driverTransferRequestService.changeStatus(saved.getRequestId(),
                 new ChangeCommand(DriverTransferRequestStatus.CANCELLED));
 
         assertEquals("CANCELLED", driverTransferRequest.state());
+    }
+
+
+    private CarId addCar() {
+
+        CarId carId = new CarId(UUID.randomUUID());
+
+        Car registeredCar = CarFactory
+                .withValidationErrorHandler(ValidationErrorHandlers.aggregatingValidationErrorHandler())
+                .with(carId, CarType.Passenger)
+                .withBasicInformation("123", "123", FuelType.GASOLINE)
+                .construct();
+
+        carsRepository.save(registeredCar);
+        return carId;
     }
 
 }

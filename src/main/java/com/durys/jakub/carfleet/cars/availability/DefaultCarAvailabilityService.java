@@ -12,7 +12,7 @@ import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
-class DefaultCarAvailabilityService implements CarAvailabilityService {
+public class DefaultCarAvailabilityService implements CarAvailabilityService {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final CarsRepository carsRepository;
@@ -32,8 +32,7 @@ class DefaultCarAvailabilityService implements CarAvailabilityService {
 
     private boolean needsTechnicalInspection(CarId carId, LocalDateTime from, LocalDateTime to) {
 
-        Car car = carsRepository.load(carId)
-                .orElseThrow(RuntimeException::new);
+        Car car = carsRepository.load(carId);
 
         if (Objects.isNull(car.nextTechnicalInspectionAt())) {
             return false;

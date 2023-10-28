@@ -94,8 +94,7 @@ class CarsApplicationServiceTest {
     }
 
     private Car find(CarId carId) {
-        return carsRepository.load(carId)
-                .orElseThrow(() -> new RuntimeException("TESTS | Car not found"));
+        return carsRepository.load(carId);
     }
 
 }
