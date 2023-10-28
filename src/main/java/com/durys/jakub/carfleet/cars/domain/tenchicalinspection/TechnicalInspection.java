@@ -44,10 +44,9 @@ public class TechnicalInspection {
 
         if (Objects.isNull(nextAt)) {
             handler.handle(new ValidationError("Date of next technical inspection cannot be empty"));
-            return;
         }
 
-        if (Objects.nonNull(at) && nextAt.isBefore(at)) {
+        if (Objects.nonNull(at) && Objects.nonNull(nextAt) && nextAt.isBefore(at)) {
             handler.handle(new ValidationError("Date of next technical inspection cannot be earlier " +
                     "than current technical inspection date"));
         }
