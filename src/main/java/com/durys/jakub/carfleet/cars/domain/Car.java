@@ -5,6 +5,7 @@ import com.durys.jakub.carfleet.cars.domain.basicinformation.FuelType;
 import com.durys.jakub.carfleet.cars.domain.basicinformation.RegistrationNumber;
 import com.durys.jakub.carfleet.cars.domain.basicinformation.Vin;
 import com.durys.jakub.carfleet.cars.domain.tenchicalinspection.TechnicalInspection;
+import com.durys.jakub.carfleet.common.errors.ValidationError;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -29,6 +30,15 @@ public class Car {
     private CarStatus status;
 
     public Car(CarId carId, CarType carType, CarBasicInformation basicInformation,
+               Set<TechnicalInspection> technicalInspections, CarStatus status) {
+        this.carId = carId;
+        this.carType = carType;
+        this.basicInformation = basicInformation;
+        this.technicalInspections = technicalInspections;
+        this.status = status;
+    }
+
+    public Car(CarId carId, CarType carType, CarBasicInformation basicInformation,
                Set<TechnicalInspection> technicalInspections) {
         this.carId = carId;
         this.carType = carType;
@@ -38,13 +48,27 @@ public class Car {
     }
 
     public Car(CarId id, CarType carType, RegistrationNumber number, Vin vin, FuelType fuelType,
-               Set<TechnicalInspection> technicalInspections) {
-        this(id, carType, new CarBasicInformation(number, vin, fuelType), technicalInspections);
+               Set<TechnicalInspection> technicalInspections, CarStatus status) {
+        this(id, carType, new CarBasicInformation(number, vin, fuelType), technicalInspections, status);
     }
 
 
     public void unregister() {
-        this.status = CarStatus.Unregistered;
+
+        if (status != CarStatus.Registered) {
+            throw new ValidationError("Car cannot be unregistered");
+        }
+
+        status = CarStatus.Unregistered;
+    }
+
+    public void register() {
+
+        if (status != CarStatus.Unregistered) {
+            throw new ValidationError("Car cannot be registered");
+        }
+
+        status = CarStatus.Registered;
     }
 
 

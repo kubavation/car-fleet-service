@@ -32,7 +32,7 @@ class DefaultCarAvailabilityServiceTest {
     private final CarId carId = new CarId(UUID.randomUUID());
 
     private final Car car = new Car(carId, CarType.Passenger,
-            new RegistrationNumber("123"), new Vin("123"), FuelType.GASOLINE, new HashSet<>());
+            new RegistrationNumber("123"), new Vin("123"), FuelType.GASOLINE, new HashSet<>(), Car.CarStatus.Registered);
 
 
     @Test
