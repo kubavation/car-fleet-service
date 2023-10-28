@@ -43,8 +43,7 @@ public class CarsApplicationService {
 
     public OperationResult unregister(CarId carId) {
 
-        Car car = carsRepository.load(carId)
-                .orElseThrow(RuntimeException::new);//todo
+        Car car = carsRepository.load(carId);
 
         car.unregister();
 
@@ -55,8 +54,7 @@ public class CarsApplicationService {
 
     public OperationResult undergoTechnicalInspection(CarId carId, LocalDate at, String description, BigDecimal mileage, LocalDate nextAt) {
 
-        Car car = carsRepository.load(carId)
-                .orElseThrow(RuntimeException::new);//todo
+        Car car = carsRepository.load(carId);
 
         car.undergoTechnicalInspection(new TechnicalInspection(at, description, mileage, nextAt));
 
