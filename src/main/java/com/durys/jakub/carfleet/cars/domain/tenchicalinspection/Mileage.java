@@ -24,9 +24,13 @@ public class Mileage {
 
         if (Objects.isNull(value)) {
             handler.handle(new ValidationError("Mileage value cannot be empty"));
+            return;
         }
 
-        //todo additional validation
+        if (value.compareTo(BigDecimal.ZERO) < 0) {
+            handler.handle(new ValidationError("Mileage value cannot be less than 0"));
+        }
+
     }
 
     public BigDecimal value() {

@@ -10,16 +10,16 @@ import com.durys.jakub.carfleet.cars.domain.basicinformation.Vin;
 import com.durys.jakub.carfleet.cars.domain.tenchicalinspection.Mileage;
 import com.durys.jakub.carfleet.cars.domain.tenchicalinspection.TechnicalInspection;
 import com.durys.jakub.carfleet.cars.infrastructure.MockedCarsRepository;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DefaultCarAvailabilityServiceTest {
 
