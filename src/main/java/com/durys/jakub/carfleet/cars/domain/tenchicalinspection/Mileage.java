@@ -23,7 +23,7 @@ public class Mileage {
     static void test(BigDecimal value, ValidationErrorHandler handler) {
 
         if (Objects.isNull(value)) {
-            handler.handle(new ValidationError("Registration number cannot be empty"));
+            handler.handle(new ValidationError("Mileage value cannot be empty"));
         }
 
         //todo additional validation
