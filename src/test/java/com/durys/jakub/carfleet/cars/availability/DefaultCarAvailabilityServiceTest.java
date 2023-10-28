@@ -83,8 +83,7 @@ class DefaultCarAvailabilityServiceTest {
     private static void addTechnicalInspection(Car car, LocalDate nextInspectionAt) {
 
         TechnicalInspection inspection = new TechnicalInspection(
-                LocalDate.of(2022, 1, 3), "Description",
-                new Mileage(BigDecimal.valueOf(2000)), nextInspectionAt);
+                LocalDate.of(2022, 1, 3), "Description", BigDecimal.valueOf(2000), nextInspectionAt);
 
         car.undergoTechnicalInspection(inspection);
     }

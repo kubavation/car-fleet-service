@@ -53,4 +53,12 @@ public class TechnicalInspection {
         }
 
     }
+
+    public LocalDate at() {
+        return at;
+    }
+
+    public LocalDate nextAt() {
+        return nextAt;
+    }
 }

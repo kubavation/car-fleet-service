@@ -58,7 +58,7 @@ public class CarsApplicationService {
         Car car = carsRepository.load(carId)
                 .orElseThrow(RuntimeException::new);//todo
 
-        car.undergoTechnicalInspection(new TechnicalInspection(at, description, new Mileage(mileage), nextAt));
+        car.undergoTechnicalInspection(new TechnicalInspection(at, description, mileage, nextAt));
 
         carsRepository.save(car);
 
