@@ -2,6 +2,7 @@ package com.durys.jakub.carfleet.transfers.domain;
 
 import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.drivers.DriverId;
+import com.durys.jakub.carfleet.requests.RequestId;
 import com.durys.jakub.carfleet.sharedkernel.TransferPath;
 
 import java.util.Set;
@@ -22,5 +23,9 @@ public class Transfer {
         this.participants = participants;
         this.carId = carId;
         this.driverId = driverId;
+    }
+
+    void addParticipant(ParticipantId participantId, String name, RequestId registrationSource) {
+        participants.add(new TransferParticipant(participantId, name, registrationSource));
     }
 }
