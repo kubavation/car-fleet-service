@@ -24,4 +24,9 @@ public class Driver {
         this.status = Status.ARCHIVED;
     }
 
+    public void updatePersonalInformation(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
 }
