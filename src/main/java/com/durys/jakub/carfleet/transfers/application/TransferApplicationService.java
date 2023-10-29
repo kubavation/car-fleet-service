@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class TransferService {
+public class TransferApplicationService {
 
     //todo
 }

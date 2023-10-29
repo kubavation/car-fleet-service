@@ -5,16 +5,28 @@ import com.durys.jakub.carfleet.common.Status;
 public class Driver {
 
     private final DriverId driverId;
-    private final DriverPersonalInformation driverInformation;
-    private final Status status;
+    private String firstName;
+    private String lastName;
+    private Status status;
 
-    public Driver(DriverId driverId, DriverPersonalInformation driverPersonalInformation, Status status) {
+    public Driver(DriverId driverId, String firstName, String lastName, Status status) {
         this.driverId = driverId;
-        this.driverInformation = driverPersonalInformation;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.status = status;
     }
 
-    public Driver(DriverId driverId, DriverPersonalInformation driverPersonalInformation) {
-        this(driverId, driverPersonalInformation, Status.ACTIVE);
+    public Driver(DriverId driverId, String firstName, String lastName) {
+        this(driverId, firstName, lastName, Status.ACTIVE);
     }
+
+    public void archive() {
+        this.status = Status.ARCHIVED;
+    }
+
+    public void updatePersonalInformation(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
 }
