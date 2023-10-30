@@ -5,14 +5,13 @@ import com.durys.jakub.carfleet.drivers.DriverId;
 import com.durys.jakub.carfleet.requests.RequestId;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 public class Transfer {
 
     public enum Type {
-        Group,
-        Single
+        Group, Single
     }
+
 
     private final TransferId transferId;
     private final TransferPath transferPath;
@@ -35,6 +34,10 @@ public class Transfer {
         this.at = at;
         this.type = type;
         this.transferNumber = new TransferNumber(transferPath, type, at);
+    }
+
+    public void addParticipant(ParticipantId participantId, String name, RequestId registrationSource) {
+        transferPath.addParticipant(participantId, name, registrationSource);
     }
 
 }
