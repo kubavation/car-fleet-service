@@ -12,9 +12,8 @@ public class Transfer {
         Group, Single
     }
 
-
     private final TransferId transferId;
-    private final TransferPath transferPath;
+    private final TransferPath path;
     private final TransferNumber transferNumber;
 
     private final Type type;
@@ -27,8 +26,7 @@ public class Transfer {
     public Transfer(TransferId transferId, TransferPath transferPath,
                     CarId carId, DriverId driverId, LocalDateTime at, Type type) {
         this.transferId = transferId;
-        this.transferPath = transferPath;
-
+        this.path = transferPath;
         this.carId = carId;
         this.driverId = driverId;
         this.at = at;
@@ -37,11 +35,11 @@ public class Transfer {
     }
 
     public void addParticipant(ParticipantId participantId, String place, RequestId registrationSource) {
-        transferPath.addParticipant(participantId, place, registrationSource);
+        path.addParticipant(participantId, place, registrationSource);
     }
 
     public void removeParticipant(ParticipantId participantId, String place, RequestId registrationSource) {
-        transferPath.removeParticipant(participantId, place, registrationSource);
+        path.removeParticipant(participantId, place, registrationSource);
     }
 
 }

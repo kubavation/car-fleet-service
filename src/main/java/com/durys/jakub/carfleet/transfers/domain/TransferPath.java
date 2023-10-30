@@ -3,7 +3,6 @@ package com.durys.jakub.carfleet.transfers.domain;
 import com.durys.jakub.carfleet.requests.RequestId;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 class TransferPath {
