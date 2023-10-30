@@ -1,7 +1,5 @@
 package com.durys.jakub.carfleet.transfers.domain;
 
-import java.time.LocalDateTime;
-
 class TransferNumber {
 
     private final String value;
