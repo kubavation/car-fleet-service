@@ -1,14 +1,12 @@
-package com.durys.jakub.carfleet.requests.state;
-
-import com.durys.jakub.carfleet.requests.Flowable;
+package com.durys.jakub.carfleet.state;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiFunction;
 
-import static com.durys.jakub.carfleet.requests.state.StateTransition.Mode.ContentChanges;
-import static com.durys.jakub.carfleet.requests.state.StateTransition.Mode.StatusChanges;
+import static com.durys.jakub.carfleet.state.StateTransition.Mode.ContentChanges;
+import static com.durys.jakub.carfleet.state.StateTransition.Mode.StatusChanges;
 
 public class StateTransition<T extends Flowable<T>> {
 

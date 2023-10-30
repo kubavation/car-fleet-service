@@ -1,4 +1,4 @@
-package com.durys.jakub.carfleet.requests.state;
+package com.durys.jakub.carfleet.state;
 
 public class ChangeCommand {
 

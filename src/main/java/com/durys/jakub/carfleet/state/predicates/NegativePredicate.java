@@ -1,4 +1,4 @@
-package com.durys.jakub.carfleet.requests.state.predicates;
+package com.durys.jakub.carfleet.state.predicates;
 
 import java.util.function.Predicate;
 

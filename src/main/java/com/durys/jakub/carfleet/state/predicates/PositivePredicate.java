@@ -1,7 +1,7 @@
-package com.durys.jakub.carfleet.requests.state.predicates;
+package com.durys.jakub.carfleet.state.predicates;
 
-import com.durys.jakub.carfleet.requests.Flowable;
-import com.durys.jakub.carfleet.requests.state.State;
+import com.durys.jakub.carfleet.state.Flowable;
+import com.durys.jakub.carfleet.state.State;
 
 import java.util.function.Predicate;
 

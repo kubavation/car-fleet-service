@@ -1,6 +1,5 @@
-package com.durys.jakub.carfleet.requests.state;
+package com.durys.jakub.carfleet.state;
 
-import com.durys.jakub.carfleet.requests.Flowable;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
