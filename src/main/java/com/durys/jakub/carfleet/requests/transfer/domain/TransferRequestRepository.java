@@ -2,7 +2,9 @@ package com.durys.jakub.carfleet.requests.transfer.domain;
 
 import com.durys.jakub.carfleet.requests.RequestId;
 
+import java.util.Optional;
+
 public interface TransferRequestRepository {
-    TransferRequest load(RequestId requestId);
-    void save(TransferRequest request);
+    Optional<TransferRequest> load(RequestId requestId);
+    TransferRequest save(TransferRequest request);
 }

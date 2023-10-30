@@ -35,6 +35,14 @@ public class TransferRequest implements Flowable<TransferRequest> {
         this.state = state;
     }
 
+    public TransferRequest(RequestId requestId, RequesterId requesterId,
+                           LocalDateTime from, LocalDateTime to, RequestPurpose purpose,
+                           String departure, String destination) {
+        this.requestId = requestId;
+        this.requesterId = requesterId;
+        this.content = new RequestContent(from, to, purpose, departure, destination);
+    }
+
     public void setUpCar(CarId carId) {
         this.carId = carId;
     }

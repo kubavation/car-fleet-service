@@ -1,9 +1,7 @@
 package com.durys.jakub.carfleet.requests.transfer.domain;
 
 import com.durys.jakub.carfleet.cars.availability.CarAvailabilityService;
-import com.durys.jakub.carfleet.requests.drivertransfer.domain.actions.ChangeTransportInformation;
 import com.durys.jakub.carfleet.requests.transfer.domain.actions.ChangeCarInformation;
-import com.durys.jakub.carfleet.requests.transfer.domain.commands.ChangeCarCommand;
 import com.durys.jakub.carfleet.requests.transfer.domain.predicates.CarAvailablePredicate;
 import com.durys.jakub.carfleet.state.Assembler;
 import com.durys.jakub.carfleet.state.StateBuilder;
