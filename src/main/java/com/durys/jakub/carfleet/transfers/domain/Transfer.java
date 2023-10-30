@@ -23,20 +23,18 @@ public class Transfer implements Flowable<Transfer> {
     private final CarId carId;
     private final DriverId driverId;
 
-    private final LocalDateTime at;
 
     private String state;
 
     public Transfer(TransferId transferId, TransferPath transferPath,
-                    TransferPeriod period, CarId carId, DriverId driverId, LocalDateTime at, Type type) {
+                    TransferPeriod period, CarId carId, DriverId driverId, Type type) {
         this.transferId = transferId;
         this.path = transferPath;
         this.period = period;
         this.carId = carId;
         this.driverId = driverId;
-        this.at = at;
         this.type = type;
-        this.transferNumber = new TransferNumber(transferPath, type, at);
+        this.transferNumber = new TransferNumber(transferPath, type, period);
     }
 
     public void addParticipant(ParticipantId participantId, String place, RequestId registrationSource) {

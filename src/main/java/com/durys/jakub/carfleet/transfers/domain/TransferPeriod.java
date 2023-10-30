@@ -36,4 +36,13 @@ class TransferPeriod {
         }
     }
 
+    LocalDateTime from() {
+        return from;
+    }
+
+    LocalDateTime to() {
+        return to;
+    }
+
+
 }

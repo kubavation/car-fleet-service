@@ -3,11 +3,9 @@ package com.durys.jakub.carfleet.transfers.domain;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TransferNumberTest {
 
@@ -15,10 +13,13 @@ class TransferNumberTest {
     void shouldCreateCorrectTransferNumber() {
 
         TransferPath transferPath = new TransferPath("Warsaw", Set.of());
-        LocalDateTime at = LocalDate.of(2023, 1, 1).atStartOfDay();
+        TransferPeriod period = new TransferPeriod(
+                LocalDate.of(2023, 1, 1).atStartOfDay(),
+                LocalDate.of(2023, 1, 2).atStartOfDay()
+        );
         Transfer.Type tranferType = Transfer.Type.Group;
 
-        TransferNumber transferNumber = new TransferNumber(transferPath, tranferType, at);
+        TransferNumber transferNumber = new TransferNumber(transferPath, tranferType, period);
 
         assertEquals("Warsaw-Group_2023-01-01", transferNumber.value());
     }
