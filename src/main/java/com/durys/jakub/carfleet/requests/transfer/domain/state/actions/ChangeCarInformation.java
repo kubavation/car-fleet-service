@@ -1,7 +1,7 @@
-package com.durys.jakub.carfleet.requests.transfer.domain.actions;
+package com.durys.jakub.carfleet.requests.transfer.domain.state.actions;
 
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
-import com.durys.jakub.carfleet.requests.transfer.domain.commands.ChangeCarCommand;
+import com.durys.jakub.carfleet.requests.transfer.domain.state.commands.ChangeCarCommand;
 import com.durys.jakub.carfleet.state.ChangeCommand;
 
 import java.util.function.BiFunction;

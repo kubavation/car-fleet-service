@@ -1,4 +1,4 @@
-package com.durys.jakub.carfleet.requests.transfer.domain.commands;
+package com.durys.jakub.carfleet.requests.transfer.domain.state.commands;
 
 import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequestStatus;
