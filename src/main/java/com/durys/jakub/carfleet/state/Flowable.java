@@ -1,4 +1,4 @@
-package com.durys.jakub.carfleet.requests;
+package com.durys.jakub.carfleet.state;
 
 public interface Flowable<T> {
     void setState(String state);

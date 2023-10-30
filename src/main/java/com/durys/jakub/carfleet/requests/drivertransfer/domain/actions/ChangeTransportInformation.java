@@ -2,7 +2,7 @@ package com.durys.jakub.carfleet.requests.drivertransfer.domain.actions;
 
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequest;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.commands.ChangeTransportInformationCommand;
-import com.durys.jakub.carfleet.requests.state.ChangeCommand;
+import com.durys.jakub.carfleet.state.ChangeCommand;
 
 import java.util.function.BiFunction;
 

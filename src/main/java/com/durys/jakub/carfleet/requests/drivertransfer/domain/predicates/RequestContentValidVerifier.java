@@ -1,9 +1,9 @@
 package com.durys.jakub.carfleet.requests.drivertransfer.domain.predicates;
 
 
-import com.durys.jakub.carfleet.requests.Flowable;
-import com.durys.jakub.carfleet.requests.state.ChangeCommand;
-import com.durys.jakub.carfleet.requests.state.State;
+import com.durys.jakub.carfleet.state.Flowable;
+import com.durys.jakub.carfleet.state.ChangeCommand;
+import com.durys.jakub.carfleet.state.State;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.function.BiFunction;

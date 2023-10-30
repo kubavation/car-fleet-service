@@ -1,11 +1,9 @@
 package com.durys.jakub.carfleet.requests.transfer.domain;
 
 import com.durys.jakub.carfleet.cars.domain.CarId;
-import com.durys.jakub.carfleet.drivers.DriverId;
-import com.durys.jakub.carfleet.requests.Flowable;
+import com.durys.jakub.carfleet.state.Flowable;
 import com.durys.jakub.carfleet.requests.RequestId;
 import com.durys.jakub.carfleet.requests.RequesterId;
-import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequest;
 import com.durys.jakub.carfleet.requests.vo.RequestContent;
 import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
 import lombok.Data;
@@ -29,11 +27,24 @@ public class TransferRequest implements Flowable<TransferRequest> {
     }
 
     public TransferRequest(RequestId requestId, RequesterId requesterId,
-                           LocalDateTime from, LocalDateTime to, RequestPurpose purpose, String state) {
+                           LocalDateTime from, LocalDateTime to, RequestPurpose purpose,
+                           String departure, String destination, String state) {
         this.requestId = requestId;
         this.requesterId = requesterId;
-        this.content = new RequestContent(from, to, purpose);
+        this.content = new RequestContent(from, to, purpose, departure, destination);
         this.state = state;
+    }
+
+    public TransferRequest(RequestId requestId, RequesterId requesterId,
+                           LocalDateTime from, LocalDateTime to, RequestPurpose purpose,
+                           String departure, String destination) {
+        this.requestId = requestId;
+        this.requesterId = requesterId;
+        this.content = new RequestContent(from, to, purpose, departure, destination);
+    }
+
+    public void setUpCar(CarId carId) {
+        this.carId = carId;
     }
 
     @Override
@@ -56,6 +67,8 @@ public class TransferRequest implements Flowable<TransferRequest> {
         this.content = new RequestContent(
                 request.getContent().getFrom(),
                 request.getContent().getTo(),
-                request.getContent().getPurpose());
+                request.getContent().getPurpose(),
+                request.getContent().getDeparture(),
+                request.getContent().getDestination());
     }
 }

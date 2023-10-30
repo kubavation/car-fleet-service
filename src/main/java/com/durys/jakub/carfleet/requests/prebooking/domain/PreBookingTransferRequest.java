@@ -2,7 +2,7 @@ package com.durys.jakub.carfleet.requests.prebooking.domain;
 
 import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.drivers.DriverId;
-import com.durys.jakub.carfleet.requests.Flowable;
+import com.durys.jakub.carfleet.state.Flowable;
 import com.durys.jakub.carfleet.requests.RequestId;
 import com.durys.jakub.carfleet.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.vo.RequestPurpose;

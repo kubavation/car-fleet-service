@@ -4,9 +4,9 @@ import com.durys.jakub.carfleet.cars.availability.CarAvailabilityService;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.actions.ChangeTransportInformation;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.predicates.CarAvailablePredicate;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.predicates.DriverNotEmptyVerifier;
-import com.durys.jakub.carfleet.requests.state.Assembler;
-import com.durys.jakub.carfleet.requests.state.StateBuilder;
-import com.durys.jakub.carfleet.requests.state.StateConfig;
+import com.durys.jakub.carfleet.state.Assembler;
+import com.durys.jakub.carfleet.state.StateBuilder;
+import com.durys.jakub.carfleet.state.StateConfig;
 import org.springframework.stereotype.Component;
 
 import static com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequestStatus.*;

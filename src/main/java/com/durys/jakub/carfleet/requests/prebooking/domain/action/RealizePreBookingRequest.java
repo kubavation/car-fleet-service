@@ -4,7 +4,7 @@ import com.durys.jakub.carfleet.events.Events;
 import com.durys.jakub.carfleet.requests.prebooking.domain.PreBookingTransferRequest;
 import com.durys.jakub.carfleet.requests.prebooking.domain.commands.RealizePreBookingRequestCommand;
 import com.durys.jakub.carfleet.requests.prebooking.domain.events.PreBookingRealized;
-import com.durys.jakub.carfleet.requests.state.ChangeCommand;
+import com.durys.jakub.carfleet.state.ChangeCommand;
 import lombok.RequiredArgsConstructor;
 
 import java.util.function.BiFunction;

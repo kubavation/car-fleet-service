@@ -1,6 +1,4 @@
-package com.durys.jakub.carfleet.requests.state;
-
-import com.durys.jakub.carfleet.requests.Flowable;
+package com.durys.jakub.carfleet.state;
 
 import java.util.Collections;
 import java.util.List;

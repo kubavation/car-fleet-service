@@ -15,11 +15,10 @@ import com.durys.jakub.carfleet.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequestStatus;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.commands.ChangeTransportInformationCommand;
 import com.durys.jakub.carfleet.requests.drivertransfer.infrastructure.MockedDriverTransferRequestRepository;
-import com.durys.jakub.carfleet.requests.state.ChangeCommand;
+import com.durys.jakub.carfleet.state.ChangeCommand;
 import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.time.LocalDateTime;

@@ -3,17 +3,13 @@ package com.durys.jakub.carfleet.requests.prebooking.application;
 import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.drivers.DriverId;
 import com.durys.jakub.carfleet.events.Events;
-import com.durys.jakub.carfleet.requests.RequestId;
 import com.durys.jakub.carfleet.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.prebooking.domain.PreBookingTransferRequest;
 import com.durys.jakub.carfleet.requests.prebooking.domain.PreBookingTransferRequestAssembler;
-import com.durys.jakub.carfleet.requests.prebooking.domain.PreBookingTransferRequestStatus;
 import com.durys.jakub.carfleet.requests.prebooking.domain.commands.RealizePreBookingRequestCommand;
 import com.durys.jakub.carfleet.requests.prebooking.infrastructure.MockedPreBookingTransferRequestRepository;
-import com.durys.jakub.carfleet.requests.state.ChangeCommand;
 import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

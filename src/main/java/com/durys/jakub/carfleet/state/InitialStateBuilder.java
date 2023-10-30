@@ -1,6 +1,4 @@
-package com.durys.jakub.carfleet.requests.state;
-
-import com.durys.jakub.carfleet.requests.Flowable;
+package com.durys.jakub.carfleet.state;
 
 public interface InitialStateBuilder<T extends Flowable<T>> {
     StateBuilder.StateTransitionDestinationBuilder<T> beginWith(Enum<?> state);
