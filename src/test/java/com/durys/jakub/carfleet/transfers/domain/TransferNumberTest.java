@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,7 +14,7 @@ class TransferNumberTest {
     @Test
     void shouldCreateCorrectTransferNumber() {
 
-        TransferPath transferPath = new TransferPath("Warsaw", Collections.emptyList());
+        TransferPath transferPath = new TransferPath("Warsaw", Set.of());
         LocalDateTime at = LocalDate.of(2023, 1, 1).atStartOfDay();
         Transfer.Type tranferType = Transfer.Type.Group;
 

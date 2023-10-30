@@ -36,8 +36,12 @@ public class Transfer {
         this.transferNumber = new TransferNumber(transferPath, type, at);
     }
 
-    public void addParticipant(ParticipantId participantId, String name, RequestId registrationSource) {
-        transferPath.addParticipant(participantId, name, registrationSource);
+    public void addParticipant(ParticipantId participantId, String place, RequestId registrationSource) {
+        transferPath.addParticipant(participantId, place, registrationSource);
+    }
+
+    public void removeParticipant(ParticipantId participantId, String place, RequestId registrationSource) {
+        transferPath.removeParticipant(participantId, place, registrationSource);
     }
 
 }

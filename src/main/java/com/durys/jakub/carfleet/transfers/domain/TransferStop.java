@@ -1,16 +1,9 @@
 package com.durys.jakub.carfleet.transfers.domain;
 
+import java.util.Objects;
 import java.util.Set;
 
-class TransferStop {
-
-    private final String place;
-    private final Set<TransferParticipant> participants;
-
-    public TransferStop(String place, Set<TransferParticipant> participants) {
-        this.place = place;
-        this.participants = participants;
-    }
+record TransferStop(String place, Set<TransferParticipant> participants) {
 
     public void addParticipant(TransferParticipant participant) {
         participants.add(participant);
@@ -20,11 +13,16 @@ class TransferStop {
         participants.removeIf(transferParticipant -> transferParticipant.participantId().equals(participant.participantId()));
     }
 
-    String getPlace() {
-        return place;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TransferStop that = (TransferStop) o;
+        return Objects.equals(place, that.place);
     }
 
-    Set<TransferParticipant> getParticipants() {
-        return participants;
+    @Override
+    public int hashCode() {
+        return Objects.hash(place);
     }
 }
