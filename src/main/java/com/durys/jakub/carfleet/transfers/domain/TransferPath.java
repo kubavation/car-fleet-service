@@ -41,7 +41,11 @@ class TransferPath {
         stops.stream()
             .filter(stop -> stop.place().equals(place))
             .findAny()
-                .ifPresent(stop -> stop.remove(new TransferParticipant(participantId, registrationSource)));
-
+                .ifPresent(stop -> {
+                    stop.remove(new TransferParticipant(participantId, registrationSource));
+                    if (stop.participants().isEmpty()) {
+                        stops.remove(stop);
+                    }
+                });
     }
 }
