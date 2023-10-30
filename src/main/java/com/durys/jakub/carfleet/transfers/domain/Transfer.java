@@ -16,6 +16,7 @@ public class Transfer implements Flowable<Transfer> {
     private final TransferId transferId;
     private final TransferPath path;
     private final TransferNumber transferNumber;
+    private final TransferPeriod period;
 
     private final Type type;
 
@@ -27,9 +28,10 @@ public class Transfer implements Flowable<Transfer> {
     private String state;
 
     public Transfer(TransferId transferId, TransferPath transferPath,
-                    CarId carId, DriverId driverId, LocalDateTime at, Type type) {
+                    TransferPeriod period, CarId carId, DriverId driverId, LocalDateTime at, Type type) {
         this.transferId = transferId;
         this.path = transferPath;
+        this.period = period;
         this.carId = carId;
         this.driverId = driverId;
         this.at = at;
