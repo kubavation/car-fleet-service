@@ -4,6 +4,7 @@ import com.durys.jakub.carfleet.cars.availability.CarAvailabilityService;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequest;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.commands.ChangeTransportInformationCommand;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
+import com.durys.jakub.carfleet.requests.transfer.domain.commands.ChangeCarCommand;
 import com.durys.jakub.carfleet.state.ChangeCommand;
 import com.durys.jakub.carfleet.state.State;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +18,11 @@ public class CarAvailablePredicate implements BiFunction<State<TransferRequest>,
     private final CarAvailabilityService carAvailabilityService;
 
     @Override
-    public Boolean apply(State<TransferRequest> driverTransferRequestState, ChangeCommand changeDriverCommand) {
+    public Boolean apply(State<TransferRequest> driverTransferRequestState, ChangeCommand changeCommand) {
 
-        return carAvailabilityService.available(((ChangeTransportInformationCommand) changeDriverCommand).getCarId(),
-                LocalDateTime.now(), LocalDateTime.now()); //todo
+        ChangeCarCommand command = (ChangeCarCommand) changeCommand;
+
+        return carAvailabilityService.available(command.getCarId(), command.getTransferFrom(), command.getTransferTo());
     }
 
 }
