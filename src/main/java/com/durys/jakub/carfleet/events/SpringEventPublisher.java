@@ -1,9 +1,8 @@
-package com.durys.jakub.carfleet.events.spring;
+package com.durys.jakub.carfleet.events;
 
-import com.durys.jakub.carfleet.events.Events;
 import org.springframework.context.ApplicationEventPublisher;
 
-public class SpringEventPublisher implements Events {
+class SpringEventPublisher implements Events {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 

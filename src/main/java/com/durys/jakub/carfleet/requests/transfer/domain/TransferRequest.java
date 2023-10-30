@@ -13,12 +13,11 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class TransferRequest implements Flowable<DriverTransferRequest> {
+public class TransferRequest implements Flowable<TransferRequest> {
 
     private final RequestId requestId;
     private final RequesterId requesterId;
     private RequestContent content;
-    private DriverId driverId;
     private CarId carId;
 
     private String state;
@@ -39,6 +38,7 @@ public class TransferRequest implements Flowable<DriverTransferRequest> {
 
     @Override
     public void setState(String state) {
+        this.state = state;
     }
 
     @Override
@@ -47,12 +47,12 @@ public class TransferRequest implements Flowable<DriverTransferRequest> {
     }
 
     @Override
-    public DriverTransferRequest content() {
+    public TransferRequest content() {
         return null;
     }
 
     @Override
-    public void setContent(DriverTransferRequest request) {
+    public void setContent(TransferRequest request) {
         this.content = new RequestContent(
                 request.getContent().getFrom(),
                 request.getContent().getTo(),
