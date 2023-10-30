@@ -13,7 +13,7 @@ class TransferNumberTest {
     @Test
     void shouldCreateCorrectTransferNumber() {
 
-        TransferPath transferPath = new TransferPath(new Place("Warsaw"), new Place("Krakow"), Collections.emptyList());
+        TransferPath transferPath = new TransferPath(new TransferStop("Warsaw"), new TransferStop("Krakow"), Collections.emptyList());
         LocalDateTime at = LocalDate.of(2023, 1, 1).atStartOfDay();
 
         TransferNumber transferNumber = new TransferNumber(transferPath, at);

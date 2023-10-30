@@ -11,24 +11,25 @@ public class Transfer {
 
     private final TransferId transferId;
     private final TransferPath transferPath;
-    private final Set<TransferParticipant> participants;
+    private final TransferNumber transferNumber;
 
     private final CarId carId;
     private final DriverId driverId;
 
     private final LocalDateTime at;
 
-    public Transfer(TransferId transferId, TransferPath transferPath, Set<TransferParticipant> participants,
+    public Transfer(TransferId transferId, TransferPath transferPath,
                     CarId carId, DriverId driverId, LocalDateTime at) {
         this.transferId = transferId;
         this.transferPath = transferPath;
-        this.participants = participants;
+
         this.carId = carId;
         this.driverId = driverId;
         this.at = at;
+        this.transferNumber = new TransferNumber(transferPath, at);
     }
 
     void addParticipant(ParticipantId participantId, String name, RequestId registrationSource) {
-        participants.add(new TransferParticipant(participantId, name, registrationSource));
+        transferPath.
     }
 }

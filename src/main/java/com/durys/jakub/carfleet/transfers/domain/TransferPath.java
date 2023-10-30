@@ -4,24 +4,20 @@ import java.util.List;
 
 class TransferPath {
 
-    private final Place from;
-    private final Place to;
+    private final String destination;
 
-    private final List<Place> places;
+    private final List<TransferStop> stops;
 
-    //todo
-
-    public TransferPath(Place from, Place to, List<Place> places) {
-        this.from = from;
-        this.to = to;
-        this.places = places;
+    public TransferPath(String to, List<TransferStop> stops) {
+        this.destination = to;
+        this.stops = stops;
     }
 
-    Place from() {
-        return from;
+    String to() {
+        return destination;
     }
 
-    Place to() {
-        return to;
+    List<TransferStop> getStops() {
+        return stops;
     }
 }
