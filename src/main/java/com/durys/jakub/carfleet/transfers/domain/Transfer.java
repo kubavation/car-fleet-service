@@ -3,7 +3,11 @@ package com.durys.jakub.carfleet.transfers.domain;
 import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.drivers.DriverId;
 import com.durys.jakub.carfleet.requests.RequestId;
+import com.durys.jakub.carfleet.requests.RequesterId;
 import com.durys.jakub.carfleet.state.Flowable;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class Transfer implements Flowable<Transfer> {
 
@@ -34,6 +38,7 @@ public class Transfer implements Flowable<Transfer> {
         this.type = type;
         this.transferNumber = new TransferNumber(transferPath, type, period);
     }
+
 
     public void addParticipant(ParticipantId participantId, String place, RequestId registrationSource) {
         path.addParticipant(participantId, place, registrationSource);

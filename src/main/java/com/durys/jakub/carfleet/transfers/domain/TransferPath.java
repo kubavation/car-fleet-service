@@ -2,6 +2,7 @@ package com.durys.jakub.carfleet.transfers.domain;
 
 import com.durys.jakub.carfleet.requests.RequestId;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,6 +15,11 @@ class TransferPath {
     public TransferPath(String to, Set<TransferStop> stops) {
         this.destination = to;
         this.stops = stops;
+    }
+
+    public TransferPath(String from, String to, TransferParticipant participant) {
+        this.destination = to;
+        this.stops = new HashSet<>(Arrays.asList(new TransferStop(from, Set.of(participant))));
     }
 
     String to() {
