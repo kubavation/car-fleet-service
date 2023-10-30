@@ -6,8 +6,8 @@ class TransferNumber {
 
     private final String value;
 
-    TransferNumber(TransferPath transferPath, LocalDateTime at) {
-        this("%s-%s_%s".formatted(transferPath.from().name(), transferPath.to().name(), at.toLocalDate()));
+    TransferNumber(TransferPath transferPath, Transfer.Type transferType, LocalDateTime at) {
+        this("%s-%s_%s".formatted(transferPath.to(), transferType.name(), at.toLocalDate()));
     }
 
     TransferNumber(String value) {
