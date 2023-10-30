@@ -1,8 +1,8 @@
-package com.durys.jakub.carfleet.sharedkernel;
+package com.durys.jakub.carfleet.transfers.domain;
 
 import java.util.List;
 
-public class TransferPath {
+class TransferPath {
 
     private final Place from;
     private final Place to;
@@ -15,5 +15,13 @@ public class TransferPath {
         this.from = from;
         this.to = to;
         this.places = places;
+    }
+
+    Place from() {
+        return from;
+    }
+
+    Place to() {
+        return to;
     }
 }

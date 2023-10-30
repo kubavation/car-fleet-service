@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class DriverTransferRequestSubmittedEventHandler {
+class DriverTransferRequestSubmittedEventHandler {
 
     private final DriverTransferRequestService driverTransferRequestService;
 
@@ -18,12 +18,9 @@ public class DriverTransferRequestSubmittedEventHandler {
         this.driverTransferRequestService = driverTransferRequestService;
     }
 
-
     @EventListener
     public void handle(DriverTransferRequestSubmitted event) {
-
         log.info("handling {}", event);
-
         driverTransferRequestService.create(new RequesterId(event.requesterId()), event.from(), event.to(), new RequestPurpose(event.purpose()));
     }
 

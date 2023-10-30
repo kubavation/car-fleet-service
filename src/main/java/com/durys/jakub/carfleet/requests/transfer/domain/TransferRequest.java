@@ -18,7 +18,6 @@ public class TransferRequest implements Flowable<TransferRequest> {
     private final RequestId requestId;
     private final RequesterId requesterId;
     private RequestContent content;
-    private DriverId driverId;
     private CarId carId;
 
     private String state;
@@ -39,6 +38,7 @@ public class TransferRequest implements Flowable<TransferRequest> {
 
     @Override
     public void setState(String state) {
+        this.state = state;
     }
 
     @Override
