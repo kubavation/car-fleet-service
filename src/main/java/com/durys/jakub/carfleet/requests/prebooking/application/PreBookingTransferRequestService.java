@@ -1,7 +1,7 @@
 package com.durys.jakub.carfleet.requests.prebooking.application;
 
 import com.durys.jakub.carfleet.cars.domain.CarId;
-import com.durys.jakub.carfleet.drivers.DriverId;
+import com.durys.jakub.carfleet.drivers.domain.DriverId;
 import com.durys.jakub.carfleet.events.Events;
 import com.durys.jakub.carfleet.requests.RequestId;
 import com.durys.jakub.carfleet.requests.RequesterId;

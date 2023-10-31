@@ -6,7 +6,7 @@ import com.durys.jakub.carfleet.cars.domain.*;
 import com.durys.jakub.carfleet.cars.domain.basicinformation.FuelType;
 import com.durys.jakub.carfleet.cars.infrastructure.MockedCarsRepository;
 import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
-import com.durys.jakub.carfleet.drivers.DriverId;
+import com.durys.jakub.carfleet.drivers.domain.DriverId;
 import com.durys.jakub.carfleet.requests.drivertransfer.application.DriverTransferRequestService;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequest;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequestAssembler;
