@@ -1,7 +1,7 @@
 package com.durys.jakub.carfleet.requests.drivertransfer.domain.event;
 
 import com.durys.jakub.carfleet.cars.domain.CarId;
-import com.durys.jakub.carfleet.drivers.DriverId;
+import com.durys.jakub.carfleet.drivers.domain.DriverId;
 import com.durys.jakub.carfleet.events.DomainEvent;
 
 import java.time.Instant;

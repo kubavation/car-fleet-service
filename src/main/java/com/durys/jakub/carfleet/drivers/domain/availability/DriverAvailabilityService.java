@@ -1,6 +1,6 @@
-package com.durys.jakub.carfleet.drivers.availability;
+package com.durys.jakub.carfleet.drivers.domain.availability;
 
-import com.durys.jakub.carfleet.drivers.DriverId;
+import com.durys.jakub.carfleet.drivers.domain.DriverId;
 
 import java.time.LocalDateTime;
 

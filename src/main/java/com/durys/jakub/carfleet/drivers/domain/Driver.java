@@ -1,7 +1,9 @@
-package com.durys.jakub.carfleet.drivers;
+package com.durys.jakub.carfleet.drivers.domain;
 
 import com.durys.jakub.carfleet.common.Status;
+import jakarta.persistence.Table;
 
+@Table
 public class Driver {
 
     private final DriverId driverId;

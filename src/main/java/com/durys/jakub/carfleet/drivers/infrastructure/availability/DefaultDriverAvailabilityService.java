@@ -1,13 +1,14 @@
-package com.durys.jakub.carfleet.drivers.availability;
+package com.durys.jakub.carfleet.drivers.infrastructure.availability;
 
-import com.durys.jakub.carfleet.drivers.DriverId;
+import com.durys.jakub.carfleet.drivers.domain.DriverId;
+import com.durys.jakub.carfleet.drivers.domain.availability.DriverAvailabilityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-@Component
+
 @RequiredArgsConstructor
 class DefaultDriverAvailabilityService implements DriverAvailabilityService {
 
