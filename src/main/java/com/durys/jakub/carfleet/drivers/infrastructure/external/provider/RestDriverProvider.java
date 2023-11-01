@@ -26,9 +26,7 @@ class RestDriverProvider implements DriverProvider {
     static class DriverACL {
         public static Driver convert(User user) {
             return new Driver(
-                    new DriverId(user.userId().value()),
-                    user.firstName(),
-                    user.lastName());
+                    new DriverId(user.userId().value()), user.firstName(), user.lastName());
         }
     }
 }
