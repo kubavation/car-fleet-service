@@ -1,6 +1,6 @@
 package com.durys.jakub.carfleet.drivers.infrastructure.external;
 
-import com.durys.jakub.carfleet.drivers.application.DriversCrudService;
+import com.durys.jakub.carfleet.drivers.application.DriversFleetUpdateService;
 import com.durys.jakub.carfleet.drivers.infrastructure.external.provider.DriverProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 class DriversFleetChangedEventHandler {
 
     private final DriverProvider driverProvider;
-    private final DriversCrudService driversCrudService;
+    private final DriversFleetUpdateService driversFleetUpdateService;
 
 
     @RabbitListener(queues = {"${queue.users-with-role-change}"})
@@ -23,7 +23,7 @@ class DriversFleetChangedEventHandler {
 
         driverProvider.loadAllBy(event.link())
                 .collectList()
-                .subscribe(driversCrudService::updateDriverFleet);
+                .subscribe(driversFleetUpdateService::updateDriverFleet);
     }
 
 }
