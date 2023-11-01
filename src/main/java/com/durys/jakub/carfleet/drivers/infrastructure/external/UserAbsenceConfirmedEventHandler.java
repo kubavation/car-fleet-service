@@ -1,5 +1,6 @@
 package com.durys.jakub.carfleet.drivers.infrastructure.external;
 
+import com.durys.jakub.carfleet.drivers.domain.DriverId;
 import com.durys.jakub.carfleet.drivers.domain.DriverRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,10 +15,14 @@ class UserAbsenceConfirmedEventHandler {
     private final DriverRepository driverRepository;
 
 
-    @RabbitListener(queues = {"todo"})
+    @RabbitListener(queues = {"queue.users-absences"})
     public void handle(UserAbsenceConfirmed event) {
 
         log.info("handling {}", event);
+
+        driverRepository.find(new DriverId(event.userId()))
+                .ifPresent(driver -> driver.markAsInactiveBetween(event.from(), event.to()));
+
     }
 
 }
