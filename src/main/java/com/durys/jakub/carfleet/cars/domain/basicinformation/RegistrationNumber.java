@@ -6,7 +6,7 @@ import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
 
 import java.util.Objects;
 
-public class RegistrationNumber {
+class RegistrationNumber {
 
     private final String value;
 

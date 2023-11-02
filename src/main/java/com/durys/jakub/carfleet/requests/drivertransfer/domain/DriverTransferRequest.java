@@ -32,14 +32,14 @@ public class DriverTransferRequest implements Flowable<DriverTransferRequest> {
                                  LocalDateTime from, LocalDateTime to, RequestPurpose purpose) {
         this.requestId = requestId;
         this.requesterId = requesterId;
-        this.content = new RequestContent(from, to, purpose);
+        this.content = new RequestContent(from, to, purpose, null, null); //todo
     }
 
     public DriverTransferRequest(RequestId requestId, RequesterId requesterId,
                                  LocalDateTime from, LocalDateTime to, RequestPurpose purpose, String state) {
         this.requestId = requestId;
         this.requesterId = requesterId;
-        this.content = new RequestContent(from, to, purpose);
+        this.content = new RequestContent(from, to, purpose, null, null); //todo
         this.state = state;
     }
 
@@ -58,7 +58,7 @@ public class DriverTransferRequest implements Flowable<DriverTransferRequest> {
         this.content = new RequestContent(
                 driverTransferRequest.content.getFrom(),
                 driverTransferRequest.content.getTo(),
-                driverTransferRequest.content.getPurpose());
+                driverTransferRequest.content.getPurpose(), null, null); //todo
     }
 
     public DriverId getDriverId() {

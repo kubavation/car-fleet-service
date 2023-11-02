@@ -7,7 +7,7 @@ import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class Mileage {
+class Mileage {
 
     private final BigDecimal value;
 
