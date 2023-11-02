@@ -1,9 +1,6 @@
 package com.durys.jakub.carfleet.cars.domain;
 
 import com.durys.jakub.carfleet.cars.domain.basicinformation.CarBasicInformation;
-import com.durys.jakub.carfleet.cars.domain.basicinformation.FuelType;
-import com.durys.jakub.carfleet.cars.domain.basicinformation.RegistrationNumber;
-import com.durys.jakub.carfleet.cars.domain.basicinformation.Vin;
 import com.durys.jakub.carfleet.cars.domain.tenchicalinspection.TechnicalInspection;
 import com.durys.jakub.carfleet.common.errors.ValidationError;
 import lombok.Getter;
@@ -44,14 +41,8 @@ public class Car {
         this.carType = carType;
         this.basicInformation = basicInformation;
         this.technicalInspections = technicalInspections;
-        this.status = CarStatus.Registered;
+        this.status = CarStatus.Unregistered;
     }
-
-    public Car(CarId id, CarType carType, RegistrationNumber number, Vin vin, FuelType fuelType,
-               Set<TechnicalInspection> technicalInspections, CarStatus status) {
-        this(id, carType, new CarBasicInformation(number, vin, fuelType), technicalInspections, status);
-    }
-
 
     public Car unregister() {
 

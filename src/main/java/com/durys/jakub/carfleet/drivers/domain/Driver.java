@@ -1,7 +1,9 @@
 package com.durys.jakub.carfleet.drivers.domain;
 
 import com.durys.jakub.carfleet.common.Status;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -10,14 +12,23 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Entity
 @Table
+@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 public class Driver {
+
+    @EmbeddedId
+    @AttributeOverrides({
+        @AttributeOverride(name = "value", column = @Column(name = "ID"))
+    })
 
     private final DriverId driverId;
     private String firstName;
     private String lastName;
     private Status status;
 
+    @OneToMany
+    @JoinColumn(name = "driver_id")
     private Set<Absence> absences;
 
     public Driver(DriverId driverId, String firstName, String lastName, Status status) {
@@ -53,16 +64,12 @@ public class Driver {
         this.absences.addAll(absences);
     }
 
-    public boolean inactive(LocalDate at) {
-        return status == Status.ARCHIVED || absences.contains(new Absence(at));
-    }
-
-    public boolean inactiveBetween(LocalDate from, LocalDate to) {
-        return status == Status.ARCHIVED ||
+    public boolean activeBetween(LocalDate from, LocalDate to) {
+        return status != Status.ARCHIVED &&
                 Stream.iterate(from, date -> date.plusDays(1))
                     .limit(ChronoUnit.DAYS.between(from, to) + 1)
                     .map(Absence::new)
-                    .anyMatch(date -> absences.contains(date));
+                    .noneMatch(date -> absences.contains(date));
     }
 
 }

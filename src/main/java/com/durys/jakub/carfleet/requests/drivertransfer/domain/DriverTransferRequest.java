@@ -23,23 +23,18 @@ public class DriverTransferRequest implements Flowable<DriverTransferRequest> {
     private DriverId driverId;
     private CarId carId;
 
-    @Override
-    public void setState(String state) {
-        this.state = state;
+    public DriverTransferRequest(RequestId requestId, RequesterId requesterId,
+                                 LocalDateTime from, LocalDateTime to, RequestPurpose purpose, String departure,
+                                 String destination) {
+        this(requestId, requesterId, from, to, purpose, departure, destination, DriverTransferRequestStatus.NEW.name());
     }
 
     public DriverTransferRequest(RequestId requestId, RequesterId requesterId,
-                                 LocalDateTime from, LocalDateTime to, RequestPurpose purpose) {
+                                 LocalDateTime from, LocalDateTime to, RequestPurpose purpose,
+                                 String departure, String destination, String state) {
         this.requestId = requestId;
         this.requesterId = requesterId;
-        this.content = new RequestContent(from, to, purpose);
-    }
-
-    public DriverTransferRequest(RequestId requestId, RequesterId requesterId,
-                                 LocalDateTime from, LocalDateTime to, RequestPurpose purpose, String state) {
-        this.requestId = requestId;
-        this.requesterId = requesterId;
-        this.content = new RequestContent(from, to, purpose);
+        this.content = new RequestContent(from, to, purpose, departure, destination);
         this.state = state;
     }
 
@@ -54,11 +49,18 @@ public class DriverTransferRequest implements Flowable<DriverTransferRequest> {
     }
 
     @Override
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    @Override
     public void setContent(DriverTransferRequest driverTransferRequest) {
         this.content = new RequestContent(
                 driverTransferRequest.content.getFrom(),
                 driverTransferRequest.content.getTo(),
-                driverTransferRequest.content.getPurpose());
+                driverTransferRequest.content.getPurpose(),
+                driverTransferRequest.content.getDeparture(),
+                driverTransferRequest.content.getDestination());
     }
 
     public DriverId getDriverId() {

@@ -22,16 +22,19 @@ public class DriverTransferRequestService {
     private final DriverTransferRequestRepository repository;
 
 
-    public DriverTransferRequest create(RequesterId requesterId, LocalDateTime from, LocalDateTime to, RequestPurpose purpose) {
+    public DriverTransferRequest create(RequesterId requesterId, LocalDateTime from, LocalDateTime to, RequestPurpose purpose,
+                                        String departure, String destination) {
 
-        DriverTransferRequest driverTransferRequest = new DriverTransferRequest(new RequestId(UUID.randomUUID()), requesterId, from, to, purpose);
+        DriverTransferRequest driverTransferRequest
+                = new DriverTransferRequest(new RequestId(UUID.randomUUID()), requesterId, from, to, purpose, departure, destination);
 
         State<DriverTransferRequest> result = assembler.configuration().begin(driverTransferRequest);
         return repository.save(result.getObject());
     }
 
 
-    public DriverTransferRequest change(RequestId requestId, LocalDateTime from, LocalDateTime to, RequestPurpose purpose) {
+    public DriverTransferRequest change(RequestId requestId, LocalDateTime from, LocalDateTime to, RequestPurpose purpose,
+                                        String departure, String destination) {
 
         DriverTransferRequest driverTransferRequest = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);
@@ -40,7 +43,7 @@ public class DriverTransferRequestService {
                 .recreate(driverTransferRequest)
                 .changeContent(
                         new DriverTransferRequest(driverTransferRequest.getRequestId(), driverTransferRequest.getRequesterId(),
-                                from, to, purpose, driverTransferRequest.state()));
+                                from, to, purpose, departure, destination, driverTransferRequest.state()));
 
         return repository.save(result.getObject());
     }

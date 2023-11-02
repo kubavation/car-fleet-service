@@ -1,21 +1,15 @@
 package com.durys.jakub.carfleet.cars.availability;
 
-import com.durys.jakub.carfleet.cars.domain.Car;
-import com.durys.jakub.carfleet.cars.domain.CarId;
-import com.durys.jakub.carfleet.cars.domain.CarType;
-import com.durys.jakub.carfleet.cars.domain.CarsRepository;
+import com.durys.jakub.carfleet.cars.domain.*;
 import com.durys.jakub.carfleet.cars.domain.basicinformation.FuelType;
-import com.durys.jakub.carfleet.cars.domain.basicinformation.RegistrationNumber;
-import com.durys.jakub.carfleet.cars.domain.basicinformation.Vin;
-import com.durys.jakub.carfleet.cars.domain.tenchicalinspection.Mileage;
 import com.durys.jakub.carfleet.cars.domain.tenchicalinspection.TechnicalInspection;
 import com.durys.jakub.carfleet.cars.infrastructure.MockedCarsRepository;
+import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -31,9 +25,7 @@ class DefaultCarAvailabilityServiceTest {
 
     private final CarId carId = new CarId(UUID.randomUUID());
 
-    private final Car car = new Car(carId, CarType.Passenger,
-            new RegistrationNumber("123"), new Vin("123"), FuelType.GASOLINE, new HashSet<>(), Car.CarStatus.Registered);
-
+    private final Car car = createCar(carId);
 
     @Test
     void shouldReturnCarAvailable() {
@@ -78,14 +70,19 @@ class DefaultCarAvailabilityServiceTest {
     }
 
 
-
-
     private static void addTechnicalInspection(Car car, LocalDate nextInspectionAt) {
 
         TechnicalInspection inspection = new TechnicalInspection(
                 LocalDate.of(2022, 1, 3), "Description", BigDecimal.valueOf(2000), nextInspectionAt);
 
         car.undergoTechnicalInspection(inspection);
+    }
+
+    private static Car createCar(CarId carId) {
+        return CarFactory.withValidationErrorHandler(ValidationErrorHandlers.throwingValidationErrorHandler())
+                .with(carId, CarType.Passenger)
+                .withBasicInformation("123", "123", FuelType.GASOLINE)
+                .construct();
     }
 
 }

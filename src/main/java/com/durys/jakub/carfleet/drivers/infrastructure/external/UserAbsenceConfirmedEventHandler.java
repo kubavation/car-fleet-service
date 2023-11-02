@@ -20,7 +20,7 @@ class UserAbsenceConfirmedEventHandler {
 
         log.info("handling {}", event);
 
-        driverRepository.find(new DriverId(event.userId()))
+        driverRepository.findById(new DriverId(event.userId()))
                 .ifPresent(driver -> driver.markAsInactiveBetween(event.from(), event.to()));
 
     }
