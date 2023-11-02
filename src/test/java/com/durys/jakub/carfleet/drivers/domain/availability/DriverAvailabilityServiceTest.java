@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DriverAvailabilityServiceTest {
@@ -35,6 +36,44 @@ class DriverAvailabilityServiceTest {
                 LocalDate.of(2023, 1, 3).atStartOfDay());
 
         assertTrue(available);
+
+    }
+
+    @Test
+    void shouldReturnDriverIsNotAvailableWhenDriverIsArchived() {
+
+        Driver driver = createWithAbsencesBetween(driverId,
+                LocalDate.of(2023, 2, 1),
+                LocalDate.of(2023, 2, 3));
+        driver.archive();
+
+        Mockito.when(driverRepository.find(driverId)).thenReturn(
+                Optional.of(driver));
+
+        boolean available = driverAvailabilityService.available(driverId,
+                LocalDate.of(2023, 1, 2).atStartOfDay(),
+                LocalDate.of(2023, 1, 3).atStartOfDay());
+
+        assertFalse(available);
+
+    }
+
+    @Test
+    void shouldReturnDriverIsNotAvailableWhenDrivesIsAbsent() {
+
+        Driver driver = createWithAbsencesBetween(driverId,
+                LocalDate.of(2023, 1, 3),
+                LocalDate.of(2023, 1, 4));
+        driver.archive();
+
+        Mockito.when(driverRepository.find(driverId)).thenReturn(
+                Optional.of(driver));
+
+        boolean available = driverAvailabilityService.available(driverId,
+                LocalDate.of(2023, 1, 2).atStartOfDay(),
+                LocalDate.of(2023, 1, 3).atStartOfDay());
+
+        assertFalse(available);
 
     }
 
