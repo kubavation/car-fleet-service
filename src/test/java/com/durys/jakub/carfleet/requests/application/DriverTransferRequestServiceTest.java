@@ -43,11 +43,14 @@ class DriverTransferRequestServiceTest {
     private final LocalDateTime from = LocalDateTime.now();
     private final LocalDateTime to = LocalDateTime.now();
     private final RequestPurpose purpose = new RequestPurpose("Content");
+    private final String departure = "Warsaw";
+    private final String destination = "Krakow";
 
     @Test
     void shouldCreateRequestAndChangeStatusToNew() {
 
-        DriverTransferRequest driverTransferRequest = driverTransferRequestService.create(requesterId, from, to, purpose);
+        DriverTransferRequest driverTransferRequest = driverTransferRequestService
+                .create(requesterId, from, to, purpose, departure, destination);
 
         assertEquals("NEW", driverTransferRequest.state());
     }
@@ -55,9 +58,11 @@ class DriverTransferRequestServiceTest {
     @Test
     void shouldChangeRequestContentAndChangeStatusToEdited() {
 
-        DriverTransferRequest result = driverTransferRequestService.create(requesterId, from, to, purpose);
+        DriverTransferRequest result = driverTransferRequestService
+                .create(requesterId, from, to, purpose, departure, destination);
 
-        DriverTransferRequest driverTransferRequest = driverTransferRequestService.change(result.getRequestId(), from, to, purpose);
+        DriverTransferRequest driverTransferRequest = driverTransferRequestService.change(result.getRequestId(),
+                from, to, purpose, departure, destination);
 
         assertEquals("EDITED", driverTransferRequest.state());
     }
@@ -69,7 +74,8 @@ class DriverTransferRequestServiceTest {
         DriverId driverId = new DriverId(UUID.randomUUID());
         CarId carId = addCar();
 
-        DriverTransferRequest result = driverTransferRequestService.create(requesterId, from, to, purpose);
+        DriverTransferRequest result = driverTransferRequestService
+                .create(requesterId, from, to, purpose, departure, destination);
 
         DriverTransferRequest driverTransferRequest = driverTransferRequestService.changeStatus(result.getRequestId(),
                 new ChangeTransportInformationCommand(driverId, carId));
@@ -82,7 +88,8 @@ class DriverTransferRequestServiceTest {
     @Test
     void shouldSaveRequestAndChangeStatusToRejected() {
 
-        DriverTransferRequest result = driverTransferRequestService.create(requesterId, from, to, purpose);
+        DriverTransferRequest result = driverTransferRequestService
+                .create(requesterId, from, to, purpose, departure, destination);
 
         DriverTransferRequest driverTransferRequest = driverTransferRequestService.changeStatus(result.getRequestId(),
                 new ChangeCommand(DriverTransferRequestStatus.REJECTED));
@@ -97,7 +104,8 @@ class DriverTransferRequestServiceTest {
         CarId carId = addCar();
 
 
-        DriverTransferRequest result = driverTransferRequestService.create(requesterId, from, to, purpose);
+        DriverTransferRequest result = driverTransferRequestService
+                .create(requesterId, from, to, purpose, departure, destination);
 
         DriverTransferRequest saved = driverTransferRequestService.changeStatus(result.getRequestId(),
                 new ChangeTransportInformationCommand(driverId, carId));

@@ -26,7 +26,7 @@ class DriverAvailabilityServiceTest {
     @Test
     void shouldReturnDriverIsAvailable() {
 
-        Mockito.when(driverRepository.find(driverId)).thenReturn(
+        Mockito.when(driverRepository.findById(driverId)).thenReturn(
                 Optional.of(createWithAbsencesBetween(driverId,
                         LocalDate.of(2023, 2, 1),
                         LocalDate.of(2023, 2, 3))));
@@ -47,7 +47,7 @@ class DriverAvailabilityServiceTest {
                 LocalDate.of(2023, 2, 3));
         driver.archive();
 
-        Mockito.when(driverRepository.find(driverId)).thenReturn(
+        Mockito.when(driverRepository.findById(driverId)).thenReturn(
                 Optional.of(driver));
 
         boolean available = driverAvailabilityService.available(driverId,
@@ -66,7 +66,7 @@ class DriverAvailabilityServiceTest {
                 LocalDate.of(2023, 1, 4));
         driver.archive();
 
-        Mockito.when(driverRepository.find(driverId)).thenReturn(
+        Mockito.when(driverRepository.findById(driverId)).thenReturn(
                 Optional.of(driver));
 
         boolean available = driverAvailabilityService.available(driverId,
