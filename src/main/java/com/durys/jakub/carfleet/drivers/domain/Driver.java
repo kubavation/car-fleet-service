@@ -53,9 +53,9 @@ public class Driver {
         this.absences.addAll(absences);
     }
 
-    public boolean inactiveBetween(LocalDate from, LocalDate to) {
-        return status == Status.ARCHIVED ||
-                Stream.iterate(from, date -> date.plusDays(1))
+    public boolean activeBetween(LocalDate from, LocalDate to) {
+        return status != Status.ARCHIVED &&
+                !Stream.iterate(from, date -> date.plusDays(1))
                     .limit(ChronoUnit.DAYS.between(from, to) + 1)
                     .map(Absence::new)
                     .anyMatch(date -> absences.contains(date));
