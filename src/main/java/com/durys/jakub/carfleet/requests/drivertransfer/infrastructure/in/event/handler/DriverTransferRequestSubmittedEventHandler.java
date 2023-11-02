@@ -5,7 +5,7 @@ import com.durys.jakub.carfleet.requests.drivertransfer.application.DriverTransf
 import com.durys.jakub.carfleet.requests.drivertransfer.infrastructure.in.event.DriverTransferRequestSubmitted;
 import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,7 +18,7 @@ class DriverTransferRequestSubmittedEventHandler {
         this.driverTransferRequestService = driverTransferRequestService;
     }
 
-    @EventListener
+    @RabbitListener(queues = {"${queue.driver-request-submission}"})
     public void handle(DriverTransferRequestSubmitted event) {
         log.info("handling {}", event);
         driverTransferRequestService.create(new RequesterId(event.requesterId()), event.from(), event.to(),
