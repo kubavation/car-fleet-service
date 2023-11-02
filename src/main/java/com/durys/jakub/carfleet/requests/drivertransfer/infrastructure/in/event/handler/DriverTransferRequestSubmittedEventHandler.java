@@ -21,7 +21,8 @@ class DriverTransferRequestSubmittedEventHandler {
     @EventListener
     public void handle(DriverTransferRequestSubmitted event) {
         log.info("handling {}", event);
-        driverTransferRequestService.create(new RequesterId(event.requesterId()), event.from(), event.to(), new RequestPurpose(event.purpose()));
+        driverTransferRequestService.create(new RequesterId(event.requesterId()), event.from(), event.to(),
+                new RequestPurpose(event.purpose()), event.departure(), event.purpose());
     }
 
 }
