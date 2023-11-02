@@ -1,4 +1,4 @@
-package com.durys.jakub.carfleet.cars.domain.application;
+package com.durys.jakub.carfleet.cars.application;
 
 import com.durys.jakub.carfleet.cars.domain.*;
 import com.durys.jakub.carfleet.cars.domain.basicinformation.FuelType;

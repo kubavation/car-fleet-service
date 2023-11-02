@@ -53,10 +53,6 @@ public class Driver {
         this.absences.addAll(absences);
     }
 
-    public boolean inactive(LocalDate at) {
-        return status == Status.ARCHIVED || absences.contains(new Absence(at));
-    }
-
     public boolean inactiveBetween(LocalDate from, LocalDate to) {
         return status == Status.ARCHIVED ||
                 Stream.iterate(from, date -> date.plusDays(1))
