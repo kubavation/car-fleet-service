@@ -89,6 +89,8 @@ class CarsApplicationServiceTest {
                 .withBasicInformation("123", "123", FuelType.GASOLINE)
                 .construct();
 
+        registeredCar.register();
+
         carsRepository.save(registeredCar);
         return carId;
     }

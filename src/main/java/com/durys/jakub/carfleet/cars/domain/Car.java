@@ -41,7 +41,7 @@ public class Car {
         this.carType = carType;
         this.basicInformation = basicInformation;
         this.technicalInspections = technicalInspections;
-        this.status = CarStatus.Registered;
+        this.status = CarStatus.Unregistered;
     }
 
     public Car unregister() {
