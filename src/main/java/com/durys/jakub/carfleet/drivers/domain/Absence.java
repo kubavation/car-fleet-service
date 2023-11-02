@@ -1,10 +1,18 @@
 package com.durys.jakub.carfleet.drivers.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 class Absence {
 
+    @Id
     private final LocalDate date;
 
     Absence(LocalDate date) {

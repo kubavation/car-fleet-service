@@ -15,7 +15,7 @@ public class DefaultDriverAvailabilityService implements DriverAvailabilityServi
 
     @Override
     public boolean available(DriverId driverId, LocalDateTime from, LocalDateTime to) {
-        return driverRepository.find(driverId)
+        return driverRepository.findById(driverId)
                 .map(driver -> driver.activeBetween(from.toLocalDate(), to.toLocalDate()))
                 .orElse(false);
     }

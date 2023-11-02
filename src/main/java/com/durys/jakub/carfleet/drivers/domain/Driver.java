@@ -1,7 +1,9 @@
 package com.durys.jakub.carfleet.drivers.domain;
 
 import com.durys.jakub.carfleet.common.Status;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -10,14 +12,22 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Entity
 @Table
+@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 public class Driver {
 
+    @EmbeddedId
+    @AttributeOverrides({
+        @AttributeOverride(name = "value", column = @Column(name = "ID"))
+    })
     private final DriverId driverId;
     private String firstName;
     private String lastName;
     private Status status;
 
+    @OneToMany
+    @JoinColumn(name = "driver_id")
     private Set<Absence> absences;
 
     public Driver(DriverId driverId, String firstName, String lastName, Status status) {
