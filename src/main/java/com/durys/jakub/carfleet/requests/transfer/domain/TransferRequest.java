@@ -3,6 +3,8 @@ package com.durys.jakub.carfleet.requests.transfer.domain;
 import com.durys.jakub.carfleet.cars.domain.Car;
 import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.common.errors.ValidationError;
+import com.durys.jakub.carfleet.ddd.BaseAggregateRoot;
+import com.durys.jakub.carfleet.events.DomainEvent;
 import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
 import com.durys.jakub.carfleet.state.Flowable;
 import com.durys.jakub.carfleet.requests.RequestId;
@@ -11,9 +13,11 @@ import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
-public class TransferRequest implements Flowable<TransferRequest> {
+public class TransferRequest extends BaseAggregateRoot implements Flowable<TransferRequest> {
 
     private final RequestId requestId;
     private final RequesterId requesterId;
@@ -29,6 +33,7 @@ public class TransferRequest implements Flowable<TransferRequest> {
         this.requesterId = requesterId;
         this.content = new RequestContent(from, to, new RequestPurpose(purpose), departure, destination, carType);
         this.state = state;
+        this.events = new HashSet<>();
     }
 
     public TransferRequest(RequestId requestId, RequesterId requesterId,
@@ -37,6 +42,7 @@ public class TransferRequest implements Flowable<TransferRequest> {
         this.requestId = requestId;
         this.requesterId = requesterId;
         this.content = new RequestContent(from, to, new RequestPurpose(purpose), departure, destination, carType);
+        this.events = new HashSet<>();
     }
 
     public void assign(Car car) {
@@ -82,7 +88,31 @@ public class TransferRequest implements Flowable<TransferRequest> {
         return content.to();
     }
 
+    public RequestPurpose purpose() {
+        return content.purpose();
+    }
+
+    public String departure() {
+        return content.departure();
+    }
+
+    public String destination() {
+        return content.destination();
+    }
+
+    public CarType carType() {
+        return content.carType();
+    }
+
     public CarId assignedCar() {
         return assignedCar;
+    }
+
+    public void append(DomainEvent event) {
+        events.add(event);
+    }
+
+    public Set<DomainEvent> events() {
+        return events;
     }
 }

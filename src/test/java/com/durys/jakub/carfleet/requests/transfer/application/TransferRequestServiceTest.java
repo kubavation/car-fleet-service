@@ -10,6 +10,7 @@ import com.durys.jakub.carfleet.cars.domain.basicinformation.FuelType;
 import com.durys.jakub.carfleet.cars.infrastructure.MockedCarsRepository;
 import com.durys.jakub.carfleet.common.errors.ValidationError;
 import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
+import com.durys.jakub.carfleet.events.Events;
 import com.durys.jakub.carfleet.requests.RequestId;
 import com.durys.jakub.carfleet.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
@@ -30,12 +31,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TransferRequestServiceTest {
 
-    private final CarAvailabilityService carAvailabilityService = Mockito.mock(DefaultCarAvailabilityService.class);
+    private final CarAvailabilityService carAvailabilityService = Mockito.mock();
     private final TransferRequestRepository transferRequestRepository = new InMemoryTransferRequestRepository();
     private final CarsRepository carsRepository = new MockedCarsRepository();
     private final TransferRequestAssembler assembler = new TransferRequestAssembler(carAvailabilityService, carsRepository);
 
-    private final TransferRequestService transferRequestService = new TransferRequestService(assembler, transferRequestRepository);
+    private final Events events = Mockito.mock();
+
+    private final TransferRequestService transferRequestService
+            = new TransferRequestService(assembler, transferRequestRepository, events);
 
 
     @Test
@@ -67,6 +71,7 @@ class TransferRequestServiceTest {
 
         assertEquals("ACCEPTED", transferRequest.state());
         assertEquals(carId, transferRequest.assignedCar());
+        Mockito.verify(events, Mockito.times(1)).publish(Mockito.any());
     }
 
     @Test
@@ -92,7 +97,7 @@ class TransferRequestServiceTest {
 
         assertEquals("REJECTED", transferRequest.state());
     }
-    
+
 
     public RequestId addTransferRequest() {
         RequesterId requesterId = new RequesterId(UUID.randomUUID());

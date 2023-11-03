@@ -1,5 +1,6 @@
 package com.durys.jakub.carfleet.requests.transfer.application;
 
+import com.durys.jakub.carfleet.events.Events;
 import com.durys.jakub.carfleet.requests.RequestId;
 import com.durys.jakub.carfleet.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
@@ -21,6 +22,7 @@ public class TransferRequestService {
 
     private final TransferRequestAssembler assembler;
     private final TransferRequestRepository repository;
+    private final Events events;
 
     public TransferRequest create(RequesterId requesterId, LocalDateTime from, LocalDateTime to, String purpose,
                                   String departure, String destination, CarType carType) {
@@ -58,6 +60,11 @@ public class TransferRequestService {
                 .recreate(transferRequest)
                 .changeState(command);
 
-        return repository.save(result.getObject());
+        TransferRequest saved = repository.save(result.getObject());
+
+        saved.events()
+                .forEach(events::publish);
+
+        return saved;
     }
 }
