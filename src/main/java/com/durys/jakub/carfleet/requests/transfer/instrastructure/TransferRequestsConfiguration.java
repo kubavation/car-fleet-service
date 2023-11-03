@@ -9,7 +9,7 @@ class TransferRequestsConfiguration {
 
     @Bean
     TransferRequestRepository transferRequestRepository() {
-        return new MockedTransferRequestRepository();
+        return new InMemoryTransferRequestRepository();
     }
 
 }
