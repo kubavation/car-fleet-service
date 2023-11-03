@@ -8,6 +8,7 @@ import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.cars.domain.CarsRepository;
 import com.durys.jakub.carfleet.cars.domain.basicinformation.FuelType;
 import com.durys.jakub.carfleet.cars.infrastructure.MockedCarsRepository;
+import com.durys.jakub.carfleet.common.errors.ValidationError;
 import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
 import com.durys.jakub.carfleet.requests.RequestId;
 import com.durys.jakub.carfleet.requests.RequesterId;
@@ -23,8 +24,7 @@ import org.mockito.Mockito;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TransferRequestServiceTest {
 
@@ -65,6 +65,20 @@ class TransferRequestServiceTest {
 
         assertEquals("ACCEPTED", transferRequest.state());
         assertEquals(carId, transferRequest.assignedCar());
+    }
+
+    @Test
+    void shouldNotAcceptTransferRequest_whenAssignedCarIsNotOfRequestedType() {
+
+        RequestId requestId = addTransferRequest();
+        CarId carId = addCar(CarType.Bus);
+
+        Mockito.when(carAvailabilityService.available(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
+
+        ValidationError validationException
+                = assertThrows(ValidationError.class, () -> transferRequestService.changeStatus(requestId, new AssignTransferCarCommand(carId)));
+
+        assertEquals("Invalid assigned car type", validationException.getMessage());
     }
 
 
