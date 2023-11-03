@@ -6,13 +6,13 @@ import com.durys.jakub.carfleet.state.ChangeCommand;
 
 import java.time.LocalDateTime;
 
-public class ChangeCarCommand extends ChangeCommand {
+public class AssignTransferCarCommand extends ChangeCommand {
 
     private final CarId carId;
     private final LocalDateTime transferFrom;
     private final LocalDateTime transferTo;
 
-    public ChangeCarCommand(CarId carId, LocalDateTime transferFrom, LocalDateTime transferTo) {
+    public AssignTransferCarCommand(CarId carId, LocalDateTime transferFrom, LocalDateTime transferTo) {
         super(DriverTransferRequestStatus.ACCEPTED);
         this.carId = carId;
         this.transferFrom = transferFrom;

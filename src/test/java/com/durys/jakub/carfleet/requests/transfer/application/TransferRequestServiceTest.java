@@ -2,11 +2,14 @@ package com.durys.jakub.carfleet.requests.transfer.application;
 
 import com.durys.jakub.carfleet.cars.availability.CarAvailabilityService;
 import com.durys.jakub.carfleet.cars.availability.DefaultCarAvailabilityService;
+import com.durys.jakub.carfleet.cars.domain.CarsRepository;
+import com.durys.jakub.carfleet.cars.infrastructure.MockedCarsRepository;
 import com.durys.jakub.carfleet.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestRepository;
 import com.durys.jakub.carfleet.requests.transfer.instrastructure.MockedTransferRequestRepository;
+import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -19,7 +22,8 @@ class TransferRequestServiceTest {
 
     private final CarAvailabilityService carAvailabilityService = Mockito.mock(DefaultCarAvailabilityService.class);
     private final TransferRequestRepository transferRequestRepository = new MockedTransferRequestRepository();
-    private final TransferRequestAssembler assembler = new TransferRequestAssembler(carAvailabilityService);
+    private final CarsRepository carsRepository = new MockedCarsRepository();
+    private final TransferRequestAssembler assembler = new TransferRequestAssembler(carAvailabilityService, carsRepository);
 
     private final TransferRequestService transferRequestService = new TransferRequestService(assembler, transferRequestRepository);
 
@@ -33,8 +37,11 @@ class TransferRequestServiceTest {
         String purpose = "test";
         String departure = "Warsaw";
         String destination = "Krakow";
+        CarType carType = CarType.Passenger;
 
-        TransferRequest transferRequest = transferRequestService.create(requesterId, from, to, purpose, departure, destination);
+        TransferRequest transferRequest = transferRequestService
+                .create(requesterId, from, to, purpose, departure, destination, carType);
+
         assertNotNull(transferRequest);
     }
 

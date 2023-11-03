@@ -6,6 +6,7 @@ import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestRepository;
 import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
+import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
 import com.durys.jakub.carfleet.state.ChangeCommand;
 import com.durys.jakub.carfleet.state.State;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +23,10 @@ public class TransferRequestService {
     private final TransferRequestRepository repository;
 
     public TransferRequest create(RequesterId requesterId, LocalDateTime from, LocalDateTime to, String purpose,
-                                  String departure, String destination) {
+                                  String departure, String destination, CarType carType) {
 
         TransferRequest transferRequest = new TransferRequest(new RequestId(UUID.randomUUID()), requesterId, from, to, purpose,
-                departure, destination);
+                departure, destination, carType);
 
         State<TransferRequest> result = assembler.configuration().begin(transferRequest);
         return repository.save(result.getObject());
@@ -33,7 +34,7 @@ public class TransferRequestService {
 
 
     public TransferRequest change(RequestId requestId, LocalDateTime from, LocalDateTime to,
-                                  String purpose, String departure, String destination) {
+                                  String purpose, String departure, String destination, CarType carType) {
 
         TransferRequest transferRequest = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);
@@ -42,7 +43,7 @@ public class TransferRequestService {
                 .recreate(transferRequest)
                 .changeContent(
                         new TransferRequest(transferRequest.getRequestId(), transferRequest.getRequesterId(),
-                                from, to, purpose, departure, destination, transferRequest.state()));
+                                from, to, purpose, departure, destination, carType, transferRequest.state()));
 
         return repository.save(result.getObject());
     }

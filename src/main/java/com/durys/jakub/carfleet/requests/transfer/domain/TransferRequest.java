@@ -2,6 +2,7 @@ package com.durys.jakub.carfleet.requests.transfer.domain;
 
 import com.durys.jakub.carfleet.cars.domain.Car;
 import com.durys.jakub.carfleet.cars.domain.CarId;
+import com.durys.jakub.carfleet.common.errors.ValidationError;
 import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
 import com.durys.jakub.carfleet.state.Flowable;
 import com.durys.jakub.carfleet.requests.RequestId;
@@ -38,7 +39,12 @@ public class TransferRequest implements Flowable<TransferRequest> {
         this.content = new RequestContent(from, to, new RequestPurpose(purpose), departure, destination, carType);
     }
 
-    public void assignCar(Car car) {
+    public void assign(Car car) {
+
+        if (car.getCarType() != content.carType()) {
+            throw new ValidationError("Invalid assigned car type");
+        }
+
         this.assignedCar = car.getCarId();
     }
 

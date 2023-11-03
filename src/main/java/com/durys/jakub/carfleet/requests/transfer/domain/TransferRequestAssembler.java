@@ -1,7 +1,8 @@
 package com.durys.jakub.carfleet.requests.transfer.domain;
 
 import com.durys.jakub.carfleet.cars.availability.CarAvailabilityService;
-import com.durys.jakub.carfleet.requests.transfer.domain.state.actions.ChangeCarInformation;
+import com.durys.jakub.carfleet.cars.domain.CarsRepository;
+import com.durys.jakub.carfleet.requests.transfer.domain.state.actions.AssignTransferCar;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.predicates.CarAvailablePredicate;
 import com.durys.jakub.carfleet.state.Assembler;
 import com.durys.jakub.carfleet.state.StateBuilder;
@@ -16,9 +17,12 @@ public class TransferRequestAssembler implements Assembler<TransferRequest> {
 
     private final StateConfig<TransferRequest> configuration;
     private final CarAvailabilityService carAvailabilityService;
+    private final CarsRepository carsRepository;
 
-    public TransferRequestAssembler(CarAvailabilityService carAvailabilityService) {
+    public TransferRequestAssembler(CarAvailabilityService carAvailabilityService,
+                                    CarsRepository carsRepository) {
         this.carAvailabilityService = carAvailabilityService;
+        this.carsRepository = carsRepository;
         this.configuration = assemble();
     }
 
@@ -33,7 +37,7 @@ public class TransferRequestAssembler implements Assembler<TransferRequest> {
                 .beginWith(SUBMITTED)
                 .to(ACCEPTED)
                 .check(new CarAvailablePredicate(carAvailabilityService))
-                .execute(new ChangeCarInformation())
+                .execute(new AssignTransferCar(carsRepository))
                 .and()
                     .from(SUBMITTED).whenContentChangesTo(EDITED)
                 .and()
@@ -44,7 +48,7 @@ public class TransferRequestAssembler implements Assembler<TransferRequest> {
                 .from(EDITED)
                     .to(ACCEPTED)
                     .check(new CarAvailablePredicate(carAvailabilityService))
-                    .execute(new ChangeCarInformation())
+                    .execute(new AssignTransferCar(carsRepository))
                 .and()
                     .from(SUBMITTED).to(REJECTED)
                 .build();
