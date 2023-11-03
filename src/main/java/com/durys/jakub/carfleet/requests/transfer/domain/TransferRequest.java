@@ -73,4 +73,12 @@ public class TransferRequest implements Flowable<TransferRequest> {
                 request.content.destination(),
                 request.content.carType());
     }
+
+    public LocalDateTime transferFrom() {
+        return content.from();
+    }
+
+    public LocalDateTime transferTo() {
+        return content.to();
+    }
 }
