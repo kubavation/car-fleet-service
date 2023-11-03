@@ -54,12 +54,12 @@ public class TransferRequest implements Flowable<TransferRequest> {
 
     @Override
     public String state() {
-        return null;
+        return state;
     }
 
     @Override
     public TransferRequest content() {
-        return null;
+        return this;
     }
 
     @Override
