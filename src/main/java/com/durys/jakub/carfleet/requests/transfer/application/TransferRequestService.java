@@ -21,7 +21,7 @@ public class TransferRequestService {
     private final TransferRequestAssembler assembler;
     private final TransferRequestRepository repository;
 
-    public TransferRequest create(RequesterId requesterId, LocalDateTime from, LocalDateTime to, RequestPurpose purpose,
+    public TransferRequest create(RequesterId requesterId, LocalDateTime from, LocalDateTime to, String purpose,
                                   String departure, String destination) {
 
         TransferRequest transferRequest = new TransferRequest(new RequestId(UUID.randomUUID()), requesterId, from, to, purpose,
@@ -33,7 +33,7 @@ public class TransferRequestService {
 
 
     public TransferRequest change(RequestId requestId, LocalDateTime from, LocalDateTime to,
-                                  RequestPurpose purpose, String departure, String destination) {
+                                  String purpose, String departure, String destination) {
 
         TransferRequest transferRequest = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);

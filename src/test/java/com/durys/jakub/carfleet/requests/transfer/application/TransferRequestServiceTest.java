@@ -7,15 +7,13 @@ import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestRepository;
 import com.durys.jakub.carfleet.requests.transfer.instrastructure.MockedTransferRequestRepository;
-import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
-import org.bouncycastle.cert.ocsp.Req;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class TransferRequestServiceTest {
 
@@ -32,7 +30,7 @@ class TransferRequestServiceTest {
         RequesterId requesterId = new RequesterId(UUID.randomUUID());
         LocalDateTime from = LocalDateTime.now();
         LocalDateTime to = LocalDateTime.now().plusDays(1);
-        RequestPurpose purpose = new RequestPurpose("test");
+        String purpose = "test";
         String departure = "Warsaw";
         String destination = "Krakow";
 
