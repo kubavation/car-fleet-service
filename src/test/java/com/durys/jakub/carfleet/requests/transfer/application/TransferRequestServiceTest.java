@@ -15,9 +15,11 @@ import com.durys.jakub.carfleet.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestRepository;
+import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestStatus;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.commands.AssignTransferCarCommand;
 import com.durys.jakub.carfleet.requests.transfer.instrastructure.InMemoryTransferRequestRepository;
 import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
+import com.durys.jakub.carfleet.state.ChangeCommand;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -81,6 +83,16 @@ class TransferRequestServiceTest {
         assertEquals("Invalid assigned car type", validationException.getMessage());
     }
 
+    @Test
+    void shouldRejectTransferRequest() {
+
+        RequestId requestId = addTransferRequest();
+
+        TransferRequest transferRequest = transferRequestService.changeStatus(requestId, new ChangeCommand(TransferRequestStatus.REJECTED));
+
+        assertEquals("REJECTED", transferRequest.state());
+    }
+    
 
     public RequestId addTransferRequest() {
         RequesterId requesterId = new RequesterId(UUID.randomUUID());
