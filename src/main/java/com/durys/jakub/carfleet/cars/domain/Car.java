@@ -3,6 +3,7 @@ package com.durys.jakub.carfleet.cars.domain;
 import com.durys.jakub.carfleet.cars.domain.basicinformation.CarBasicInformation;
 import com.durys.jakub.carfleet.cars.domain.tenchicalinspection.TechnicalInspection;
 import com.durys.jakub.carfleet.common.errors.ValidationError;
+import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
 import lombok.Getter;
 
 import java.time.LocalDate;

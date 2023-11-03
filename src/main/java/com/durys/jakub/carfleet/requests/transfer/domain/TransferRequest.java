@@ -1,6 +1,8 @@
 package com.durys.jakub.carfleet.requests.transfer.domain;
 
+import com.durys.jakub.carfleet.cars.domain.Car;
 import com.durys.jakub.carfleet.cars.domain.CarId;
+import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
 import com.durys.jakub.carfleet.state.Flowable;
 import com.durys.jakub.carfleet.requests.RequestId;
 import com.durys.jakub.carfleet.requests.RequesterId;
@@ -21,23 +23,23 @@ public class TransferRequest implements Flowable<TransferRequest> {
 
     public TransferRequest(RequestId requestId, RequesterId requesterId,
                            LocalDateTime from, LocalDateTime to, String purpose,
-                           String departure, String destination, String state) {
+                           String departure, String destination, CarType carType, String state) {
         this.requestId = requestId;
         this.requesterId = requesterId;
-        this.content = new RequestContent(from, to, new RequestPurpose(purpose), departure, destination);
+        this.content = new RequestContent(from, to, new RequestPurpose(purpose), departure, destination, carType);
         this.state = state;
     }
 
     public TransferRequest(RequestId requestId, RequesterId requesterId,
                            LocalDateTime from, LocalDateTime to, String purpose,
-                           String departure, String destination) {
+                           String departure, String destination, CarType carType) {
         this.requestId = requestId;
         this.requesterId = requesterId;
-        this.content = new RequestContent(from, to, new RequestPurpose(purpose), departure, destination);
+        this.content = new RequestContent(from, to, new RequestPurpose(purpose), departure, destination, carType);
     }
 
-    public void setUpCar(CarId carId) {
-        this.assignedCar = carId;
+    public void assignCar(Car car) {
+        this.assignedCar = car.getCarId();
     }
 
     @Override
@@ -58,10 +60,11 @@ public class TransferRequest implements Flowable<TransferRequest> {
     @Override
     public void setContent(TransferRequest request) {
         this.content = new RequestContent(
-                request.getContent().from(),
-                request.getContent().to(),
-                request.getContent().purpose(),
-                request.getContent().departure(),
-                request.getContent().destination());
+                request.content.from(),
+                request.content.to(),
+                request.content.purpose(),
+                request.content.departure(),
+                request.content.destination(),
+                request.content.carType());
     }
 }

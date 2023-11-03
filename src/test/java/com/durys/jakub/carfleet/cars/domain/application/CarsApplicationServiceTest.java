@@ -6,6 +6,7 @@ import com.durys.jakub.carfleet.cars.domain.basicinformation.FuelType;
 import com.durys.jakub.carfleet.cars.infrastructure.MockedCarsRepository;
 import com.durys.jakub.carfleet.common.OperationResult;
 import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
+import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

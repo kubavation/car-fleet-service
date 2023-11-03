@@ -11,7 +11,7 @@ public class ChangeCarInformation implements BiFunction<TransferRequest, ChangeC
     @Override
     public Void apply(TransferRequest transferRequest, ChangeCommand changeCommand) {
         var command = (ChangeCarCommand) changeCommand;
-        transferRequest.setUpCar(command.getCarId());
+        transferRequest.assignCar(command.getCarId());
         return null;
     }
 }
