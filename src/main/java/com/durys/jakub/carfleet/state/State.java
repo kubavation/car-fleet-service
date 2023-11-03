@@ -26,11 +26,12 @@ public class State<T extends Flowable<T>> {
     }
 
 
-    public State<T> changeState(ChangeCommand command){
+    public State<T> changeState(ChangeCommand command) {
 
-        log.info("chaning state to {}", command.getDesiredState());
+        log.info("changing state to {}", command.getDesiredState());
 
         StateTransition<T> transition = findStatusChangedTransition(command.getDesiredState());
+
 
         if (transition == null) {
             throw new RuntimeException("Invalid transition");
