@@ -3,7 +3,7 @@ package com.durys.jakub.carfleet.cars.domain;
 import com.durys.jakub.carfleet.cars.domain.basicinformation.CarBasicInformation;
 import com.durys.jakub.carfleet.cars.domain.basicinformation.FuelType;
 import com.durys.jakub.carfleet.common.errors.ValidationErrorHandler;
-import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
+import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

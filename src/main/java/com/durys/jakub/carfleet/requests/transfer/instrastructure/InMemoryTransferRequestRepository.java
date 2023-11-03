@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class MockedTransferRequestRepository implements TransferRequestRepository {
+public class InMemoryTransferRequestRepository implements TransferRequestRepository {
 
     private static final Map<RequestId, TransferRequest> DB = new HashMap<>();
 
