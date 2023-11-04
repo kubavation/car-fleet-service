@@ -35,7 +35,7 @@ public class DriverTransferRequest implements Flowable<DriverTransferRequest> {
     public DriverTransferRequest(RequestId requestId, RequesterId requesterId,
                                  LocalDateTime from, LocalDateTime to, RequestPurpose purpose, String departure,
                                  String destination) {
-        this(requestId, requesterId, from, to, purpose, departure, destination, DriverTransferRequestStatus.NEW.name());
+        this(requestId, requesterId, from, to, purpose, departure, destination, Status.NEW.name());
     }
 
     public DriverTransferRequest(RequestId requestId, RequesterId requesterId,
