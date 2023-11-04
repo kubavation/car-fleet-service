@@ -68,7 +68,7 @@ class TransferRequestServiceTest {
         var response = transferRequestService.changeStatus(requestId, new AssignTransferCarCommand(carId));
 
         assertTrue(response.isRight());
-        assertEquals("ACCEPTED", response.get().state());
+        assertEquals(TransferRequest.Status.ACCEPTED.name(), response.get().state());
         assertEquals(carId, response.get().assignedCar());
     }
 

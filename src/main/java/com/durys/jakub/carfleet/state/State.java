@@ -41,9 +41,9 @@ public class State<T extends Flowable<T>> {
                 checkStatusChangePredicates(command, transition.getStateChangePredicates());
 
         if (predicatesResult.succeeded()) {
-            transition.getTo().init(object);
+            transition.to().init(object);
             transition.getAfterStateChangeActions().forEach(e -> e.apply(object, command));
-            return Either.right(transition.getTo());
+            return Either.right(transition.to());
         }
 
         return Either.left(predicatesResult.errors());
@@ -59,7 +59,7 @@ public class State<T extends Flowable<T>> {
         }
 
         //todo validation (predicates)
-        State<T> state = contentChangedTransition.getTo();
+        State<T> state = contentChangedTransition.to();
         state.init(object);
         this.object.setContent(content);
         return state;
@@ -83,7 +83,7 @@ public class State<T extends Flowable<T>> {
 
     public Set<BiFunction<T, ChangeCommand, Void>> afterStateChangeActions(String toName) {
         return possibleTransitions.stream()
-                .filter(transition -> transition.getTo().name.equals(toName))
+                .filter(transition -> transition.to().name.equals(toName))
                 .flatMap(transition -> transition.getAfterStateChangeActions().stream())
                 .collect(Collectors.toSet());
     }
@@ -91,7 +91,7 @@ public class State<T extends Flowable<T>> {
     private StateTransition<T> findStatusChangedTransition(String desiredState) {
         return getPossibleTransitions()
                 .stream()
-                .filter(transition -> transition.getTo().name.equals(desiredState))
+                .filter(transition -> transition.to().name.equals(desiredState))
                 .filter(StateTransition::statusChangedTransition)
                 .findFirst()
                 .orElse(null);
@@ -101,7 +101,7 @@ public class State<T extends Flowable<T>> {
     private StateTransition<T> findContentChangedTransition(String currentState) {
         return getPossibleTransitions()
                 .stream()
-                .filter(transition -> transition.getFrom().name.equals(currentState))
+                .filter(transition -> transition.from().name.equals(currentState))
                 .filter(StateTransition::contentChangedTransition)
                 .findFirst()
                 .orElse(null);

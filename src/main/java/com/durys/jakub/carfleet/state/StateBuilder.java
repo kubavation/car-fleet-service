@@ -40,7 +40,7 @@ public class StateBuilder<T extends Flowable<T>> implements InitialStateBuilder<
         @Override
         public StateTransitionActionBuilder<T> check(BiFunction<State<T>, ChangeCommand, PredicateResult> checkingFunction) {
             transition.addPredicate(checkingFunction);
-            return this; //todo
+            return this;
         }
 
         @Override

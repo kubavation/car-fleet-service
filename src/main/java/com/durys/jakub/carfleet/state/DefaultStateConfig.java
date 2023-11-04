@@ -44,7 +44,7 @@ public class DefaultStateConfig<T extends Flowable<T>> implements StateConfig<T>
             var duplicateTransition = duplicateTransitions.get(0);
 
             throw new RuntimeException("Duplicate transition between %s -> %s"
-                    .formatted(duplicateTransition.getFrom(), duplicateTransition.getTo()));
+                    .formatted(duplicateTransition.from(), duplicateTransition.to()));
         }
 
     }
