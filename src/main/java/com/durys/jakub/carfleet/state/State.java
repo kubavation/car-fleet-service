@@ -1,6 +1,6 @@
 package com.durys.jakub.carfleet.state;
 
-import com.durys.jakub.carfleet.common.OperationResult;
+import io.vavr.control.Either;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class State<T extends Flowable<T>> {
     }
 
 
-    public State<T> changeState(ChangeCommand command) {
+    public Either<Set<Exception>, State<T>> changeState(ChangeCommand command) {
 
         log.info("changing state to {}", command.getDesiredState());
 
@@ -43,10 +43,10 @@ public class State<T extends Flowable<T>> {
         if (predicatesResult.succeeded()) {
             transition.getTo().init(object);
             transition.getAfterStateChangeActions().forEach(e -> e.apply(object, command));
-            return transition.getTo();
+            return Either.right(transition.getTo());
         }
 
-        return this;
+        return Either.left(predicatesResult.errors());
     }
 
 

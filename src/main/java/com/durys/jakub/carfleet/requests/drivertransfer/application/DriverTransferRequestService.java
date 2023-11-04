@@ -8,10 +8,12 @@ import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferReq
 import com.durys.jakub.carfleet.state.ChangeCommand;
 import com.durys.jakub.carfleet.state.State;
 import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
+import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Component
@@ -49,15 +51,14 @@ public class DriverTransferRequestService {
     }
 
 
-    public DriverTransferRequest changeStatus(RequestId requestId, ChangeCommand command) {
+    public Either<Set<Exception>, DriverTransferRequest> changeStatus(RequestId requestId, ChangeCommand command) {
 
         DriverTransferRequest driverTransferRequest = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);
 
-        State<DriverTransferRequest> result = assembler.configuration()
+        return assembler.configuration()
                 .recreate(driverTransferRequest)
-                .changeState(command);
-
-        return repository.save(result.getObject());
+                .changeState(command)
+                .map(state -> repository.save(state.getObject()));
     }
 }
