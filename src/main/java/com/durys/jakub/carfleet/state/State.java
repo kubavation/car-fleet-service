@@ -1,5 +1,6 @@
 package com.durys.jakub.carfleet.state;
 
+import com.durys.jakub.carfleet.common.OperationResult;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -32,14 +33,15 @@ public class State<T extends Flowable<T>> {
 
         StateTransition<T> transition = findStatusChangedTransition(command.getDesiredState());
 
-
         if (transition == null) {
             throw new RuntimeException("Invalid transition");
         }
 
-        Set<BiFunction<State<T>, ChangeCommand, Boolean>> predicates = transition.getStateChangePredicates();
+        Set<BiFunction<State<T>, ChangeCommand, PredicateResult>> predicates = transition.getStateChangePredicates();
 
-        if (predicates.stream().allMatch(e -> e.apply(this, command))) {
+        StatusChangePredicatesResult predicatesResult = checkStatusChangePredicates(command, predicates);
+
+        if (predicatesResult.succeeded()) {
             transition.getTo().init(object);
             transition.getAfterStateChangeActions().forEach(e -> e.apply(object, command));
             return transition.getTo();
@@ -104,6 +106,17 @@ public class State<T extends Flowable<T>> {
                 .filter(StateTransition::contentChangedTransition)
                 .findFirst()
                 .orElse(null);
+    }
+
+    private StatusChangePredicatesResult checkStatusChangePredicates(ChangeCommand command,
+                            Set<BiFunction<State<T>, ChangeCommand, PredicateResult>> predicates) {
+
+        List<PredicateResult> result = predicates
+                .stream()
+                .map(predicate -> predicate.apply(this, command))
+                .toList();
+
+        return StatusChangePredicatesResult.from(result);
     }
 
     @Override

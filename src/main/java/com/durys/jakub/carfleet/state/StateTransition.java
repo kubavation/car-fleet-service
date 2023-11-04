@@ -20,7 +20,7 @@ public class StateTransition<T extends Flowable<T>> {
     private final Mode mode;
 
     private final Set<BiFunction<T, ChangeCommand, Void>> afterStateChangeActions = new HashSet<>();
-    private final Set<BiFunction<State<T>, ChangeCommand, Boolean>> stateChangePredicates = new HashSet<>();
+    private final Set<BiFunction<State<T>, ChangeCommand, PredicateResult>> stateChangePredicates = new HashSet<>();
 
     private StateTransition(State<T> from, State<T> to, Mode mode) {
         this.from = from;
@@ -40,7 +40,7 @@ public class StateTransition<T extends Flowable<T>> {
         afterStateChangeActions.add(action);
     }
 
-    public void addPredicate(BiFunction<State<T>, ChangeCommand, Boolean> predicate) {
+    public void addPredicate(BiFunction<State<T>, ChangeCommand, PredicateResult> predicate) {
         stateChangePredicates.add(predicate);
     }
 
@@ -65,7 +65,7 @@ public class StateTransition<T extends Flowable<T>> {
         return afterStateChangeActions;
     }
 
-    public Set<BiFunction<State<T>, ChangeCommand, Boolean>> getStateChangePredicates() {
+    public Set<BiFunction<State<T>, ChangeCommand, PredicateResult>> getStateChangePredicates() {
         return stateChangePredicates;
     }
 
