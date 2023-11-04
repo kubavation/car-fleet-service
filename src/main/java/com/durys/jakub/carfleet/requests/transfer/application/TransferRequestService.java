@@ -62,9 +62,6 @@ public class TransferRequestService {
 
         TransferRequest saved = repository.save(result.getObject());
 
-        saved.events()
-                .forEach(events::publish);
-
         return saved;
     }
 }
