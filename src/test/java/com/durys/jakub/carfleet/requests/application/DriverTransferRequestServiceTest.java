@@ -12,7 +12,6 @@ import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferReq
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequestAssembler;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
-import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequestStatus;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.commands.ChangeTransportInformationCommand;
 import com.durys.jakub.carfleet.requests.drivertransfer.infrastructure.MockedDriverTransferRequestRepository;
 import com.durys.jakub.carfleet.sharedkernel.cars.CarType;

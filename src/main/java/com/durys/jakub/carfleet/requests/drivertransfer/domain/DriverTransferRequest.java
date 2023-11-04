@@ -14,6 +14,15 @@ import java.time.LocalDateTime;
 @Data
 public class DriverTransferRequest implements Flowable<DriverTransferRequest> {
 
+    public enum Status {
+        NEW,
+        EDITED,
+        ACCEPTED,
+        CANCELLED,
+        REJECTED
+    }
+
+
     private final RequestId requestId;
     private final RequesterId requesterId;
     private RequestContent content;
