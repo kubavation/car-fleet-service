@@ -47,16 +47,9 @@ class TransferRequestServiceDomainEventsTest {
     }
 
     public RequestId addTransferRequest() {
-        RequesterId requesterId = new RequesterId(UUID.randomUUID());
-        LocalDateTime from = LocalDateTime.now();
-        LocalDateTime to = LocalDateTime.now().plusDays(1);
-        String purpose = "test";
-        String departure = "Warsaw";
-        String destination = "Krakow";
-        CarType carType = CarType.Passenger;
-
         TransferRequest transferRequest = transferRequestService
-                .create(requesterId, from, to, purpose, departure, destination, carType);
+                .create(new RequesterId(UUID.randomUUID()), LocalDateTime.now(), LocalDateTime.now().plusDays(1),
+                "test", "Warsaw",  "Krakow", CarType.Passenger);
         return transferRequest.getRequestId();
     }
 

@@ -1,7 +1,6 @@
 package com.durys.jakub.carfleet.requests.transfer.application;
 
 import com.durys.jakub.carfleet.cars.availability.CarAvailabilityService;
-import com.durys.jakub.carfleet.cars.availability.DefaultCarAvailabilityService;
 import com.durys.jakub.carfleet.cars.domain.Car;
 import com.durys.jakub.carfleet.cars.domain.CarFactory;
 import com.durys.jakub.carfleet.cars.domain.CarId;
@@ -100,16 +99,9 @@ class TransferRequestServiceTest {
 
 
     public RequestId addTransferRequest() {
-        RequesterId requesterId = new RequesterId(UUID.randomUUID());
-        LocalDateTime from = LocalDateTime.now();
-        LocalDateTime to = LocalDateTime.now().plusDays(1);
-        String purpose = "test";
-        String departure = "Warsaw";
-        String destination = "Krakow";
-        CarType carType = CarType.Passenger;
-
         TransferRequest transferRequest = transferRequestService
-                .create(requesterId, from, to, purpose, departure, destination, carType);
+                .create(new RequesterId(UUID.randomUUID()), LocalDateTime.now(), LocalDateTime.now().plusDays(1),
+                        "test", "Warsaw",  "Krakow", CarType.Passenger);
         return transferRequest.getRequestId();
     }
 
