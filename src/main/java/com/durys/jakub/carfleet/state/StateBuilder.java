@@ -38,7 +38,7 @@ public class StateBuilder<T extends Flowable<T>> implements InitialStateBuilder<
         }
 
         @Override
-        public StateTransitionActionBuilder<T> check(BiFunction<State<T>, ChangeCommand, Boolean> checkingFunction) {
+        public StateTransitionActionBuilder<T> check(BiFunction<State<T>, ChangeCommand, PredicateResult> checkingFunction) {
             transition.addPredicate(checkingFunction);
             return this; //todo
         }
@@ -113,7 +113,7 @@ public class StateBuilder<T extends Flowable<T>> implements InitialStateBuilder<
 
     public interface StateTransitionActionBuilder<T extends Flowable<T>> extends DefaultBuilder<T> {
         StateTransitionActionBuilder<T> execute(BiFunction<T, ChangeCommand, Void> action);
-        StateTransitionActionBuilder<T> check(BiFunction<State<T>, ChangeCommand, Boolean> predicate);
+        StateTransitionActionBuilder<T> check(BiFunction<State<T>, ChangeCommand, PredicateResult> predicate);
         StateConfig<T> build();
     }
 

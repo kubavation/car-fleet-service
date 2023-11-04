@@ -37,9 +37,8 @@ public class State<T extends Flowable<T>> {
             throw new RuntimeException("Invalid transition");
         }
 
-        Set<BiFunction<State<T>, ChangeCommand, PredicateResult>> predicates = transition.getStateChangePredicates();
-
-        StatusChangePredicatesResult predicatesResult = checkStatusChangePredicates(command, predicates);
+        StatusChangePredicatesResult predicatesResult =
+                checkStatusChangePredicates(command, transition.getStateChangePredicates());
 
         if (predicatesResult.succeeded()) {
             transition.getTo().init(object);

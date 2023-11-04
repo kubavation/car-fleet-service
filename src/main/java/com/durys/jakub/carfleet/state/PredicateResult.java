@@ -19,6 +19,10 @@ public class PredicateResult {
         this.errors = errors;
     }
 
+    public static PredicateResult from(boolean result) {
+        return result ? PredicateResult.success() : PredicateResult.failure(Collections.emptyList());
+    }
+
     public static PredicateResult success() {
         return new PredicateResult(Status.Success, Collections.emptyList());
     }
