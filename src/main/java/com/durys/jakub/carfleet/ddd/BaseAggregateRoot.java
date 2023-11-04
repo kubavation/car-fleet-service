@@ -15,4 +15,8 @@ public abstract class BaseAggregateRoot {
 
     @Version
     private Long version;
+
+    public void append(DomainEvent event) {
+        events.add(event);
+    }
 }

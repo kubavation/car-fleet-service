@@ -24,6 +24,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequest.Status.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DriverTransferRequestServiceTest {
@@ -64,7 +65,7 @@ class DriverTransferRequestServiceTest {
         DriverTransferRequest driverTransferRequest = driverTransferRequestService.change(result.getRequestId(),
                 from, to, purpose, departure, destination);
 
-        assertEquals("EDITED", driverTransferRequest.state());
+        assertEquals(EDITED.name(), driverTransferRequest.state());
     }
 
     @Test
@@ -81,7 +82,7 @@ class DriverTransferRequestServiceTest {
                 new ChangeTransportInformationCommand(driverId, carId));
 
         assertTrue(response.isRight());
-        assertEquals("ACCEPTED", response.get().state());
+        assertEquals(ACCEPTED.name(), response.get().state());
         assertEquals(driverId, response.get().getDriverId());
         assertEquals(carId, response.get().getCarId());
     }
@@ -93,10 +94,10 @@ class DriverTransferRequestServiceTest {
                 .create(requesterId, from, to, purpose, departure, destination);
 
         var response = driverTransferRequestService.changeStatus(result.getRequestId(),
-                new ChangeCommand(DriverTransferRequestStatus.REJECTED));
+                new ChangeCommand(DriverTransferRequest.Status.REJECTED));
 
         assertTrue(response.isRight());
-        assertEquals("REJECTED", response.get().state());
+        assertEquals(REJECTED.name(), response.get().state());
     }
 
     @Test
@@ -113,10 +114,10 @@ class DriverTransferRequestServiceTest {
                 new ChangeTransportInformationCommand(driverId, carId)).get();
 
         var response = driverTransferRequestService.changeStatus(saved.getRequestId(),
-                new ChangeCommand(DriverTransferRequestStatus.CANCELLED));
+                new ChangeCommand(DriverTransferRequest.Status.CANCELLED));
 
         assertTrue(response.isRight());
-        assertEquals("CANCELLED", response.get().state());
+        assertEquals(CANCELLED.name(), response.get().state());
     }
 
 
