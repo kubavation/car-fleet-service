@@ -1,6 +1,6 @@
 package com.durys.jakub.carfleet.requests.transfer.instrastructure;
 
-import com.durys.jakub.carfleet.requests.RequestId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestRepository;
 

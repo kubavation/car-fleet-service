@@ -1,7 +1,7 @@
 package com.durys.jakub.carfleet.requests.prebooking.domain.events;
 
 import com.durys.jakub.carfleet.events.DomainEvent;
-import com.durys.jakub.carfleet.requests.RequesterId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 
 import java.time.Instant;
 import java.util.UUID;

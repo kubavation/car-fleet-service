@@ -1,12 +1,11 @@
 package com.durys.jakub.carfleet.requests.transfer.application;
 
 import com.durys.jakub.carfleet.events.Events;
-import com.durys.jakub.carfleet.requests.RequestId;
-import com.durys.jakub.carfleet.requests.RequesterId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestRepository;
-import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
 import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
 import com.durys.jakub.carfleet.state.ChangeCommand;
 import com.durys.jakub.carfleet.state.State;
@@ -60,8 +59,6 @@ public class TransferRequestService {
                 .recreate(transferRequest)
                 .changeState(command);
 
-        TransferRequest saved = repository.save(result.getObject());
-
-        return saved;
+        return repository.save(result.getObject());
     }
 }

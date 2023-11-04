@@ -3,7 +3,7 @@ package com.durys.jakub.carfleet.requests.prebooking.domain.events;
 import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.drivers.domain.DriverId;
 import com.durys.jakub.carfleet.events.DomainEvent;
-import com.durys.jakub.carfleet.requests.RequestId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

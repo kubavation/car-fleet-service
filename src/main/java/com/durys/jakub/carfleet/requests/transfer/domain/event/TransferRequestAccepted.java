@@ -2,8 +2,8 @@ package com.durys.jakub.carfleet.requests.transfer.domain.event;
 
 import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.events.DomainEvent;
-import com.durys.jakub.carfleet.requests.RequestId;
-import com.durys.jakub.carfleet.requests.RequesterId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 
 import java.time.Instant;

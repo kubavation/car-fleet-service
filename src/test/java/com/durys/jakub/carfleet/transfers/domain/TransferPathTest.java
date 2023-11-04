@@ -1,6 +1,6 @@
 package com.durys.jakub.carfleet.transfers.domain;
 
-import com.durys.jakub.carfleet.requests.RequestId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;

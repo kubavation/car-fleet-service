@@ -1,6 +1,6 @@
 package com.durys.jakub.carfleet.requests.drivertransfer.infrastructure.in.event.handler;
 
-import com.durys.jakub.carfleet.requests.RequesterId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.drivertransfer.application.DriverTransferRequestService;
 import com.durys.jakub.carfleet.requests.drivertransfer.infrastructure.in.event.DriverTransferRequestSubmitted;
 import com.durys.jakub.carfleet.requests.vo.RequestPurpose;

@@ -1,7 +1,7 @@
 package com.durys.jakub.carfleet.requests.drivertransfer.application;
 
-import com.durys.jakub.carfleet.requests.RequestId;
-import com.durys.jakub.carfleet.requests.RequesterId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequest;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequestRepository;
