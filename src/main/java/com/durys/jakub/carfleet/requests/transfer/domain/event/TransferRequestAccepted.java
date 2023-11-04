@@ -17,7 +17,7 @@ public record TransferRequestAccepted(UUID id, Instant at, RequestId requestId, 
     public static TransferRequestAccepted from(TransferRequest request) {
         return new TransferRequestAccepted(
                 UUID.randomUUID(), Instant.now(),
-                request.getRequestId(), request.getRequesterId(), request.transferFrom(),
+                request.requestId(), request.requesterId(), request.transferFrom(),
                 request.transferTo(), request.departure(), request.destination(), request.assignedCar());
     }
 }

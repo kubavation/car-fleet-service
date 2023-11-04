@@ -43,7 +43,7 @@ public class TransferRequestService {
         State<TransferRequest> result = assembler.configuration()
                 .recreate(transferRequest)
                 .changeContent(
-                        new TransferRequest(transferRequest.getRequestId(), transferRequest.getRequesterId(),
+                        new TransferRequest(transferRequest.requestId(), transferRequest.requesterId(),
                                 from, to, purpose, departure, destination, carType, transferRequest.state()));
 
         return repository.save(result.getObject());

@@ -21,8 +21,8 @@ public class Driver {
     @AttributeOverrides({
         @AttributeOverride(name = "value", column = @Column(name = "ID"))
     })
-
     private final DriverId driverId;
+
     private String firstName;
     private String lastName;
     private Status status;
