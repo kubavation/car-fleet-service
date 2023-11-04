@@ -8,8 +8,8 @@ import com.durys.jakub.carfleet.cars.domain.basicinformation.FuelType;
 import com.durys.jakub.carfleet.cars.infrastructure.MockedCarsRepository;
 import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
 import com.durys.jakub.carfleet.events.Events;
-import com.durys.jakub.carfleet.requests.RequestId;
-import com.durys.jakub.carfleet.requests.RequesterId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.commands.AssignTransferCarCommand;
 import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
@@ -50,7 +50,7 @@ class TransferRequestServiceDomainEventsTest {
         TransferRequest transferRequest = transferRequestService
                 .create(new RequesterId(UUID.randomUUID()), LocalDateTime.now(), LocalDateTime.now().plusDays(1),
                 "test", "Warsaw",  "Krakow", CarType.Passenger);
-        return transferRequest.getRequestId();
+        return transferRequest.requestId();
     }
 
     private CarId addCar(CarType carType) {

@@ -1,8 +1,8 @@
 package com.durys.jakub.carfleet.transfers.application;
 
 import com.durys.jakub.carfleet.cars.domain.CarId;
-import com.durys.jakub.carfleet.requests.RequestId;
-import com.durys.jakub.carfleet.requests.RequesterId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.transfers.domain.Transfer;
 import com.durys.jakub.carfleet.transfers.domain.TransferFactory;
 import jakarta.transaction.Transactional;

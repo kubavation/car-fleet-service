@@ -1,7 +1,7 @@
 package com.durys.jakub.carfleet.requests.transfer.domain;
 
 import com.durys.jakub.carfleet.ddd.Repository;
-import com.durys.jakub.carfleet.requests.RequestId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 
 import java.util.Optional;
 

@@ -3,7 +3,7 @@ package com.durys.jakub.carfleet.requests.prebooking.application;
 import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.drivers.domain.DriverId;
 import com.durys.jakub.carfleet.events.Events;
-import com.durys.jakub.carfleet.requests.RequesterId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.prebooking.domain.PreBookingTransferRequest;
 import com.durys.jakub.carfleet.requests.prebooking.domain.PreBookingTransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.prebooking.domain.commands.RealizePreBookingRequestCommand;

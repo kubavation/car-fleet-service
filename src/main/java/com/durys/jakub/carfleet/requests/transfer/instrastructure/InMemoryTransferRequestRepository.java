@@ -1,6 +1,6 @@
 package com.durys.jakub.carfleet.requests.transfer.instrastructure;
 
-import com.durys.jakub.carfleet.requests.RequestId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestRepository;
 
@@ -19,7 +19,7 @@ public class InMemoryTransferRequestRepository implements TransferRequestReposit
 
     @Override
     public TransferRequest save(TransferRequest request) {
-        DB.put(request.getRequestId(), request);
-        return load(request.getRequestId()).get();
+        DB.put(request.requestId(), request);
+        return load(request.requestId()).get();
     }
 }

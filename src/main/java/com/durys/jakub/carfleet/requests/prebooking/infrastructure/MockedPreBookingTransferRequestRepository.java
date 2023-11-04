@@ -1,6 +1,6 @@
 package com.durys.jakub.carfleet.requests.prebooking.infrastructure;
 
-import com.durys.jakub.carfleet.requests.RequestId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.requests.prebooking.domain.PreBookingTransferRequest;
 import com.durys.jakub.carfleet.requests.prebooking.domain.PreBookingTransferRequestRepository;
 

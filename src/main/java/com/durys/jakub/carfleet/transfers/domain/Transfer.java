@@ -2,7 +2,7 @@ package com.durys.jakub.carfleet.transfers.domain;
 
 import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.drivers.domain.DriverId;
-import com.durys.jakub.carfleet.requests.RequestId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.state.Flowable;
 
 public class Transfer implements Flowable<Transfer> {

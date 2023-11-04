@@ -1,6 +1,6 @@
 package com.durys.jakub.carfleet.requests.prebooking.domain.commands;
 
-import com.durys.jakub.carfleet.requests.RequesterId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.prebooking.domain.PreBookingTransferRequestStatus;
 import com.durys.jakub.carfleet.state.ChangeCommand;
 
