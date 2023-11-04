@@ -23,6 +23,14 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 public class TransferRequest extends BaseAggregateRoot implements Flowable<TransferRequest> {
 
+    public enum Status {
+        SUBMITTED,
+        EDITED,
+        ACCEPTED,
+        CANCELLED,
+        REJECTED
+    }
+
     @EmbeddedId
     @AttributeOverride(name = "value", column = @Column(name = "ID"))
     private final RequestId requestId;

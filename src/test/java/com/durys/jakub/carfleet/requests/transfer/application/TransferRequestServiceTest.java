@@ -101,7 +101,7 @@ class TransferRequestServiceTest {
         TransferRequest transferRequest = transferRequestService
                 .create(new RequesterId(UUID.randomUUID()), LocalDateTime.now(), LocalDateTime.now().plusDays(1),
                         "test", "Warsaw",  "Krakow", CarType.Passenger);
-        return transferRequest.getRequestId();
+        return transferRequest.requestId();
     }
 
     private CarId addCar(CarType carType) {

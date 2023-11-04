@@ -9,7 +9,7 @@ import com.durys.jakub.carfleet.state.StateBuilder;
 import com.durys.jakub.carfleet.state.StateConfig;
 import org.springframework.stereotype.Component;
 
-import static com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestStatus.*;
+import static com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest.Status.*;
 
 
 @Component
