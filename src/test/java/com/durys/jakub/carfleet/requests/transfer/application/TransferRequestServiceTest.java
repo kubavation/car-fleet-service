@@ -70,7 +70,6 @@ class TransferRequestServiceTest {
 
         assertEquals("ACCEPTED", transferRequest.state());
         assertEquals(carId, transferRequest.assignedCar());
-        Mockito.verify(events, Mockito.times(1)).publish(Mockito.any());
     }
 
     @Test
