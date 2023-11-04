@@ -78,12 +78,13 @@ class DriverTransferRequestServiceTest {
         DriverTransferRequest result = driverTransferRequestService
                 .create(requesterId, from, to, purpose, departure, destination);
 
-        DriverTransferRequest driverTransferRequest = driverTransferRequestService.changeStatus(result.getRequestId(),
+        var response = driverTransferRequestService.changeStatus(result.getRequestId(),
                 new ChangeTransportInformationCommand(driverId, carId));
 
-        assertEquals("ACCEPTED", driverTransferRequest.state());
-        assertEquals(driverId, driverTransferRequest.getDriverId());
-        assertEquals(carId, driverTransferRequest.getCarId());
+        assertTrue(response.isRight());
+        assertEquals("ACCEPTED", response.get().state());
+        assertEquals(driverId, response.get().getDriverId());
+        assertEquals(carId, response.get().getCarId());
     }
 
     @Test
@@ -92,10 +93,11 @@ class DriverTransferRequestServiceTest {
         DriverTransferRequest result = driverTransferRequestService
                 .create(requesterId, from, to, purpose, departure, destination);
 
-        DriverTransferRequest driverTransferRequest = driverTransferRequestService.changeStatus(result.getRequestId(),
+        var response = driverTransferRequestService.changeStatus(result.getRequestId(),
                 new ChangeCommand(DriverTransferRequestStatus.REJECTED));
 
-        assertEquals("REJECTED", driverTransferRequest.state());
+        assertTrue(response.isRight());
+        assertEquals("REJECTED", response.get().state());
     }
 
     @Test
@@ -109,13 +111,13 @@ class DriverTransferRequestServiceTest {
                 .create(requesterId, from, to, purpose, departure, destination);
 
         DriverTransferRequest saved = driverTransferRequestService.changeStatus(result.getRequestId(),
-                new ChangeTransportInformationCommand(driverId, carId));
+                new ChangeTransportInformationCommand(driverId, carId)).get();
 
-
-        DriverTransferRequest driverTransferRequest = driverTransferRequestService.changeStatus(saved.getRequestId(),
+        var response = driverTransferRequestService.changeStatus(saved.getRequestId(),
                 new ChangeCommand(DriverTransferRequestStatus.CANCELLED));
 
-        assertEquals("CANCELLED", driverTransferRequest.state());
+        assertTrue(response.isRight());
+        assertEquals("CANCELLED", response.get().state());
     }
 
 

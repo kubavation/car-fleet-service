@@ -48,10 +48,11 @@ class PreBookingTransferRequestServiceTest {
         PreBookingTransferRequest request = preBookingTransferRequestService
                 .create(requesterId, from, to, purpose, carId, driverId);
 
-        PreBookingTransferRequest result = preBookingTransferRequestService
+        var response = preBookingTransferRequestService
                 .changeStatus(request.getRequestId(), new RealizePreBookingRequestCommand(request.getRequesterId()));
 
-        assertEquals("ARCHIVED", result.state());
+        assertTrue(response.isRight());
+        assertEquals("ARCHIVED", response.get().state());
         verify(events).publish(any());
     }
 
