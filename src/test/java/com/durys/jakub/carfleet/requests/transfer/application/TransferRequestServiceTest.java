@@ -65,10 +65,11 @@ class TransferRequestServiceTest {
 
         Mockito.when(carAvailabilityService.available(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
 
-        TransferRequest transferRequest = transferRequestService.changeStatus(requestId, new AssignTransferCarCommand(carId));
+        var response = transferRequestService.changeStatus(requestId, new AssignTransferCarCommand(carId));
 
-        assertEquals("ACCEPTED", transferRequest.state());
-        assertEquals(carId, transferRequest.assignedCar());
+        assertTrue(response.isRight());
+        assertEquals(TransferRequest.Status.ACCEPTED.name(), response.get().state());
+        assertEquals(carId, response.get().assignedCar());
     }
 
     @Test
@@ -90,9 +91,10 @@ class TransferRequestServiceTest {
 
         RequestId requestId = addTransferRequest();
 
-        TransferRequest transferRequest = transferRequestService.changeStatus(requestId, new ChangeCommand(TransferRequest.Status.REJECTED));
+        var response = transferRequestService.changeStatus(requestId, new ChangeCommand(TransferRequest.Status.REJECTED));
 
-        assertEquals("REJECTED", transferRequest.state());
+        assertTrue(response.isRight());
+        assertEquals("REJECTED", response.get().state());
     }
 
 

@@ -8,9 +8,9 @@ import java.util.function.BiFunction;
 import static com.durys.jakub.carfleet.state.StateTransition.Mode.ContentChanges;
 import static com.durys.jakub.carfleet.state.StateTransition.Mode.StatusChanges;
 
-public class StateTransition<T extends Flowable<T>> {
+class StateTransition<T extends Flowable<T>> {
 
-    public enum Mode {
+    enum Mode {
         StatusChanges,
         ContentChanges
     }
@@ -20,7 +20,7 @@ public class StateTransition<T extends Flowable<T>> {
     private final Mode mode;
 
     private final Set<BiFunction<T, ChangeCommand, Void>> afterStateChangeActions = new HashSet<>();
-    private final Set<BiFunction<State<T>, ChangeCommand, Boolean>> stateChangePredicates = new HashSet<>();
+    private final Set<BiFunction<State<T>, ChangeCommand, PredicateResult>> stateChangePredicates = new HashSet<>();
 
     private StateTransition(State<T> from, State<T> to, Mode mode) {
         this.from = from;
@@ -28,44 +28,43 @@ public class StateTransition<T extends Flowable<T>> {
         this.mode = mode;
     }
 
-    public static <T extends Flowable<T>> StateTransition<T> onStatusChange(State<T> from, State<T> to) {
+    static <T extends Flowable<T>> StateTransition<T> onStatusChange(State<T> from, State<T> to) {
         return new StateTransition<>(from, to, StatusChanges);
     }
 
-    public static <T extends Flowable<T>> StateTransition<T> onContentChange(State<T> from, State<T> to) {
+    static <T extends Flowable<T>> StateTransition<T> onContentChange(State<T> from, State<T> to) {
         return new StateTransition<>(from, to, ContentChanges);
     }
 
-    public void addAction(BiFunction<T, ChangeCommand, Void> action) {
+    void addAction(BiFunction<T, ChangeCommand, Void> action) {
         afterStateChangeActions.add(action);
     }
 
-    public void addPredicate(BiFunction<State<T>, ChangeCommand, Boolean> predicate) {
+    void addPredicate(BiFunction<State<T>, ChangeCommand, PredicateResult> predicate) {
         stateChangePredicates.add(predicate);
     }
-
-
-    public State<T> getFrom() {
+    
+    State<T> from() {
         return from;
     }
 
-    public State<T> getTo() {
+    State<T> to() {
         return to;
     }
 
-    public boolean statusChangedTransition() {
+    boolean statusChangedTransition() {
         return mode == StatusChanges;
     }
 
-    public boolean contentChangedTransition() {
+    boolean contentChangedTransition() {
         return mode == ContentChanges;
     }
 
-    public Set<BiFunction<T, ChangeCommand, Void>> getAfterStateChangeActions() {
+    Set<BiFunction<T, ChangeCommand, Void>> getAfterStateChangeActions() {
         return afterStateChangeActions;
     }
 
-    public Set<BiFunction<State<T>, ChangeCommand, Boolean>> getStateChangePredicates() {
+    Set<BiFunction<State<T>, ChangeCommand, PredicateResult>> getStateChangePredicates() {
         return stateChangePredicates;
     }
 

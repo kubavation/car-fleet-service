@@ -9,10 +9,12 @@ import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestReposito
 import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
 import com.durys.jakub.carfleet.state.ChangeCommand;
 import com.durys.jakub.carfleet.state.State;
+import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Component
@@ -50,15 +52,14 @@ public class TransferRequestService {
     }
 
 
-    public TransferRequest changeStatus(RequestId requestId, ChangeCommand command) {
+    public Either<Set<Exception>, TransferRequest> changeStatus(RequestId requestId, ChangeCommand command) {
 
         TransferRequest transferRequest = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);
 
-        State<TransferRequest> result = assembler.configuration()
+        return assembler.configuration()
                 .recreate(transferRequest)
-                .changeState(command);
-
-        return repository.save(result.getObject());
+                .changeState(command)
+                .map(state -> repository.save(state.getObject()));
     }
 }

@@ -11,10 +11,12 @@ import com.durys.jakub.carfleet.requests.prebooking.domain.PreBookingTransferReq
 import com.durys.jakub.carfleet.state.ChangeCommand;
 import com.durys.jakub.carfleet.state.State;
 import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
+import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Component
@@ -52,15 +54,14 @@ public class PreBookingTransferRequestService {
     }
 
 
-    public PreBookingTransferRequest changeStatus(RequestId requestId, ChangeCommand command) {
+    public Either<Set<Exception>, PreBookingTransferRequest> changeStatus(RequestId requestId, ChangeCommand command) {
 
         PreBookingTransferRequest request = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);
 
-        State<PreBookingTransferRequest> result = assembler.configuration()
+        return assembler.configuration()
                 .recreate(request)
-                .changeState(command);
-
-        return repository.save(result.getObject());
+                .changeState(command)
+                .map(state -> repository.save(state.getObject()));
     }
 }

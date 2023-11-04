@@ -1,5 +1,6 @@
 package com.durys.jakub.carfleet.state;
 
+import io.vavr.control.Either;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -26,26 +27,26 @@ public class State<T extends Flowable<T>> {
     }
 
 
-    public State<T> changeState(ChangeCommand command) {
+    public Either<Set<Exception>, State<T>> changeState(ChangeCommand command) {
 
         log.info("changing state to {}", command.getDesiredState());
 
         StateTransition<T> transition = findStatusChangedTransition(command.getDesiredState());
 
-
         if (transition == null) {
             throw new RuntimeException("Invalid transition");
         }
 
-        Set<BiFunction<State<T>, ChangeCommand, Boolean>> predicates = transition.getStateChangePredicates();
+        StatusChangePredicatesResult predicatesResult =
+                checkStatusChangePredicates(command, transition.getStateChangePredicates());
 
-        if (predicates.stream().allMatch(e -> e.apply(this, command))) {
-            transition.getTo().init(object);
+        if (predicatesResult.succeeded()) {
+            transition.to().init(object);
             transition.getAfterStateChangeActions().forEach(e -> e.apply(object, command));
-            return transition.getTo();
+            return Either.right(transition.to());
         }
 
-        return this;
+        return Either.left(predicatesResult.errors());
     }
 
 
@@ -58,7 +59,7 @@ public class State<T extends Flowable<T>> {
         }
 
         //todo validation (predicates)
-        State<T> state = contentChangedTransition.getTo();
+        State<T> state = contentChangedTransition.to();
         state.init(object);
         this.object.setContent(content);
         return state;
@@ -82,7 +83,7 @@ public class State<T extends Flowable<T>> {
 
     public Set<BiFunction<T, ChangeCommand, Void>> afterStateChangeActions(String toName) {
         return possibleTransitions.stream()
-                .filter(transition -> transition.getTo().name.equals(toName))
+                .filter(transition -> transition.to().name.equals(toName))
                 .flatMap(transition -> transition.getAfterStateChangeActions().stream())
                 .collect(Collectors.toSet());
     }
@@ -90,7 +91,7 @@ public class State<T extends Flowable<T>> {
     private StateTransition<T> findStatusChangedTransition(String desiredState) {
         return getPossibleTransitions()
                 .stream()
-                .filter(transition -> transition.getTo().name.equals(desiredState))
+                .filter(transition -> transition.to().name.equals(desiredState))
                 .filter(StateTransition::statusChangedTransition)
                 .findFirst()
                 .orElse(null);
@@ -100,10 +101,21 @@ public class State<T extends Flowable<T>> {
     private StateTransition<T> findContentChangedTransition(String currentState) {
         return getPossibleTransitions()
                 .stream()
-                .filter(transition -> transition.getFrom().name.equals(currentState))
+                .filter(transition -> transition.from().name.equals(currentState))
                 .filter(StateTransition::contentChangedTransition)
                 .findFirst()
                 .orElse(null);
+    }
+
+    private StatusChangePredicatesResult checkStatusChangePredicates(ChangeCommand command,
+                            Set<BiFunction<State<T>, ChangeCommand, PredicateResult>> predicates) {
+
+        List<PredicateResult> result = predicates
+                .stream()
+                .map(predicate -> predicate.apply(this, command))
+                .toList();
+
+        return StatusChangePredicatesResult.from(result);
     }
 
     @Override
