@@ -15,7 +15,6 @@ import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestRepository;
-import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestStatus;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.commands.AssignTransferCarCommand;
 import com.durys.jakub.carfleet.requests.transfer.instrastructure.InMemoryTransferRequestRepository;
 import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
@@ -91,7 +90,7 @@ class TransferRequestServiceTest {
 
         RequestId requestId = addTransferRequest();
 
-        TransferRequest transferRequest = transferRequestService.changeStatus(requestId, new ChangeCommand(TransferRequestStatus.REJECTED));
+        TransferRequest transferRequest = transferRequestService.changeStatus(requestId, new ChangeCommand(TransferRequest.Status.REJECTED));
 
         assertEquals("REJECTED", transferRequest.state());
     }
