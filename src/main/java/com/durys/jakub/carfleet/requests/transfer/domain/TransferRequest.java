@@ -100,7 +100,6 @@ public class TransferRequest extends BaseAggregateRoot implements Flowable<Trans
                 request.content.carType());
     }
 
-
     public LocalDateTime transferFrom() {
         return content.from();
     }
@@ -140,4 +139,5 @@ public class TransferRequest extends BaseAggregateRoot implements Flowable<Trans
     public RequesterId requesterId() {
         return requesterId;
     }
+
 }
