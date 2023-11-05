@@ -1,7 +1,8 @@
 package com.durys.jakub.carfleet.requests.transfer.instrastructure.in;
 
+import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.requests.transfer.application.TransferRequestService;
-import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
+import com.durys.jakub.carfleet.requests.transfer.domain.state.commands.AssignTransferCarCommand;
 import com.durys.jakub.carfleet.requests.transfer.instrastructure.in.model.SubmitTransferRequest;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
@@ -9,6 +10,9 @@ import com.durys.jakub.carfleet.state.ChangeCommand;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
+
+import static com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest.Status.CANCELLED;
+import static com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest.Status.REJECTED;
 
 @RestController
 @RequestMapping("/transfer-requests")
@@ -39,8 +43,17 @@ class TransferRequestController {
 
     @PatchMapping("/{requestId}/rejection")
     void reject(@PathVariable UUID requestId) {
-        transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(TransferRequest.Status.REJECTED));
+        transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(REJECTED));
     }
 
+    @PatchMapping("/{requestId}/cancelation")
+    void cancel(@PathVariable UUID requestId) {
+        transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(CANCELLED));
+    }
+
+    @PatchMapping("/{requestId}/acceptation")
+    void accept(@PathVariable UUID requestId, @RequestParam UUID assignedCarId) {
+        transferRequestService.changeStatus(new RequestId(requestId), new AssignTransferCarCommand(new CarId(assignedCarId)));
+    }
 
 }
