@@ -34,10 +34,8 @@ class TransferRequestServiceTest {
     private final CarsRepository carsRepository = new MockedCarsRepository();
     private final TransferRequestAssembler assembler = new TransferRequestAssembler(carAvailabilityService, carsRepository);
 
-    private final Events events = Mockito.mock();
-
     private final TransferRequestService transferRequestService
-            = new TransferRequestService(assembler, transferRequestRepository, events);
+            = new TransferRequestService(assembler, transferRequestRepository);
 
 
     @Test
