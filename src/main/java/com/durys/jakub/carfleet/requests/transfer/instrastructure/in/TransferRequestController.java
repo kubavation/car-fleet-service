@@ -9,7 +9,6 @@ import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.state.ChangeCommand;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +41,7 @@ class TransferRequestController {
                 transferRequest.destination(), transferRequest.carType());
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(addLinks(transferRequest, created));
+                .body(resourceLinks(transferRequest, created));
     }
 
     @PatchMapping("/{requestId}")
@@ -53,7 +52,7 @@ class TransferRequestController {
                 transferRequest.destination(), transferRequest.carType());
 
         return ResponseEntity.ok()
-                .body(addLinks(transferRequest, edited));
+                .body(resourceLinks(transferRequest, edited));
     }
 
     @PatchMapping("/{requestId}/rejection")
@@ -75,7 +74,7 @@ class TransferRequestController {
     }
 
 
-    private static EntityModel<RestResponse> addLinks(SubmitTransferRequest request, TransferRequest model) {
+    private static EntityModel<RestResponse> resourceLinks(SubmitTransferRequest request, TransferRequest model) {
         return EntityModel.of(
                 new RestResponse(model.requestId().value()),
                 List.of(
