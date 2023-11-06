@@ -1,5 +1,7 @@
 package com.durys.jakub.carfleet.state;
 
+import java.util.Objects;
+
 public class ChangeCommand {
 
     private final String desiredState;
@@ -14,6 +16,19 @@ public class ChangeCommand {
 
     public String getDesiredState() {
         return desiredState;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChangeCommand that = (ChangeCommand) o;
+        return Objects.equals(desiredState, that.desiredState);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(desiredState);
     }
 }
 

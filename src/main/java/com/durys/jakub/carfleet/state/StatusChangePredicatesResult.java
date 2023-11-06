@@ -13,31 +13,31 @@ class StatusChangePredicatesResult {
     }
 
     private final Status status;
-    private final Set<Exception> errors;
+    private final List<Exception> errors;
 
-    StatusChangePredicatesResult(Status status, Set<Exception> errors) {
+    StatusChangePredicatesResult(Status status, List<Exception> errors) {
         this.status = status;
         this.errors = errors;
     }
 
     public static StatusChangePredicatesResult from(List<PredicateResult> results) {
 
-        Set<PredicateResult> failedPredicates = results.stream()
+        List<PredicateResult> failedPredicates = results.stream()
                 .filter(PredicateResult::failed)
-                .collect(Collectors.toSet());
+                .toList();
 
         if (failedPredicates.isEmpty()) {
-            return new StatusChangePredicatesResult(Status.Success, Collections.emptySet());
+            return new StatusChangePredicatesResult(Status.Success, Collections.emptyList());
         }
 
         return new StatusChangePredicatesResult(Status.Failure, errorsFrom(failedPredicates));
     }
 
-    private static Set<Exception> errorsFrom(Set<PredicateResult> predicates) {
+    private static List<Exception> errorsFrom(List<PredicateResult> predicates) {
         return predicates
                 .stream()
                 .flatMap(predicate -> predicate.errors().stream())
-                .collect(Collectors.toSet());
+                .toList();
     }
 
     public boolean succeeded() {
@@ -48,7 +48,7 @@ class StatusChangePredicatesResult {
         return !succeeded();
     }
 
-    public Set<Exception> errors() {
+    public List<Exception> errors() {
         return errors;
     }
 

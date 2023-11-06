@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -51,7 +52,7 @@ public class DriverTransferRequestService {
     }
 
 
-    public Either<Set<Exception>, DriverTransferRequest> changeStatus(RequestId requestId, ChangeCommand command) {
+    public Either<List<Exception>, DriverTransferRequest> changeStatus(RequestId requestId, ChangeCommand command) {
 
         DriverTransferRequest driverTransferRequest = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);

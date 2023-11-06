@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -54,7 +55,7 @@ public class PreBookingTransferRequestService {
     }
 
 
-    public Either<Set<Exception>, PreBookingTransferRequest> changeStatus(RequestId requestId, ChangeCommand command) {
+    public Either<List<Exception>, PreBookingTransferRequest> changeStatus(RequestId requestId, ChangeCommand command) {
 
         PreBookingTransferRequest request = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);

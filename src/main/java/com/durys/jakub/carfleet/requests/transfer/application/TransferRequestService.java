@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -52,7 +53,7 @@ public class TransferRequestService {
     }
 
 
-    public Either<Set<Exception>, TransferRequest> changeStatus(RequestId requestId, ChangeCommand command) {
+    public Either<List<Exception>, TransferRequest> changeStatus(RequestId requestId, ChangeCommand command) {
 
         TransferRequest transferRequest = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);
