@@ -3,8 +3,7 @@ package com.durys.jakub.carfleet.requests.transfer.instrastructure.in;
 import lombok.Getter;
 import org.springframework.hateoas.RepresentationModel;
 
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -18,7 +17,7 @@ class RestResponse extends RepresentationModel<RestResponse> {
     private final OperationStatus status;
     private final Set<String> additionalMessages;
 
-    private RestResponse(UUID resourceId, OperationStatus status, Set<Exception> exceptions) {
+    private RestResponse(UUID resourceId, OperationStatus status, List<Exception> exceptions) {
         this.resourceId = resourceId;
         this.status = status;
         this.additionalMessages = exceptions.stream()
@@ -27,10 +26,10 @@ class RestResponse extends RepresentationModel<RestResponse> {
     }
 
     static RestResponse success(UUID resourceId) {
-        return new RestResponse(resourceId, OperationStatus.Success, Set.of());
+        return new RestResponse(resourceId, OperationStatus.Success, Collections.emptyList());
     }
 
-    static RestResponse failure(UUID resourceId, Set<Exception> exceptions) {
+    static RestResponse failure(UUID resourceId, List<Exception> exceptions) {
         return new RestResponse(resourceId, OperationStatus.Failure, exceptions);
     }
 }

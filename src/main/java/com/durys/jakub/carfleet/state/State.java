@@ -27,7 +27,7 @@ public class State<T extends Flowable<T>> {
     }
 
 
-    public Either<Set<Exception>, State<T>> changeState(ChangeCommand command) {
+    public Either<List<Exception>, State<T>> changeState(ChangeCommand command) {
 
         log.info("changing state to {}", command.getDesiredState());
 

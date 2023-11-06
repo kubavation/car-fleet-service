@@ -104,7 +104,7 @@ class TransferRequestController {
         );
     }
 
-    private static RestResponse toResponse(UUID resourceId, Either<Set<Exception>, TransferRequest> result) {
+    private static RestResponse toResponse(UUID resourceId, Either<List<Exception>, TransferRequest> result) {
         return result
                 .fold(
                     exceptions -> RestResponse.failure(resourceId, exceptions),
