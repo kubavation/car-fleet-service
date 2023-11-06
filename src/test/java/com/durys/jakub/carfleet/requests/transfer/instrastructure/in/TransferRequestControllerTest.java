@@ -94,15 +94,32 @@ class TransferRequestControllerTest {
 
         UUID requestId = UUID.randomUUID();
 
-        MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders
+        var result = new TransferRequest(new RequestId(requestId),
+                new RequesterId(request.requesterId()),
+                request.from(), request.to(), request.purpose(), request.departure(), request.destination(), request.carType());
+
+
+        Mockito.when(transferRequestService
+                        .change(new RequestId(requestId), request.from(), request.to(),
+                                request.purpose(), request.departure(), request.destination(), request.carType()))
+                .thenReturn(result);
+
+       mockMvc.perform(MockMvcRequestBuilders
                         .patch("/transfer-requests/%s".formatted(requestId.toString()))
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andReturn()
-                .getResponse();
-
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._links.change-content.href")
+                        .value(containsString("/transfer-requests/%s".formatted(result.requestId().value()))))
+                .andExpect(jsonPath("$._links.reject.href")
+                        .value(containsString("/transfer-requests/%s/rejection".formatted(result.requestId().value()))))
+                .andExpect(jsonPath("$._links.cancel.href")
+                        .value(containsString("/transfer-requests/%s/cancellation".formatted(result.requestId().value()))))
+                .andExpect(jsonPath("$._links.accept.href")
+                        .value(containsString("/transfer-requests/%s/acceptation".formatted(result.requestId().value()))))
+                .andReturn();
     }
 
     @Test
