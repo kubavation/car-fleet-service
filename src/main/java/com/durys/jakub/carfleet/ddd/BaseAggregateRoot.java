@@ -10,8 +10,6 @@ import java.util.Set;
 @MappedSuperclass
 public abstract class BaseAggregateRoot {
 
-    //todo add aggregateId
-
     @Transient
     protected Set<DomainEvent> events;
 
@@ -21,4 +19,6 @@ public abstract class BaseAggregateRoot {
     public void append(DomainEvent event) {
         events.add(event);
     }
+
+    public abstract AggregateId aggregateId();
 }
