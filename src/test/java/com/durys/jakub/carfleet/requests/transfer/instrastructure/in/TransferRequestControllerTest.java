@@ -6,8 +6,10 @@ import com.durys.jakub.carfleet.requests.transfer.instrastructure.in.model.Submi
 import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
+import com.durys.jakub.carfleet.state.ChangeCommand;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.vavr.control.Either;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -27,8 +29,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
+import static com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest.Status.REJECTED;
 import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.*;
@@ -135,6 +139,24 @@ class TransferRequestControllerTest {
                 .getResponse();
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+    @Test
+    void rejectTransferRequest_shouldReturn200AndErrorDetails() throws Exception {
+
+        UUID requestId = UUID.randomUUID();
+
+        Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(REJECTED)))
+                .thenReturn(Either.left(Set.of(new RuntimeException("Unexpected Exception"))));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .patch("/transfer-requests/%s/rejection".formatted(requestId.toString()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("Failure"))
+                .andExpect(jsonPath("$.additionalMessages[0]").value("Unexpected Exception"));
     }
 
     @Test
