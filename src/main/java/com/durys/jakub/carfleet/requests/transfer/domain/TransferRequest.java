@@ -3,6 +3,7 @@ package com.durys.jakub.carfleet.requests.transfer.domain;
 import com.durys.jakub.carfleet.cars.domain.Car;
 import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.common.errors.ValidationError;
+import com.durys.jakub.carfleet.ddd.AggregateId;
 import com.durys.jakub.carfleet.ddd.BaseAggregateRoot;
 import com.durys.jakub.carfleet.events.DomainEvent;
 import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
@@ -22,6 +23,7 @@ import java.util.Set;
 @Table(name = "TRANSFER_REQUEST")
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 public class TransferRequest extends BaseAggregateRoot implements Flowable<TransferRequest> {
+
 
     public enum Status {
         SUBMITTED,
@@ -72,6 +74,12 @@ public class TransferRequest extends BaseAggregateRoot implements Flowable<Trans
         }
 
         this.assignedCar = car.getCarId();
+    }
+
+
+    @Override
+    public AggregateId aggregateId() {
+        return new AggregateId(requestId.value());
     }
 
     @Override
