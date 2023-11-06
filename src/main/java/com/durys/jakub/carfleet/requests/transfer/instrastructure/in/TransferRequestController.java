@@ -42,18 +42,7 @@ class TransferRequestController {
                 transferRequest.destination(), transferRequest.carType());
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(
-                    EntityModel.of(new RestResponse(created.requestId().value()),
-                        List.of(
-                            linkTo(methodOn(TransferRequestController.class)
-                                    .changeContent(created.requestId().value(), transferRequest)).withRel("change-content"),
-                            linkTo(methodOn(TransferRequestController.class)
-                                    .reject(created.requestId().value())).withRel("reject"),
-                            linkTo(methodOn(TransferRequestController.class)
-                                    .cancel(created.requestId().value())).withRel("cancel"),
-                            linkTo(methodOn(TransferRequestController.class)
-                                    .accept(created.requestId().value(), UUID.randomUUID())).withRel("accept"))
-                    ));
+                .body(addLinks(transferRequest, created));
     }
 
     @PatchMapping("/{requestId}")
@@ -63,18 +52,8 @@ class TransferRequestController {
                 transferRequest.purpose(), transferRequest.departure(),
                 transferRequest.destination(), transferRequest.carType());
 
-        return ResponseEntity.ok().body(
-                EntityModel.of(new RestResponse(edited.requestId().value()),
-                        List.of(
-                                linkTo(methodOn(TransferRequestController.class)
-                                        .changeContent(edited.requestId().value(), transferRequest)).withRel("change-content"),
-                                linkTo(methodOn(TransferRequestController.class)
-                                        .reject(edited.requestId().value())).withRel("reject"),
-                                linkTo(methodOn(TransferRequestController.class)
-                                        .cancel(edited.requestId().value())).withRel("cancel"),
-                                linkTo(methodOn(TransferRequestController.class)
-                                        .accept(edited.requestId().value(), UUID.randomUUID())).withRel("accept"))
-                ));
+        return ResponseEntity.ok()
+                .body(addLinks(transferRequest, edited));
     }
 
     @PatchMapping("/{requestId}/rejection")
@@ -94,5 +73,22 @@ class TransferRequestController {
         transferRequestService.changeStatus(new RequestId(requestId), new AssignTransferCarCommand(new CarId(assignedCarId)));
         return ResponseEntity.ok().body(null);
     }
+
+
+    private static EntityModel<RestResponse> addLinks(SubmitTransferRequest request, TransferRequest model) {
+        return EntityModel.of(
+                new RestResponse(model.requestId().value()),
+                List.of(
+                        linkTo(methodOn(TransferRequestController.class)
+                                .changeContent(model.requestId().value(), request)).withRel("change-content"),
+                        linkTo(methodOn(TransferRequestController.class)
+                                .reject(model.requestId().value())).withRel("reject"),
+                        linkTo(methodOn(TransferRequestController.class)
+                                .cancel(model.requestId().value())).withRel("cancel"),
+                        linkTo(methodOn(TransferRequestController.class)
+                                .accept(model.requestId().value(), UUID.randomUUID())).withRel("accept"))
+        );
+    }
+
 
 }
