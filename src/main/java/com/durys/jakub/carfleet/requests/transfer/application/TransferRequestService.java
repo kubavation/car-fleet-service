@@ -1,12 +1,11 @@
 package com.durys.jakub.carfleet.requests.transfer.application;
 
-import com.durys.jakub.carfleet.events.Events;
-import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
-import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestRepository;
 import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.state.ChangeCommand;
 import com.durys.jakub.carfleet.state.State;
 import io.vavr.control.Either;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Component
@@ -24,7 +22,6 @@ public class TransferRequestService {
 
     private final TransferRequestAssembler assembler;
     private final TransferRequestRepository repository;
-    private final Events events;
 
     public TransferRequest create(RequesterId requesterId, LocalDateTime from, LocalDateTime to, String purpose,
                                   String departure, String destination, CarType carType) {

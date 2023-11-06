@@ -11,6 +11,10 @@ public class Transfer implements Flowable<Transfer> {
         Group, Single
     }
 
+    public enum State {
+        Open, Closed, Completed, Archived
+    }
+
     private final TransferId transferId;
     private final TransferPath path;
     private final TransferNumber transferNumber;
