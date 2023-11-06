@@ -49,7 +49,7 @@ class TransferRequestController {
         transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(REJECTED));
     }
 
-    @PatchMapping("/{requestId}/cancelation")
+    @PatchMapping("/{requestId}/cancellation")
     void cancel(@PathVariable UUID requestId) {
         transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(CANCELLED));
     }

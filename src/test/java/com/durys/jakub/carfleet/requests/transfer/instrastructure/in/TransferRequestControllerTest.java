@@ -58,6 +58,75 @@ class TransferRequestControllerTest {
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
     }
 
+    @Test
+    void editTransferRequest_shouldReturn200() throws Exception {
+
+        var request = new SubmitTransferRequest(UUID.randomUUID(),
+                LocalDateTime.now(), LocalDateTime.now(),
+                "Departure", "Destination", "Purpose",
+                CarType.Passenger);
+
+        UUID requestId = UUID.randomUUID();
+
+        MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders
+                        .patch("/transfer-requests/%s".formatted(requestId.toString()))
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+    @Test
+    void rejectTransferRequest_shouldReturn200() throws Exception {
+
+        UUID requestId = UUID.randomUUID();
+
+        MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders
+                        .patch("/transfer-requests/%s/rejection".formatted(requestId.toString()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+    @Test
+    void cancelTransferRequest_shouldReturn200() throws Exception {
+
+
+        UUID requestId = UUID.randomUUID();
+
+        MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders
+                        .patch("/transfer-requests/%s/cancellation".formatted(requestId.toString()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+    @Test
+    void acceptTransferRequest_shouldReturn200() throws Exception {
+
+        UUID requestId = UUID.randomUUID();
+        UUID carId = UUID.randomUUID();
+
+        MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders
+                        .patch("/transfer-requests/%s/acceptation".formatted(requestId.toString()))
+                        .param("assignedCarId", carId.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
 
     private static ObjectMapper init() {
         ObjectMapper mapper = new ObjectMapper();
