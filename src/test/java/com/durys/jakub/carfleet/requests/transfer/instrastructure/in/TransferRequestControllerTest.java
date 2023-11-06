@@ -75,6 +75,12 @@ class TransferRequestControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$._links.change-content.href")
                         .value(containsString("/transfer-requests/%s".formatted(result.requestId().value()))))
+                .andExpect(jsonPath("$._links.reject.href")
+                        .value(containsString("/transfer-requests/%s/rejection".formatted(result.requestId().value()))))
+                .andExpect(jsonPath("$._links.cancel.href")
+                        .value(containsString("/transfer-requests/%s/cancellation".formatted(result.requestId().value()))))
+                .andExpect(jsonPath("$._links.accept.href")
+                        .value(containsString("/transfer-requests/%s/acceptation".formatted(result.requestId().value()))))
                 .andReturn();
     }
 

@@ -46,7 +46,13 @@ class TransferRequestController {
                     EntityModel.of(new RestResponse(created.requestId().value()),
                         List.of(
                             linkTo(methodOn(TransferRequestController.class)
-                                    .changeContent(created.requestId().value(), transferRequest)).withRel("change-content"))
+                                    .changeContent(created.requestId().value(), transferRequest)).withRel("change-content"),
+                            linkTo(methodOn(TransferRequestController.class)
+                                    .reject(created.requestId().value())).withRel("reject"),
+                            linkTo(methodOn(TransferRequestController.class)
+                                    .cancel(created.requestId().value())).withRel("cancel"),
+                            linkTo(methodOn(TransferRequestController.class)
+                                    .accept(created.requestId().value(), UUID.randomUUID())).withRel("accept"))
                     ));
     }
 
@@ -61,18 +67,21 @@ class TransferRequestController {
     }
 
     @PatchMapping("/{requestId}/rejection")
-    void reject(@PathVariable UUID requestId) {
+    ResponseEntity<EntityModel<RestResponse>> reject(@PathVariable UUID requestId) {
         transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(REJECTED));
+        return ResponseEntity.ok().body(null);
     }
 
     @PatchMapping("/{requestId}/cancellation")
-    void cancel(@PathVariable UUID requestId) {
+    ResponseEntity<EntityModel<RestResponse>> cancel(@PathVariable UUID requestId) {
         transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(CANCELLED));
+        return ResponseEntity.ok().body(null);
     }
 
     @PatchMapping("/{requestId}/acceptation")
-    void accept(@PathVariable UUID requestId, @RequestParam UUID assignedCarId) {
+    ResponseEntity<EntityModel<RestResponse>> accept(@PathVariable UUID requestId, @RequestParam UUID assignedCarId) {
         transferRequestService.changeStatus(new RequestId(requestId), new AssignTransferCarCommand(new CarId(assignedCarId)));
+        return ResponseEntity.ok().body(null);
     }
 
 }
