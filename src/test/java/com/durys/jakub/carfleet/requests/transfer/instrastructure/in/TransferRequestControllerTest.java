@@ -26,12 +26,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import static com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest.Status.CANCELLED;
 import static com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest.Status.REJECTED;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -129,6 +129,13 @@ class TransferRequestControllerTest {
 
         UUID requestId = UUID.randomUUID();
 
+        var result = new TransferRequest(new RequestId(requestId),
+                new RequesterId(UUID.randomUUID()),
+                LocalDateTime.now(), LocalDateTime.now(), "", "Departure", "Destination", CarType.Passenger);
+
+        Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(REJECTED)))
+                .thenReturn(Either.right(result));
+
         MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders
                         .patch("/transfer-requests/%s/rejection".formatted(requestId.toString()))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -160,8 +167,14 @@ class TransferRequestControllerTest {
     @Test
     void cancelTransferRequest_shouldReturn200() throws Exception {
 
-
         UUID requestId = UUID.randomUUID();
+
+        var result = new TransferRequest(new RequestId(requestId),
+                new RequesterId(UUID.randomUUID()),
+                LocalDateTime.now(), LocalDateTime.now(), "", "Departure", "Destination", CarType.Passenger);
+
+        Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(CANCELLED)))
+                .thenReturn(Either.right(result));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .patch("/transfer-requests/%s/cancellation".formatted(requestId.toString()))
@@ -197,6 +210,13 @@ class TransferRequestControllerTest {
 
         UUID requestId = UUID.randomUUID();
         UUID carId = UUID.randomUUID();
+
+        var result = new TransferRequest(new RequestId(requestId),
+                new RequesterId(UUID.randomUUID()),
+                LocalDateTime.now(), LocalDateTime.now(), "", "Departure", "Destination", CarType.Passenger);
+
+        Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new AssignTransferCarCommand(new CarId(carId))))
+                .thenReturn(Either.right(result));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .patch("/transfer-requests/%s/acceptation".formatted(requestId.toString()))
