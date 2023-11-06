@@ -1,28 +1,40 @@
 package com.durys.jakub.carfleet.requests.transfer.instrastructure.in;
 
 import com.durys.jakub.carfleet.requests.transfer.application.TransferRequestService;
+import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.instrastructure.in.model.SubmitTransferRequest;
 import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static net.bytebuddy.matcher.ElementMatchers.is;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(TransferRequestController.class)
 class TransferRequestControllerTest {
@@ -47,15 +59,23 @@ class TransferRequestControllerTest {
                 "Departure", "Destination", "Purpose",
                 CarType.Passenger);
 
-        MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders
-                        .post("/transfer-requests")
-                        .content(objectMapper.writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andReturn()
-                .getResponse();
+        var result = new TransferRequest(new RequestId(UUID.randomUUID()),
+                new RequesterId(request.requesterId()),
+                request.from(), request.to(), request.purpose(), request.departure(), request.destination(), request.carType());
 
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        Mockito.when(transferRequestService
+                .create(new RequesterId(request.requesterId()), request.from(), request.to(),
+                        request.purpose(), request.departure(), request.destination(), request.carType()))
+                .thenReturn(result);
+
+        mockMvc.perform(post("/transfer-requests")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$._links.change-content.href")
+                        .value(containsString("/transfer-requests/%s".formatted(result.requestId().value()))))
+                .andReturn();
     }
 
     @Test
