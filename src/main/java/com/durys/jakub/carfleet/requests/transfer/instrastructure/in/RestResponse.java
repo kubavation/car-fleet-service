@@ -29,7 +29,7 @@ class RestResponse extends RepresentationModel<RestResponse> {
     static RestResponse success(UUID resourceId) {
         return new RestResponse(resourceId, OperationStatus.Success, Set.of());
     }
-    
+
     static RestResponse failure(UUID resourceId, Set<Exception> exceptions) {
         return new RestResponse(resourceId, OperationStatus.Failure, exceptions);
     }

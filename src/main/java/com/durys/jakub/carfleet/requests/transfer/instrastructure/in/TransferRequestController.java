@@ -8,12 +8,14 @@ import com.durys.jakub.carfleet.requests.transfer.instrastructure.in.model.Submi
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.state.ChangeCommand;
+import io.vavr.control.Either;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest.Status.CANCELLED;
@@ -57,26 +59,39 @@ class TransferRequestController {
 
     @PatchMapping("/{requestId}/rejection")
     ResponseEntity<EntityModel<RestResponse>> reject(@PathVariable UUID requestId) {
-        transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(REJECTED));
-        return ResponseEntity.ok().body(null);
+
+        var result = transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(REJECTED));
+
+        return ResponseEntity.ok()
+                .body(EntityModel
+                        .of(toResponse(requestId, result)));
     }
 
     @PatchMapping("/{requestId}/cancellation")
     ResponseEntity<EntityModel<RestResponse>> cancel(@PathVariable UUID requestId) {
-        transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(CANCELLED));
-        return ResponseEntity.ok().body(null);
+
+        var result =  transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(CANCELLED));
+
+        return ResponseEntity.ok()
+                .body(EntityModel
+                        .of(toResponse(requestId, result)));
     }
 
     @PatchMapping("/{requestId}/acceptation")
     ResponseEntity<EntityModel<RestResponse>> accept(@PathVariable UUID requestId, @RequestParam UUID assignedCarId) {
-        transferRequestService.changeStatus(new RequestId(requestId), new AssignTransferCarCommand(new CarId(assignedCarId)));
-        return ResponseEntity.ok().body(null);
+
+        var result = transferRequestService.changeStatus(new RequestId(requestId),
+                new AssignTransferCarCommand(new CarId(assignedCarId)));
+
+        return ResponseEntity.ok()
+                .body(EntityModel
+                        .of(toResponse(requestId, result)));
     }
 
 
     private static EntityModel<RestResponse> resourceLinks(SubmitTransferRequest request, TransferRequest model) {
         return EntityModel.of(
-                new RestResponse(model.requestId().value()),
+                RestResponse.success(model.requestId().value()),
                 List.of(
                         linkTo(methodOn(TransferRequestController.class)
                                 .changeContent(model.requestId().value(), request)).withRel("change-content"),
@@ -87,6 +102,13 @@ class TransferRequestController {
                         linkTo(methodOn(TransferRequestController.class)
                                 .accept(model.requestId().value(), UUID.randomUUID())).withRel("accept"))
         );
+    }
+
+    private static RestResponse toResponse(UUID resourceId, Either<Set<Exception>, TransferRequest> result) {
+        return result
+                .fold(
+                    exceptions -> RestResponse.failure(resourceId, exceptions),
+                    request -> RestResponse.success(resourceId));
     }
 
 
