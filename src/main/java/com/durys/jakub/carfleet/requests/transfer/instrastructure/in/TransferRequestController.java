@@ -7,6 +7,8 @@ import com.durys.jakub.carfleet.requests.transfer.instrastructure.in.model.Submi
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.state.ChangeCommand;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -25,6 +27,7 @@ class TransferRequestController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     void submit(@RequestBody SubmitTransferRequest transferRequest) {
         transferRequestService.create(
                 new RequesterId(transferRequest.requesterId()),
