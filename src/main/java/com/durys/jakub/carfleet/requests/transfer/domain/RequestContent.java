@@ -1,11 +1,13 @@
 package com.durys.jakub.carfleet.requests.transfer.domain;
 
+import com.durys.jakub.carfleet.common.errors.ValidationError;
+import com.durys.jakub.carfleet.common.errors.ValidationErrorHandler;
+import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
 import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
 import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -14,34 +16,39 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 class RequestContent {
 
-    private final LocalDateTime from;
-    private final LocalDateTime to;
+    @Embedded
+    private final Period period;
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "PURPOSE"))
     private final RequestPurpose purpose;
-    private final String departure;
-    private final String destination;
+
+    @Embedded
+    private final TransferRoute transferRoute;
 
     @Enumerated(EnumType.STRING)
     private final CarType carType;
 
-    RequestContent(LocalDateTime from, LocalDateTime to, RequestPurpose purpose,
+    RequestContent(LocalDateTime from, LocalDateTime to, String purpose,
                    String departure, String destination, CarType carType) {
-        this.from = from;
-        this.to = to;
-        this.purpose = purpose;
-        this.departure = departure;
-        this.destination = destination;
+        this(from, to, purpose, departure, destination, carType, ValidationErrorHandlers.throwingValidationErrorHandler());
+    }
+
+    RequestContent(LocalDateTime from, LocalDateTime to, String purpose,
+                   String departure, String destination, CarType carType, ValidationErrorHandler handler) {
+
+        this.period = new Period(from, to, handler);
+        this.purpose = new RequestPurpose(purpose, handler);
+        this.transferRoute = new TransferRoute(departure, destination, handler);
         this.carType = carType;
     }
 
     public LocalDateTime from() {
-        return from;
+        return period.from();
     }
 
     public LocalDateTime to() {
-        return to;
+        return period.to();
     }
 
     public RequestPurpose purpose() {
@@ -49,34 +56,42 @@ class RequestContent {
     }
 
     public String departure() {
-        return departure;
+        return transferRoute.departure();
     }
 
     public String destination() {
-        return destination;
+        return transferRoute.destination();
     }
 
     public CarType carType() {
         return carType;
     }
 
+
+    static void test(LocalDateTime from, LocalDateTime to, String purpose, String departure,
+                     String destination, CarType carType,
+                     ValidationErrorHandler handler) {
+
+        Period.test(from, to, handler);
+        RequestPurpose.test(purpose, handler);
+        TransferRoute.test(departure, destination, handler);
+
+        if (Objects.isNull(carType)) {
+            handler.handle(new ValidationError("Car type cannot be empty"));
+        }
+    }
+
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (RequestContent) obj;
-        return Objects.equals(this.from, that.from) &&
-                Objects.equals(this.to, that.to) &&
-                Objects.equals(this.purpose, that.purpose) &&
-                Objects.equals(this.departure, that.departure) &&
-                Objects.equals(this.destination, that.destination) &&
-                Objects.equals(this.carType, that.carType);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RequestContent that = (RequestContent) o;
+        return Objects.equals(period, that.period) && Objects.equals(purpose, that.purpose)
+                && Objects.equals(transferRoute, that.transferRoute) && carType == that.carType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(from, to, purpose, departure, destination, carType);
+        return Objects.hash(period, purpose, transferRoute, carType);
     }
-
-
 }

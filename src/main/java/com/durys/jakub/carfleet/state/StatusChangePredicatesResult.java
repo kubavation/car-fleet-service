@@ -1,5 +1,7 @@
 package com.durys.jakub.carfleet.state;
 
+import com.durys.jakub.carfleet.common.errors.ValidationError;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -13,9 +15,9 @@ class StatusChangePredicatesResult {
     }
 
     private final Status status;
-    private final List<Exception> errors;
+    private final List<ValidationError> errors;
 
-    StatusChangePredicatesResult(Status status, List<Exception> errors) {
+    StatusChangePredicatesResult(Status status, List<ValidationError> errors) {
         this.status = status;
         this.errors = errors;
     }
@@ -33,7 +35,7 @@ class StatusChangePredicatesResult {
         return new StatusChangePredicatesResult(Status.Failure, errorsFrom(failedPredicates));
     }
 
-    private static List<Exception> errorsFrom(List<PredicateResult> predicates) {
+    private static List<ValidationError> errorsFrom(List<PredicateResult> predicates) {
         return predicates
                 .stream()
                 .flatMap(predicate -> predicate.errors().stream())
@@ -48,7 +50,7 @@ class StatusChangePredicatesResult {
         return !succeeded();
     }
 
-    public List<Exception> errors() {
+    public List<ValidationError> errors() {
         return errors;
     }
 

@@ -1,5 +1,6 @@
 package com.durys.jakub.carfleet.requests.drivertransfer.application;
 
+import com.durys.jakub.carfleet.common.errors.ValidationError;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequest;
@@ -52,7 +53,7 @@ public class DriverTransferRequestService {
     }
 
 
-    public Either<List<Exception>, DriverTransferRequest> changeStatus(RequestId requestId, ChangeCommand command) {
+    public Either<List<ValidationError>, DriverTransferRequest> changeStatus(RequestId requestId, ChangeCommand command) {
 
         DriverTransferRequest driverTransferRequest = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);

@@ -1,6 +1,7 @@
 package com.durys.jakub.carfleet.requests.transfer.instrastructure.in;
 
 import com.durys.jakub.carfleet.cars.domain.CarId;
+import com.durys.jakub.carfleet.common.errors.ValidationError;
 import com.durys.jakub.carfleet.requests.transfer.application.TransferRequestService;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.commands.AssignTransferCarCommand;
@@ -36,14 +37,19 @@ class TransferRequestController {
     @PostMapping
     ResponseEntity<EntityModel<RestResponse>> submit(@RequestBody SubmitTransferRequest transferRequest) {
 
-        TransferRequest created = transferRequestService.create(
+        var response = transferRequestService.create(
                 new RequesterId(transferRequest.requesterId()),
                 transferRequest.from(), transferRequest.to(),
                 transferRequest.purpose(), transferRequest.departure(),
                 transferRequest.destination(), transferRequest.carType());
 
+        if (response.isLeft()) {
+            return ResponseEntity.ok(
+                    EntityModel.of(toResponse(null, response)));
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(resourceLinks(transferRequest, created));
+                .body(resourceLinks(transferRequest, response.get()));
     }
 
     @PatchMapping("/{requestId}")
@@ -104,12 +110,14 @@ class TransferRequestController {
         );
     }
 
-    private static RestResponse toResponse(UUID resourceId, Either<List<Exception>, TransferRequest> result) {
+    private static RestResponse toResponse(UUID resourceId, Either<List<ValidationError>, TransferRequest> result) {
         return result
                 .fold(
                     exceptions -> RestResponse.failure(resourceId, exceptions),
                     request -> RestResponse.success(resourceId));
     }
+
+
 
 
 }

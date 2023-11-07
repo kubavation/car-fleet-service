@@ -49,10 +49,11 @@ class TransferRequestServiceTest {
         String destination = "Krakow";
         CarType carType = CarType.Passenger;
 
-        TransferRequest transferRequest = transferRequestService
+        var response = transferRequestService
                 .create(requesterId, from, to, purpose, departure, destination, carType);
 
-        assertNotNull(transferRequest);
+        assertTrue(response.isRight());
+        assertNotNull(response.get());
     }
 
     @Test
@@ -99,7 +100,7 @@ class TransferRequestServiceTest {
     public RequestId addTransferRequest() {
         TransferRequest transferRequest = transferRequestService
                 .create(new RequesterId(UUID.randomUUID()), LocalDateTime.now(), LocalDateTime.now().plusDays(1),
-                        "test", "Warsaw",  "Krakow", CarType.Passenger);
+                        "test", "Warsaw",  "Krakow", CarType.Passenger).get();
         return transferRequest.requestId();
     }
 

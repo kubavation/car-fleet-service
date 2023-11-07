@@ -1,5 +1,7 @@
 package com.durys.jakub.carfleet.state;
 
+import com.durys.jakub.carfleet.common.errors.ValidationError;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -12,9 +14,9 @@ public class PredicateResult {
     }
 
     private final Status status;
-    private final List<Exception> errors;
+    private final List<ValidationError> errors;
 
-    PredicateResult(Status status, List<Exception> errors) {
+    PredicateResult(Status status, List<ValidationError> errors) {
         this.status = status;
         this.errors = errors;
     }
@@ -27,11 +29,11 @@ public class PredicateResult {
         return new PredicateResult(Status.Success, Collections.emptyList());
     }
 
-    public static PredicateResult failure(List<Exception> exceptions) {
+    public static PredicateResult failure(List<ValidationError> exceptions) {
         return new PredicateResult(Status.Failure, exceptions);
     }
 
-    public static PredicateResult failure(Exception exception) {
+    public static PredicateResult failure(ValidationError exception) {
         return new PredicateResult(Status.Success, Collections.singletonList(exception));
     }
 
@@ -43,7 +45,7 @@ public class PredicateResult {
         return !succeeded();
     }
 
-    public List<Exception> errors() {
+    public List<ValidationError> errors() {
         return errors;
     }
 
