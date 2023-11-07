@@ -68,7 +68,7 @@ class RequestContent {
     }
 
 
-    public static void test(LocalDateTime from, LocalDateTime to, String purpose, String departure,
+    static void test(LocalDateTime from, LocalDateTime to, String purpose, String departure,
                      String destination, CarType carType,
                      ValidationErrorHandler handler) {
 

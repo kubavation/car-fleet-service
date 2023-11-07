@@ -3,6 +3,8 @@ package com.durys.jakub.carfleet.requests.transfer.domain;
 import com.durys.jakub.carfleet.cars.domain.Car;
 import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.common.errors.ValidationError;
+import com.durys.jakub.carfleet.common.errors.ValidationErrorHandler;
+import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
 import com.durys.jakub.carfleet.ddd.AggregateId;
 import com.durys.jakub.carfleet.ddd.BaseAggregateRoot;
 import com.durys.jakub.carfleet.events.DomainEvent;
@@ -23,7 +25,6 @@ import java.util.Set;
 @Table(name = "TRANSFER_REQUEST")
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 public class TransferRequest extends BaseAggregateRoot implements Flowable<TransferRequest> {
-
 
     public enum Status {
         SUBMITTED,
@@ -51,19 +52,23 @@ public class TransferRequest extends BaseAggregateRoot implements Flowable<Trans
     public TransferRequest(RequestId requestId, RequesterId requesterId,
                            LocalDateTime from, LocalDateTime to, String purpose,
                            String departure, String destination, CarType carType, String state) {
-        this.requestId = requestId;
-        this.requesterId = requesterId;
-        this.content = new RequestContent(from, to, new RequestPurpose(purpose), departure, destination, carType);
-        this.state = state;
-        this.events = new HashSet<>();
+        this(requestId, requesterId, from, to, purpose, departure, destination, carType, state,
+                ValidationErrorHandlers.throwingValidationErrorHandler());
     }
 
     public TransferRequest(RequestId requestId, RequesterId requesterId,
                            LocalDateTime from, LocalDateTime to, String purpose,
-                           String departure, String destination, CarType carType) {
+                           String departure, String destination, CarType carType, ValidationErrorHandler handler) {
+        this(requestId, requesterId, from, to, purpose, departure, destination, carType, null, handler);
+    }
+
+    public TransferRequest(RequestId requestId, RequesterId requesterId, LocalDateTime from, LocalDateTime to,
+                           String purpose, String departure, String destination, CarType carType, String state,
+                           ValidationErrorHandler handler) {
         this.requestId = requestId;
         this.requesterId = requesterId;
-        this.content = new RequestContent(from, to, new RequestPurpose(purpose), departure, destination, carType);
+        this.content = new RequestContent(from, to, purpose, departure, destination, carType, handler);
+        this.state = state;
         this.events = new HashSet<>();
     }
 
@@ -76,6 +81,10 @@ public class TransferRequest extends BaseAggregateRoot implements Flowable<Trans
         this.assignedCar = car.getCarId();
     }
 
+    public static void test(LocalDateTime from, LocalDateTime to, String purpose,
+                            String departure, String destination, CarType carType, ValidationErrorHandler handler) {
+        RequestContent.test(from, to, purpose, departure, destination, carType, handler);
+    }
 
     @Override
     public AggregateId aggregateId() {
@@ -102,7 +111,7 @@ public class TransferRequest extends BaseAggregateRoot implements Flowable<Trans
         this.content = new RequestContent(
                 request.content.from(),
                 request.content.to(),
-                request.content.purpose(),
+                request.content.purpose().content(),
                 request.content.departure(),
                 request.content.destination(),
                 request.content.carType());
