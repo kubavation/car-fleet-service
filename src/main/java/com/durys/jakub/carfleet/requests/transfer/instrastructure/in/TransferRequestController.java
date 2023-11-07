@@ -43,8 +43,13 @@ class TransferRequestController {
                 transferRequest.purpose(), transferRequest.departure(),
                 transferRequest.destination(), transferRequest.carType());
 
+        if (response.isLeft()) {
+            return ResponseEntity.ok(
+                    EntityModel.of(toResponse(null, response)));
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(resourceLinks(transferRequest, response.get())); //todo
+                .body(resourceLinks(transferRequest, response.get()));
     }
 
     @PatchMapping("/{requestId}")
