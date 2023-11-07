@@ -36,14 +36,14 @@ class TransferRequestController {
     @PostMapping
     ResponseEntity<EntityModel<RestResponse>> submit(@RequestBody SubmitTransferRequest transferRequest) {
 
-        TransferRequest created = transferRequestService.create(
+        var response = transferRequestService.create(
                 new RequesterId(transferRequest.requesterId()),
                 transferRequest.from(), transferRequest.to(),
                 transferRequest.purpose(), transferRequest.departure(),
                 transferRequest.destination(), transferRequest.carType());
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(resourceLinks(transferRequest, created));
+                .body(resourceLinks(transferRequest, response.get())); //todo
     }
 
     @PatchMapping("/{requestId}")

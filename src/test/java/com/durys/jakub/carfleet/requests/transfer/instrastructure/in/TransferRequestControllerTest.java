@@ -70,7 +70,7 @@ class TransferRequestControllerTest {
         Mockito.when(transferRequestService
                 .create(new RequesterId(request.requesterId()), request.from(), request.to(),
                         request.purpose(), request.departure(), request.destination(), request.carType()))
-                .thenReturn(result);
+                .thenReturn(Either.right(result));
 
         mockMvc.perform(post("/transfer-requests")
                         .content(objectMapper.writeValueAsString(request))

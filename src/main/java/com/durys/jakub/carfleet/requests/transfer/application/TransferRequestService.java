@@ -10,11 +10,13 @@ import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.state.ChangeCommand;
 import com.durys.jakub.carfleet.state.State;
 import io.vavr.control.Either;
+import jakarta.persistence.SecondaryTable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Component
@@ -24,14 +26,24 @@ public class TransferRequestService {
     private final TransferRequestAssembler assembler;
     private final TransferRequestRepository repository;
 
-    public TransferRequest create(RequesterId requesterId, LocalDateTime from, LocalDateTime to, String purpose,
-                                  String departure, String destination, CarType carType) {
+    public Either<Set<String>, TransferRequest> create(RequesterId requesterId, LocalDateTime from,
+                                                       LocalDateTime to, String purpose, String departure,
+                                                       String destination, CarType carType) {
+
+        var errorHandler = ValidationErrorHandlers.aggregatingValidationErrorHandler();
+
+        TransferRequest.test(from, to, purpose, departure, destination, carType, errorHandler);
+
+        if (errorHandler.hasErrors()) {
+            return Either.left(errorHandler.errorMessages());
+        }
+
 
         TransferRequest transferRequest = new TransferRequest(new RequestId(UUID.randomUUID()), requesterId, from, to, purpose,
                 departure, destination, carType, ValidationErrorHandlers.throwingValidationErrorHandler());
 
         State<TransferRequest> result = assembler.configuration().begin(transferRequest);
-        return repository.save(result.getObject());
+        return Either.right(repository.save(result.getObject()));
     }
 
 

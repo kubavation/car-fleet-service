@@ -47,9 +47,9 @@ class TransferRequestServiceDomainEventsTest {
     }
 
     public RequestId addTransferRequest() {
-        TransferRequest transferRequest = transferRequestService
+        var transferRequest = transferRequestService
                 .create(new RequesterId(UUID.randomUUID()), LocalDateTime.now(), LocalDateTime.now().plusDays(1),
-                "test", "Warsaw",  "Krakow", CarType.Passenger);
+                "test", "Warsaw",  "Krakow", CarType.Passenger).get();
         return transferRequest.requestId();
     }
 
