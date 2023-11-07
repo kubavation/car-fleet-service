@@ -12,7 +12,7 @@ public class Transfer implements Flowable<Transfer> {
     }
 
     public enum State {
-        Open, Closed, Completed, Archived
+        OPEN, CLOSED, COMPLETED, ARCHIVED
     }
 
     private final TransferId transferId;
