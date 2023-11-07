@@ -1,6 +1,7 @@
 package com.durys.jakub.carfleet.requests.prebooking.application;
 
 import com.durys.jakub.carfleet.cars.domain.CarId;
+import com.durys.jakub.carfleet.common.errors.ValidationError;
 import com.durys.jakub.carfleet.drivers.domain.DriverId;
 import com.durys.jakub.carfleet.events.Events;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
@@ -55,7 +56,7 @@ public class PreBookingTransferRequestService {
     }
 
 
-    public Either<List<Exception>, PreBookingTransferRequest> changeStatus(RequestId requestId, ChangeCommand command) {
+    public Either<List<ValidationError>, PreBookingTransferRequest> changeStatus(RequestId requestId, ChangeCommand command) {
 
         PreBookingTransferRequest request = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);

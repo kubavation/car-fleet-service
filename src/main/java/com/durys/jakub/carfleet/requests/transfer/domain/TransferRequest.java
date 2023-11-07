@@ -58,8 +58,9 @@ public class TransferRequest extends BaseAggregateRoot implements Flowable<Trans
 
     public TransferRequest(RequestId requestId, RequesterId requesterId,
                            LocalDateTime from, LocalDateTime to, String purpose,
-                           String departure, String destination, CarType carType, ValidationErrorHandler handler) {
-        this(requestId, requesterId, from, to, purpose, departure, destination, carType, null, handler);
+                           String departure, String destination, CarType carType) {
+        this(requestId, requesterId, from, to, purpose, departure, destination, carType, null,
+                ValidationErrorHandlers.throwingValidationErrorHandler());
     }
 
     public TransferRequest(RequestId requestId, RequesterId requesterId, LocalDateTime from, LocalDateTime to,

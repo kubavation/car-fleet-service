@@ -1,6 +1,7 @@
 package com.durys.jakub.carfleet.requests.drivertransfer.domain.predicates;
 
 
+import com.durys.jakub.carfleet.common.errors.ValidationError;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequest;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.commands.ChangeTransportInformationCommand;
 import com.durys.jakub.carfleet.state.ChangeCommand;
@@ -18,7 +19,7 @@ public class DriverNotEmptyVerifier implements BiFunction<State<DriverTransferRe
         var command = (ChangeTransportInformationCommand) changeDriverCommand;
 
         if (command.getDriverId() == null) {
-            return PredicateResult.failure(new RuntimeException("Driver have to be assigned"));
+            return PredicateResult.failure(new ValidationError("Driver have to be assigned"));
         }
 
         return PredicateResult.success();

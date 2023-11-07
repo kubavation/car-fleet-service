@@ -1,6 +1,7 @@
 package com.durys.jakub.carfleet.requests.transfer.instrastructure.in;
 
 import com.durys.jakub.carfleet.cars.domain.CarId;
+import com.durys.jakub.carfleet.common.errors.ValidationError;
 import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
 import com.durys.jakub.carfleet.requests.transfer.application.TransferRequestService;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
@@ -65,7 +66,7 @@ class TransferRequestControllerTest {
         var result = new TransferRequest(new RequestId(UUID.randomUUID()),
                 new RequesterId(request.requesterId()),
                 request.from(), request.to(), request.purpose(), request.departure(),
-                request.destination(), request.carType(), ValidationErrorHandlers.aggregatingValidationErrorHandler());
+                request.destination(), request.carType());
 
         Mockito.when(transferRequestService
                 .create(new RequesterId(request.requesterId()), request.from(), request.to(),
@@ -100,8 +101,7 @@ class TransferRequestControllerTest {
 
         var result = new TransferRequest(new RequestId(requestId),
                 new RequesterId(request.requesterId()),
-                request.from(), request.to(), request.purpose(), request.departure(), request.destination(), request.carType(),
-                ValidationErrorHandlers.aggregatingValidationErrorHandler());
+                request.from(), request.to(), request.purpose(), request.departure(), request.destination(), request.carType());
 
 
         Mockito.when(transferRequestService
@@ -134,8 +134,7 @@ class TransferRequestControllerTest {
 
         var result = new TransferRequest(new RequestId(requestId),
                 new RequesterId(UUID.randomUUID()),
-                LocalDateTime.now(), LocalDateTime.now(), "", "Departure", "Destination", CarType.Passenger,
-                ValidationErrorHandlers.aggregatingValidationErrorHandler());
+                LocalDateTime.now(), LocalDateTime.now(), "", "Departure", "Destination", CarType.Passenger);
 
         Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(REJECTED)))
                 .thenReturn(Either.right(result));
@@ -156,7 +155,7 @@ class TransferRequestControllerTest {
         UUID requestId = UUID.randomUUID();
 
         Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(REJECTED)))
-                .thenReturn(Either.left(List.of(new RuntimeException("Unexpected Exception"))));
+                .thenReturn(Either.left(List.of(new ValidationError("Unexpected Exception"))));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .patch("/transfer-requests/%s/rejection".formatted(requestId.toString()))
@@ -175,8 +174,7 @@ class TransferRequestControllerTest {
 
         var result = new TransferRequest(new RequestId(requestId),
                 new RequesterId(UUID.randomUUID()),
-                LocalDateTime.now(), LocalDateTime.now(), "", "Departure", "Destination", CarType.Passenger,
-                ValidationErrorHandlers.aggregatingValidationErrorHandler());
+                LocalDateTime.now(), LocalDateTime.now(), "", "Departure", "Destination", CarType.Passenger);
 
         Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(CANCELLED)))
                 .thenReturn(Either.right(result));
@@ -197,8 +195,8 @@ class TransferRequestControllerTest {
         Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(CANCELLED)))
                 .thenReturn(Either.left(
                         List.of(
-                                new RuntimeException("Unexpected Exception 1"),
-                                new RuntimeException("Unexpected Exception 2"))));
+                                new ValidationError("Unexpected Exception 1"),
+                                new ValidationError("Unexpected Exception 2"))));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .patch("/transfer-requests/%s/cancellation".formatted(requestId.toString()))
@@ -218,8 +216,7 @@ class TransferRequestControllerTest {
 
         var result = new TransferRequest(new RequestId(requestId),
                 new RequesterId(UUID.randomUUID()),
-                LocalDateTime.now(), LocalDateTime.now(), "", "Departure", "Destination", CarType.Passenger,
-                ValidationErrorHandlers.aggregatingValidationErrorHandler());
+                LocalDateTime.now(), LocalDateTime.now(), "", "Departure", "Destination", CarType.Passenger);
 
         Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new AssignTransferCarCommand(new CarId(carId))))
                 .thenReturn(Either.right(result));
@@ -242,8 +239,8 @@ class TransferRequestControllerTest {
         Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new AssignTransferCarCommand(new CarId(carId))))
                 .thenReturn(Either.left(
                         List.of(
-                                new RuntimeException("Unexpected Exception 1"),
-                                new RuntimeException("Unexpected Exception 2"))));
+                                new ValidationError("Unexpected Exception 1"),
+                                new ValidationError("Unexpected Exception 2"))));
 
 
         mockMvc.perform(MockMvcRequestBuilders

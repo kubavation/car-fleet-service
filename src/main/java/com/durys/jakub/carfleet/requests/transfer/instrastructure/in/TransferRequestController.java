@@ -1,6 +1,7 @@
 package com.durys.jakub.carfleet.requests.transfer.instrastructure.in;
 
 import com.durys.jakub.carfleet.cars.domain.CarId;
+import com.durys.jakub.carfleet.common.errors.ValidationError;
 import com.durys.jakub.carfleet.requests.transfer.application.TransferRequestService;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.commands.AssignTransferCarCommand;
@@ -104,12 +105,14 @@ class TransferRequestController {
         );
     }
 
-    private static RestResponse toResponse(UUID resourceId, Either<List<Exception>, TransferRequest> result) {
+    private static RestResponse toResponse(UUID resourceId, Either<List<ValidationError>, TransferRequest> result) {
         return result
                 .fold(
                     exceptions -> RestResponse.failure(resourceId, exceptions),
                     request -> RestResponse.success(resourceId));
     }
+
+
 
 
 }
