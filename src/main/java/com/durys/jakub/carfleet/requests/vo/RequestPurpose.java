@@ -43,7 +43,7 @@ public class RequestPurpose implements Serializable {
         return Objects.hash(content);
     }
 
-    static void test(String purpose, ValidationErrorHandler handler) {
+    public static void test(String purpose, ValidationErrorHandler handler) {
         if (Objects.isNull(purpose) || purpose.trim().isEmpty()) {
             handler.handle(new ValidationError("Purpose cannot be empty"));
         }
