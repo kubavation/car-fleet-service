@@ -24,9 +24,7 @@ class Period {
     }
 
     Period(LocalDateTime from, LocalDateTime to) {
-        this.from = from;
-        this.to = to;
-        test(from, to, ValidationErrorHandlers.throwingValidationErrorHandler());
+        this(from, to, ValidationErrorHandlers.throwingValidationErrorHandler());
     }
 
     LocalDateTime from() {

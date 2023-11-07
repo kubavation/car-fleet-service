@@ -17,8 +17,7 @@ public class RequestPurpose implements Serializable {
     private final String content;
 
     public RequestPurpose(String content) {
-        this.content = content;
-        test(content, ValidationErrorHandlers.throwingValidationErrorHandler());
+        this(content, ValidationErrorHandlers.throwingValidationErrorHandler());
     }
 
     public RequestPurpose(String content, ValidationErrorHandler handler) {
