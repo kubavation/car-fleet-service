@@ -2,6 +2,7 @@ package com.durys.jakub.carfleet.requests.transfer.instrastructure.in;
 
 import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.common.errors.ValidationError;
+import com.durys.jakub.carfleet.ddd.AggregateId;
 import com.durys.jakub.carfleet.requests.transfer.application.TransferRequestService;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.commands.AssignTransferCarCommand;
@@ -11,12 +12,12 @@ import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.state.ChangeCommand;
 import io.vavr.control.Either;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import static com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest.Status.CANCELLED;
@@ -35,7 +36,7 @@ class TransferRequestController {
     }
 
     @PostMapping
-    ResponseEntity<EntityModel<RestResponse>> submit(@RequestBody SubmitTransferRequest transferRequest) {
+    ResponseEntity<RestResponse> submit(@RequestBody SubmitTransferRequest transferRequest) {
 
         var response = transferRequestService.create(
                 new RequesterId(transferRequest.requesterId()),
@@ -44,12 +45,13 @@ class TransferRequestController {
                 transferRequest.destination(), transferRequest.carType());
 
         if (response.isLeft()) {
-            return ResponseEntity.ok(
-                    EntityModel.of(toResponse(null, response)));
+            return ResponseEntity.ok(toResponse(null, response));
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(resourceLinks(transferRequest, response.get()));
+        return response
+                .map(result ->
+                        ResponseEntity.status(HttpStatus.CREATED)
+                            .body(RestResponse.success(null).add(resourceLinks(transferRequest, result)))).get();
     }
 
     @PatchMapping("/{requestId}")
@@ -60,7 +62,7 @@ class TransferRequestController {
                 transferRequest.destination(), transferRequest.carType());
 
         return ResponseEntity.ok()
-                .body(resourceLinks(transferRequest, edited));
+                .body(EntityModel.of(RestResponse.success(requestId), resourceLinks(transferRequest, edited)));
     }
 
     @PatchMapping("/{requestId}/rejection")
@@ -95,19 +97,16 @@ class TransferRequestController {
     }
 
 
-    private static EntityModel<RestResponse> resourceLinks(SubmitTransferRequest request, TransferRequest model) {
-        return EntityModel.of(
-                RestResponse.success(model.requestId().value()),
-                List.of(
-                        linkTo(methodOn(TransferRequestController.class)
-                                .changeContent(model.requestId().value(), request)).withRel("change-content"),
-                        linkTo(methodOn(TransferRequestController.class)
-                                .reject(model.requestId().value())).withRel("reject"),
-                        linkTo(methodOn(TransferRequestController.class)
-                                .cancel(model.requestId().value())).withRel("cancel"),
-                        linkTo(methodOn(TransferRequestController.class)
-                                .accept(model.requestId().value(), UUID.randomUUID())).withRel("accept"))
-        );
+    private static List<Link> resourceLinks(SubmitTransferRequest request, TransferRequest model) {
+        return List.of(
+                linkTo(methodOn(TransferRequestController.class)
+                        .changeContent(model.requestId().value(), request)).withRel("change-content"),
+                linkTo(methodOn(TransferRequestController.class)
+                        .reject(model.requestId().value())).withRel("reject"),
+                linkTo(methodOn(TransferRequestController.class)
+                        .cancel(model.requestId().value())).withRel("cancel"),
+                linkTo(methodOn(TransferRequestController.class)
+                        .accept(model.requestId().value(), UUID.randomUUID())).withRel("accept"));
     }
 
     private static RestResponse toResponse(UUID resourceId, Either<List<ValidationError>, TransferRequest> result) {
@@ -116,7 +115,6 @@ class TransferRequestController {
                     exceptions -> RestResponse.failure(resourceId, exceptions),
                     request -> RestResponse.success(resourceId));
     }
-
 
 
 
