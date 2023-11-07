@@ -1,6 +1,7 @@
 package com.durys.jakub.carfleet.requests.transfer.instrastructure.in;
 
 import com.durys.jakub.carfleet.cars.domain.CarId;
+import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
 import com.durys.jakub.carfleet.requests.transfer.application.TransferRequestService;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.commands.AssignTransferCarCommand;
@@ -63,7 +64,8 @@ class TransferRequestControllerTest {
 
         var result = new TransferRequest(new RequestId(UUID.randomUUID()),
                 new RequesterId(request.requesterId()),
-                request.from(), request.to(), request.purpose(), request.departure(), request.destination(), request.carType());
+                request.from(), request.to(), request.purpose(), request.departure(),
+                request.destination(), request.carType(), ValidationErrorHandlers.aggregatingValidationErrorHandler());
 
         Mockito.when(transferRequestService
                 .create(new RequesterId(request.requesterId()), request.from(), request.to(),
@@ -98,7 +100,8 @@ class TransferRequestControllerTest {
 
         var result = new TransferRequest(new RequestId(requestId),
                 new RequesterId(request.requesterId()),
-                request.from(), request.to(), request.purpose(), request.departure(), request.destination(), request.carType());
+                request.from(), request.to(), request.purpose(), request.departure(), request.destination(), request.carType(),
+                ValidationErrorHandlers.aggregatingValidationErrorHandler());
 
 
         Mockito.when(transferRequestService
@@ -131,7 +134,8 @@ class TransferRequestControllerTest {
 
         var result = new TransferRequest(new RequestId(requestId),
                 new RequesterId(UUID.randomUUID()),
-                LocalDateTime.now(), LocalDateTime.now(), "", "Departure", "Destination", CarType.Passenger);
+                LocalDateTime.now(), LocalDateTime.now(), "", "Departure", "Destination", CarType.Passenger,
+                ValidationErrorHandlers.aggregatingValidationErrorHandler());
 
         Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(REJECTED)))
                 .thenReturn(Either.right(result));
@@ -171,7 +175,8 @@ class TransferRequestControllerTest {
 
         var result = new TransferRequest(new RequestId(requestId),
                 new RequesterId(UUID.randomUUID()),
-                LocalDateTime.now(), LocalDateTime.now(), "", "Departure", "Destination", CarType.Passenger);
+                LocalDateTime.now(), LocalDateTime.now(), "", "Departure", "Destination", CarType.Passenger,
+                ValidationErrorHandlers.aggregatingValidationErrorHandler());
 
         Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(CANCELLED)))
                 .thenReturn(Either.right(result));
@@ -213,7 +218,8 @@ class TransferRequestControllerTest {
 
         var result = new TransferRequest(new RequestId(requestId),
                 new RequesterId(UUID.randomUUID()),
-                LocalDateTime.now(), LocalDateTime.now(), "", "Departure", "Destination", CarType.Passenger);
+                LocalDateTime.now(), LocalDateTime.now(), "", "Departure", "Destination", CarType.Passenger,
+                ValidationErrorHandlers.aggregatingValidationErrorHandler());
 
         Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new AssignTransferCarCommand(new CarId(carId))))
                 .thenReturn(Either.right(result));

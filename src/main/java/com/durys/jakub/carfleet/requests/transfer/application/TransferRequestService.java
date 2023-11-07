@@ -1,5 +1,6 @@
 package com.durys.jakub.carfleet.requests.transfer.application;
 
+import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestRepository;
@@ -27,7 +28,7 @@ public class TransferRequestService {
                                   String departure, String destination, CarType carType) {
 
         TransferRequest transferRequest = new TransferRequest(new RequestId(UUID.randomUUID()), requesterId, from, to, purpose,
-                departure, destination, carType);
+                departure, destination, carType, ValidationErrorHandlers.throwingValidationErrorHandler());
 
         State<TransferRequest> result = assembler.configuration().begin(transferRequest);
         return repository.save(result.getObject());
