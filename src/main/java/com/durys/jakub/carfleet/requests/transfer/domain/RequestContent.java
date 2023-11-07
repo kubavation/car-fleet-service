@@ -14,12 +14,13 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 class RequestContent {
 
-    private final LocalDateTime from;
-    private final LocalDateTime to;
+    @Embedded
+    private final Period period;
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "PURPOSE"))
     private final RequestPurpose purpose;
+
     private final String departure;
     private final String destination;
 
@@ -28,8 +29,7 @@ class RequestContent {
 
     RequestContent(LocalDateTime from, LocalDateTime to, RequestPurpose purpose,
                    String departure, String destination, CarType carType) {
-        this.from = from;
-        this.to = to;
+        this.period = new Period(from, to);
         this.purpose = purpose;
         this.departure = departure;
         this.destination = destination;
@@ -37,11 +37,11 @@ class RequestContent {
     }
 
     public LocalDateTime from() {
-        return from;
+        return period.from();
     }
 
     public LocalDateTime to() {
-        return to;
+        return period.to();
     }
 
     public RequestPurpose purpose() {
@@ -60,23 +60,19 @@ class RequestContent {
         return carType;
     }
 
+
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (RequestContent) obj;
-        return Objects.equals(this.from, that.from) &&
-                Objects.equals(this.to, that.to) &&
-                Objects.equals(this.purpose, that.purpose) &&
-                Objects.equals(this.departure, that.departure) &&
-                Objects.equals(this.destination, that.destination) &&
-                Objects.equals(this.carType, that.carType);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RequestContent that = (RequestContent) o;
+        return Objects.equals(period, that.period) && Objects.equals(purpose, that.purpose)
+                && Objects.equals(departure, that.departure)
+                && Objects.equals(destination, that.destination) && carType == that.carType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(from, to, purpose, departure, destination, carType);
+        return Objects.hash(period, purpose, departure, destination, carType);
     }
-
-
 }

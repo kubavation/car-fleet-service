@@ -3,10 +3,15 @@ package com.durys.jakub.carfleet.requests.transfer.domain;
 import com.durys.jakub.carfleet.common.errors.ValidationError;
 import com.durys.jakub.carfleet.common.errors.ValidationErrorHandler;
 import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
+import jakarta.persistence.Embeddable;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Embeddable
+@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 class Period {
 
     private final LocalDateTime from;
