@@ -47,11 +47,19 @@ public class TransferRequestService {
     }
 
 
-    public TransferRequest change(RequestId requestId, LocalDateTime from, LocalDateTime to,
+    public Either<List<ValidationError>, TransferRequest> change(RequestId requestId, LocalDateTime from, LocalDateTime to,
                                   String purpose, String departure, String destination, CarType carType) {
 
         TransferRequest transferRequest = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);
+
+        var errorHandler = ValidationErrorHandlers.aggregatingValidationErrorHandler();
+
+        TransferRequest.test(from, to, purpose, departure, destination, carType, errorHandler);
+
+        if (errorHandler.hasErrors()) {
+            return Either.left(errorHandler.errors());
+        }
 
         State<TransferRequest> result = assembler.configuration()
                 .recreate(transferRequest)
@@ -59,7 +67,7 @@ public class TransferRequestService {
                         new TransferRequest(transferRequest.requestId(), transferRequest.requesterId(),
                                 from, to, purpose, departure, destination, carType, transferRequest.state()));
 
-        return repository.save(result.getObject());
+        return Either.right(repository.save(result.getObject()));
     }
 
 
