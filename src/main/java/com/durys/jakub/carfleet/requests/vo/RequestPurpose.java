@@ -1,5 +1,8 @@
 package com.durys.jakub.carfleet.requests.vo;
 
+import com.durys.jakub.carfleet.common.errors.ValidationError;
+import com.durys.jakub.carfleet.common.errors.ValidationErrorHandler;
+import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -15,6 +18,12 @@ public class RequestPurpose implements Serializable {
 
     public RequestPurpose(String content) {
         this.content = content;
+        test(content, ValidationErrorHandlers.throwingValidationErrorHandler());
+    }
+
+    public RequestPurpose(String content, ValidationErrorHandler handler) {
+        this.content = content;
+        test(content, handler);
     }
 
     public String content() {
@@ -34,5 +43,10 @@ public class RequestPurpose implements Serializable {
         return Objects.hash(content);
     }
 
+    static void test(String purpose, ValidationErrorHandler handler) {
+        if (Objects.isNull(purpose) || purpose.trim().isEmpty()) {
+            handler.handle(new ValidationError("Purpose cannot be empty"));
+        }
+    }
 
 }
