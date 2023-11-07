@@ -59,7 +59,7 @@ class TransferRequestControllerTest {
     void createTransferRequest_shouldReturn201() throws Exception {
 
         var request = new SubmitTransferRequest(UUID.randomUUID(),
-                LocalDateTime.now(), LocalDateTime.now(),
+                LocalDateTime.now(), LocalDateTime.now().plusDays(1),
                 "Departure", "Destination", "Purpose",
                 CarType.Passenger);
 
@@ -93,7 +93,7 @@ class TransferRequestControllerTest {
     void editTransferRequest_shouldReturn200() throws Exception {
 
         var request = new SubmitTransferRequest(UUID.randomUUID(),
-                LocalDateTime.now(), LocalDateTime.now(),
+                LocalDateTime.now(), LocalDateTime.now().plusDays(1),
                 "Departure", "Destination", "Purpose",
                 CarType.Passenger);
 
@@ -134,7 +134,8 @@ class TransferRequestControllerTest {
 
         var result = new TransferRequest(new RequestId(requestId),
                 new RequesterId(UUID.randomUUID()),
-                LocalDateTime.now(), LocalDateTime.now(), "", "Departure", "Destination", CarType.Passenger);
+                LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Purpose",
+                "Departure", "Destination", CarType.Passenger);
 
         Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(REJECTED)))
                 .thenReturn(Either.right(result));
@@ -174,7 +175,8 @@ class TransferRequestControllerTest {
 
         var result = new TransferRequest(new RequestId(requestId),
                 new RequesterId(UUID.randomUUID()),
-                LocalDateTime.now(), LocalDateTime.now(), "", "Departure", "Destination", CarType.Passenger);
+                LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Purpose",
+                "Departure", "Destination", CarType.Passenger);
 
         Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(CANCELLED)))
                 .thenReturn(Either.right(result));
@@ -216,7 +218,8 @@ class TransferRequestControllerTest {
 
         var result = new TransferRequest(new RequestId(requestId),
                 new RequesterId(UUID.randomUUID()),
-                LocalDateTime.now(), LocalDateTime.now(), "", "Departure", "Destination", CarType.Passenger);
+                LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Purpose",
+                "Departure", "Destination", CarType.Passenger);
 
         Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new AssignTransferCarCommand(new CarId(carId))))
                 .thenReturn(Either.right(result));
