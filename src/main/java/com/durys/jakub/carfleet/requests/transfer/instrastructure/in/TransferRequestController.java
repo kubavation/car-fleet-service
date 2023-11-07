@@ -55,14 +55,16 @@ class TransferRequestController {
     }
 
     @PatchMapping("/{requestId}")
-    ResponseEntity<EntityModel<RestResponse>> changeContent(@PathVariable UUID requestId, @RequestBody SubmitTransferRequest transferRequest) {
+    ResponseEntity<RestResponse> changeContent(@PathVariable UUID requestId, @RequestBody SubmitTransferRequest transferRequest) {
 
-        TransferRequest edited = transferRequestService.change(new RequestId(requestId), transferRequest.from(), transferRequest.to(),
+        var response = transferRequestService.change(new RequestId(requestId), transferRequest.from(), transferRequest.to(),
                 transferRequest.purpose(), transferRequest.departure(),
                 transferRequest.destination(), transferRequest.carType());
 
-        return ResponseEntity.ok()
-                .body(EntityModel.of(RestResponse.success(requestId), resourceLinks(transferRequest, edited)));
+        return response
+                .map(result ->
+                        ResponseEntity.status(HttpStatus.OK)
+                                .body(RestResponse.success(null).add(resourceLinks(transferRequest, result)))).get();
     }
 
     @PatchMapping("/{requestId}/rejection")
