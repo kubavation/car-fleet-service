@@ -11,7 +11,7 @@ public class AssignTransferCarCommand extends ChangeCommand {
     private final CarId carId;
 
     public AssignTransferCarCommand(CarId carId) {
-        super(DriverTransferRequest.Status.ACCEPTED);
+        super(DriverTransferRequest.Status.EDITED);
         this.carId = carId;
     }
 
