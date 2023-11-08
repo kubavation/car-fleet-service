@@ -2,6 +2,7 @@ package com.durys.jakub.carfleet.requests.transfer.instrastructure.in;
 
 import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.common.errors.ValidationError;
+import com.durys.jakub.carfleet.common.errors.ValidationErrors;
 import com.durys.jakub.carfleet.ddd.AggregateId;
 import com.durys.jakub.carfleet.requests.transfer.application.TransferRequestService;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
@@ -111,7 +112,7 @@ class TransferRequestController {
                         .accept(model.requestId().value(), UUID.randomUUID())).withRel("accept"));
     }
 
-    private static RestResponse toResponse(UUID resourceId, Either<List<ValidationError>, TransferRequest> result) {
+    private static RestResponse toResponse(UUID resourceId, Either<ValidationErrors, TransferRequest> result) {
         return result
                 .fold(
                     exceptions -> RestResponse.failure(resourceId, exceptions),

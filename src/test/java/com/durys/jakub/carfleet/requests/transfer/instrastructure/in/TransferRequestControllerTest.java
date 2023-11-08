@@ -3,6 +3,7 @@ package com.durys.jakub.carfleet.requests.transfer.instrastructure.in;
 import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.common.errors.ValidationError;
 import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
+import com.durys.jakub.carfleet.common.errors.ValidationErrors;
 import com.durys.jakub.carfleet.requests.transfer.application.TransferRequestService;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.commands.AssignTransferCarCommand;
@@ -156,7 +157,11 @@ class TransferRequestControllerTest {
         UUID requestId = UUID.randomUUID();
 
         Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(REJECTED)))
-                .thenReturn(Either.left(List.of(new ValidationError("Unexpected Exception"))));
+                .thenReturn(
+                        Either.left(
+                                new ValidationErrors(
+                                        List.of(new ValidationError("Unexpected Exception")))
+                        ));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .patch("/transfer-requests/%s/rejection".formatted(requestId.toString()))
@@ -196,9 +201,11 @@ class TransferRequestControllerTest {
 
         Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(CANCELLED)))
                 .thenReturn(Either.left(
-                        List.of(
+                        new ValidationErrors(
+                            List.of(
                                 new ValidationError("Unexpected Exception 1"),
-                                new ValidationError("Unexpected Exception 2"))));
+                                new ValidationError("Unexpected Exception 2")))
+                ));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .patch("/transfer-requests/%s/cancellation".formatted(requestId.toString()))
@@ -241,9 +248,11 @@ class TransferRequestControllerTest {
 
         Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new AssignTransferCarCommand(new CarId(carId))))
                 .thenReturn(Either.left(
-                        List.of(
-                                new ValidationError("Unexpected Exception 1"),
-                                new ValidationError("Unexpected Exception 2"))));
+                        new ValidationErrors(
+                                List.of(
+                                        new ValidationError("Unexpected Exception 1"),
+                                        new ValidationError("Unexpected Exception 2")))
+                ));
 
 
         mockMvc.perform(MockMvcRequestBuilders

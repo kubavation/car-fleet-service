@@ -2,6 +2,7 @@ package com.durys.jakub.carfleet.requests.transfer.application;
 
 import com.durys.jakub.carfleet.common.errors.ValidationError;
 import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
+import com.durys.jakub.carfleet.common.errors.ValidationErrors;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestRepository;
@@ -25,7 +26,7 @@ public class TransferRequestService {
     private final TransferRequestAssembler assembler;
     private final TransferRequestRepository repository;
 
-    public Either<List<ValidationError>, TransferRequest> create(RequesterId requesterId, LocalDateTime from,
+    public Either<ValidationErrors, TransferRequest> create(RequesterId requesterId, LocalDateTime from,
                                                                  LocalDateTime to, String purpose, String departure,
                                                                  String destination, CarType carType) {
 
@@ -47,7 +48,7 @@ public class TransferRequestService {
     }
 
 
-    public Either<List<ValidationError>, TransferRequest> change(RequestId requestId, LocalDateTime from, LocalDateTime to,
+    public Either<ValidationErrors, TransferRequest> change(RequestId requestId, LocalDateTime from, LocalDateTime to,
                                   String purpose, String departure, String destination, CarType carType) {
 
         TransferRequest transferRequest = repository.load(requestId)
@@ -71,7 +72,7 @@ public class TransferRequestService {
     }
 
 
-    public Either<List<ValidationError>, TransferRequest> changeStatus(RequestId requestId, ChangeCommand command) {
+    public Either<ValidationErrors, TransferRequest> changeStatus(RequestId requestId, ChangeCommand command) {
 
         TransferRequest transferRequest = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);

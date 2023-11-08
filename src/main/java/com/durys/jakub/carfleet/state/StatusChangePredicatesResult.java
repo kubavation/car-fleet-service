@@ -1,11 +1,10 @@
 package com.durys.jakub.carfleet.state;
 
 import com.durys.jakub.carfleet.common.errors.ValidationError;
+import com.durys.jakub.carfleet.common.errors.ValidationErrors;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 class StatusChangePredicatesResult {
 
@@ -15,11 +14,11 @@ class StatusChangePredicatesResult {
     }
 
     private final Status status;
-    private final List<ValidationError> errors;
+    private final ValidationErrors errors;
 
     StatusChangePredicatesResult(Status status, List<ValidationError> errors) {
         this.status = status;
-        this.errors = errors;
+        this.errors = new ValidationErrors(errors);
     }
 
     public static StatusChangePredicatesResult from(List<PredicateResult> results) {
@@ -50,7 +49,7 @@ class StatusChangePredicatesResult {
         return !succeeded();
     }
 
-    public List<ValidationError> errors() {
+    public ValidationErrors errors() {
         return errors;
     }
 
