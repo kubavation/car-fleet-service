@@ -28,8 +28,6 @@ public class TransferRequestService {
 
     public Either<ValidationErrors, TransferRequest> handle(SubmitTransferRequestCommand command) {
 
-
-
         var errorHandler = ValidationErrorHandlers.aggregatingValidationErrorHandler();
 
         TransferRequest.test(command.from(), command.to(), command.purpose(),
