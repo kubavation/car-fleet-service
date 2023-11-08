@@ -7,7 +7,6 @@ import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestAssemble
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestRepository;
 import com.durys.jakub.carfleet.requests.transfer.domain.command.ChangeTransferRequestContentCommand;
 import com.durys.jakub.carfleet.requests.transfer.domain.command.SubmitTransferRequestCommand;
-import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
 import com.durys.jakub.carfleet.sharedkernel.identity.IdentityProvider;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.state.ChangeCommand;
@@ -16,7 +15,6 @@ import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Component
@@ -52,7 +50,7 @@ public class TransferRequestService {
     public Either<ValidationErrors, TransferRequest> change(ChangeTransferRequestContentCommand command) {
 
         TransferRequest transferRequest = repository.load(command.requestId())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new RuntimeException("Transfer request with ID: %s not found".formatted(command.requestId().value())));
 
         var errorHandler = ValidationErrorHandlers.aggregatingValidationErrorHandler();
 
@@ -77,7 +75,7 @@ public class TransferRequestService {
     public Either<ValidationErrors, TransferRequest> changeStatus(RequestId requestId, ChangeCommand command) {
 
         TransferRequest transferRequest = repository.load(requestId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new RuntimeException("Transfer request with ID: %s not found".formatted(requestId.value())));
 
         return assembler.configuration()
                 .recreate(transferRequest)
