@@ -2,7 +2,9 @@ package com.durys.jakub.carfleet.requests.transfer.domain;
 
 import com.durys.jakub.carfleet.cars.availability.CarAvailabilityService;
 import com.durys.jakub.carfleet.cars.domain.CarsRepository;
+import com.durys.jakub.carfleet.requests.transfer.domain.state.actions.AcceptTransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.actions.AssignTransferCar;
+import com.durys.jakub.carfleet.requests.transfer.domain.state.predicates.CarAssignedPredicate;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.predicates.CarAvailablePredicate;
 import com.durys.jakub.carfleet.state.Assembler;
 import com.durys.jakub.carfleet.state.StateBuilder;
@@ -36,21 +38,29 @@ public class TransferRequestAssembler implements Assembler<TransferRequest> {
         return StateBuilder.builderForClass(TransferRequest.class)
                 .beginWith(SUBMITTED)
                 .to(ACCEPTED)
+                .check(new CarAssignedPredicate())
                 .check(new CarAvailablePredicate(carAvailabilityService))
-                .execute(new AssignTransferCar(carsRepository))
+                .execute(new AcceptTransferRequest())
                 .and()
-                    .from(SUBMITTED).whenContentChangesTo(EDITED)
+                    .from(SUBMITTED)
+                    .whenContentChangesTo(EDITED)
+                    .check(new CarAvailablePredicate(carAvailabilityService))
                 .and()
-                    .from(EDITED).to(EDITED)
+                    .from(EDITED).to(EDITED).check(new CarAvailablePredicate(carAvailabilityService))
                 .and()
-                    .from(ACCEPTED).to(CANCELLED)
+                    .from(ACCEPTED).to(CANCELLED) //todo
                 .and()
                 .from(EDITED)
                     .to(ACCEPTED)
+                    .check(new CarAssignedPredicate())
                     .check(new CarAvailablePredicate(carAvailabilityService))
-                    .execute(new AssignTransferCar(carsRepository))
+                    .execute(new AcceptTransferRequest())
                 .and()
                     .from(SUBMITTED).to(REJECTED)
+                .and()
+                    .from(EDITED).to(REJECTED)
+                .and()
+                    .from(EDITED).to(CANCELLED)
                 .build();
     }
 }
