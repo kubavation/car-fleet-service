@@ -12,6 +12,7 @@ import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.state.ChangeCommand;
 import com.durys.jakub.carfleet.state.State;
 import io.vavr.control.Either;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,7 @@ public class TransferRequestService {
     private final TransferRequestRepository repository;
     private final IdentityProvider<UUID> identityProvider;
 
+    @Transactional
     public Either<ValidationErrors, TransferRequest> handle(SubmitTransferRequestCommand command) {
 
         var errorHandler = ValidationErrorHandlers.aggregatingValidationErrorHandler();
@@ -46,7 +48,7 @@ public class TransferRequestService {
         return Either.right(repository.save(result.getObject()));
     }
 
-
+    @Transactional
     public Either<ValidationErrors, TransferRequest> change(ChangeTransferRequestContentCommand command) {
 
         TransferRequest transferRequest = repository.load(command.requestId())
@@ -72,6 +74,7 @@ public class TransferRequestService {
     }
 
 
+    @Transactional
     public Either<ValidationErrors, TransferRequest> changeStatus(RequestId requestId, ChangeCommand command) {
 
         TransferRequest transferRequest = repository.load(requestId)

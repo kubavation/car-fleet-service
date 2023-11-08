@@ -31,15 +31,12 @@ class RequestContent {
 
     RequestContent(LocalDateTime from, LocalDateTime to, String purpose,
                    String departure, String destination, CarType carType) {
-        this(from, to, purpose, departure, destination, carType, ValidationErrorHandlers.throwingValidationErrorHandler());
-    }
 
-    RequestContent(LocalDateTime from, LocalDateTime to, String purpose,
-                   String departure, String destination, CarType carType, ValidationErrorHandler handler) {
+        test(from, to, purpose, departure, destination, carType, ValidationErrorHandlers.throwingValidationErrorHandler());
 
-        this.period = new Period(from, to, handler);
-        this.purpose = new RequestPurpose(purpose, handler);
-        this.transferRoute = new TransferRoute(departure, destination, handler);
+        this.period = new Period(from, to);
+        this.purpose = new RequestPurpose(purpose);
+        this.transferRoute = new TransferRoute(departure, destination);
         this.carType = carType;
     }
 
