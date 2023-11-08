@@ -6,6 +6,7 @@ import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
 import com.durys.jakub.carfleet.common.errors.ValidationErrors;
 import com.durys.jakub.carfleet.requests.transfer.application.TransferRequestService;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
+import com.durys.jakub.carfleet.requests.transfer.domain.command.SubmitTransferRequestCommand;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.commands.AssignTransferCarCommand;
 import com.durys.jakub.carfleet.requests.transfer.instrastructure.in.model.SubmitTransferRequest;
 import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
@@ -70,8 +71,9 @@ class TransferRequestControllerTest {
                 request.destination(), request.carType());
 
         Mockito.when(transferRequestService
-                .create(new RequesterId(request.requesterId()), request.from(), request.to(),
-                        request.purpose(), request.departure(), request.destination(), request.carType()))
+                .create(new SubmitTransferRequestCommand(
+                            new RequesterId(request.requesterId()), request.from(), request.to(),
+                            request.purpose(), request.departure(), request.destination(), request.carType())))
                 .thenReturn(Either.right(result));
 
         mockMvc.perform(post("/transfer-requests")

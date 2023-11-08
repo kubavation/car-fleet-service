@@ -1,14 +1,13 @@
 package com.durys.jakub.carfleet.requests.transfer.application;
 
-import com.durys.jakub.carfleet.common.errors.ValidationError;
 import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
 import com.durys.jakub.carfleet.common.errors.ValidationErrors;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestRepository;
+import com.durys.jakub.carfleet.requests.transfer.domain.command.SubmitTransferRequestCommand;
 import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
-import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.state.ChangeCommand;
 import com.durys.jakub.carfleet.state.State;
 import io.vavr.control.Either;
@@ -16,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -26,24 +24,25 @@ public class TransferRequestService {
     private final TransferRequestAssembler assembler;
     private final TransferRequestRepository repository;
 
-    public Either<ValidationErrors, TransferRequest> create(RequesterId requesterId, LocalDateTime from,
-                                                                 LocalDateTime to, String purpose, String departure,
-                                                                 String destination, CarType carType) {
+    public Either<ValidationErrors, TransferRequest> create(SubmitTransferRequestCommand command) {
 
         var errorHandler = ValidationErrorHandlers.aggregatingValidationErrorHandler();
 
-        TransferRequest.test(from, to, purpose, departure, destination, carType, errorHandler);
+        TransferRequest.test(command.from(), command.to(), command.purpose(),
+                command.departure(), command.destination(), command.carType(), errorHandler);
 
         if (errorHandler.hasErrors()) {
             return Either.left(errorHandler.errors());
         }
 
         TransferRequest transferRequest = new TransferRequest(
-                new RequestId(UUID.randomUUID()),
-                requesterId, from, to, purpose,
-                departure, destination, carType);
+                new RequestId(UUID.randomUUID()), command.requesterId(),
+                command.from(), command.to(), command.purpose(),
+                command.departure(), command.destination(), command.carType());
 
-        State<TransferRequest> result = assembler.configuration().begin(transferRequest);
+        State<TransferRequest> result = assembler.configuration()
+                .begin(transferRequest);
+
         return Either.right(repository.save(result.getObject()));
     }
 
