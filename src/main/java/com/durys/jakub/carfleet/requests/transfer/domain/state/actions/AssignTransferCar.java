@@ -3,7 +3,6 @@ package com.durys.jakub.carfleet.requests.transfer.domain.state.actions;
 import com.durys.jakub.carfleet.cars.domain.Car;
 import com.durys.jakub.carfleet.cars.domain.CarsRepository;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
-import com.durys.jakub.carfleet.requests.transfer.domain.event.TransferRequestAccepted;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.commands.AssignTransferCarCommand;
 import com.durys.jakub.carfleet.state.ChangeCommand;
 
@@ -22,7 +21,6 @@ public class AssignTransferCar implements BiFunction<TransferRequest, ChangeComm
         var command = (AssignTransferCarCommand) changeCommand;
         Car car = carsRepository.load(command.getCarId());
         transferRequest.assign(car);
-        transferRequest.append(TransferRequestAccepted.from(transferRequest));
         return null;
     }
 }

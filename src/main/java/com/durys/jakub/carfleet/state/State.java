@@ -1,6 +1,7 @@
 package com.durys.jakub.carfleet.state;
 
 import com.durys.jakub.carfleet.common.errors.ValidationError;
+import com.durys.jakub.carfleet.common.errors.ValidationErrors;
 import io.vavr.control.Either;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +29,7 @@ public class State<T extends Flowable<T>> {
     }
 
 
-    public Either<List<ValidationError>, State<T>> changeState(ChangeCommand command) {
+    public Either<ValidationErrors, State<T>> changeState(ChangeCommand command) {
 
         log.info("changing state to {}", command.getDesiredState());
 
@@ -51,7 +52,7 @@ public class State<T extends Flowable<T>> {
     }
 
 
-    public State<T> changeContent(T content) {
+    public Either<ValidationErrors, State<T>> changeContent(T content) {
 
         StateTransition<T> contentChangedTransition = findContentChangedTransition(content.state());
 
@@ -62,8 +63,9 @@ public class State<T extends Flowable<T>> {
         //todo validation (predicates)
         State<T> state = contentChangedTransition.to();
         state.init(object);
-        this.object.setContent(content);
-        return state;
+        object.setContent(content);
+
+        return Either.right(state);
     }
 
     public String name() {

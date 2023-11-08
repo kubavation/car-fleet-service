@@ -1,6 +1,7 @@
 package com.durys.jakub.carfleet.requests.drivertransfer.application;
 
 import com.durys.jakub.carfleet.common.errors.ValidationError;
+import com.durys.jakub.carfleet.common.errors.ValidationErrors;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.drivertransfer.domain.DriverTransferRequest;
@@ -37,23 +38,22 @@ public class DriverTransferRequestService {
     }
 
 
-    public DriverTransferRequest change(RequestId requestId, LocalDateTime from, LocalDateTime to, RequestPurpose purpose,
+    public Either<ValidationErrors, DriverTransferRequest> change(RequestId requestId, LocalDateTime from, LocalDateTime to, RequestPurpose purpose,
                                         String departure, String destination) {
 
         DriverTransferRequest driverTransferRequest = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);
 
-        State<DriverTransferRequest> result = assembler.configuration()
+        return assembler.configuration()
                 .recreate(driverTransferRequest)
                 .changeContent(
                         new DriverTransferRequest(driverTransferRequest.getRequestId(), driverTransferRequest.getRequesterId(),
-                                from, to, purpose, departure, destination, driverTransferRequest.state()));
-
-        return repository.save(result.getObject());
+                                from, to, purpose, departure, destination, driverTransferRequest.state()))
+                .map(state -> repository.save(state.getObject()));
     }
 
 
-    public Either<List<ValidationError>, DriverTransferRequest> changeStatus(RequestId requestId, ChangeCommand command) {
+    public Either<ValidationErrors, DriverTransferRequest> changeStatus(RequestId requestId, ChangeCommand command) {
 
         DriverTransferRequest driverTransferRequest = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);

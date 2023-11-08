@@ -8,9 +8,9 @@ import com.durys.jakub.carfleet.cars.domain.basicinformation.FuelType;
 import com.durys.jakub.carfleet.cars.infrastructure.MockedCarsRepository;
 import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
 import com.durys.jakub.carfleet.events.Events;
+import com.durys.jakub.carfleet.requests.transfer.domain.command.SubmitTransferRequestCommand;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
-import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.commands.AssignTransferCarCommand;
 import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
 import org.junit.jupiter.api.Test;
@@ -48,8 +48,10 @@ class TransferRequestServiceDomainEventsTest {
 
     public RequestId addTransferRequest() {
         var transferRequest = transferRequestService
-                .create(new RequesterId(UUID.randomUUID()), LocalDateTime.now(), LocalDateTime.now().plusDays(1),
-                "test", "Warsaw",  "Krakow", CarType.Passenger).get();
+                .handle(
+                        new SubmitTransferRequestCommand(
+                                new RequesterId(UUID.randomUUID()), LocalDateTime.now(), LocalDateTime.now().plusDays(1),
+                                "test", "Warsaw",  "Krakow", CarType.Passenger)).get();
         return transferRequest.requestId();
     }
 

@@ -2,6 +2,7 @@ package com.durys.jakub.carfleet.requests.prebooking.application;
 
 import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.common.errors.ValidationError;
+import com.durys.jakub.carfleet.common.errors.ValidationErrors;
 import com.durys.jakub.carfleet.drivers.domain.DriverId;
 import com.durys.jakub.carfleet.events.Events;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
@@ -40,23 +41,22 @@ public class PreBookingTransferRequestService {
     }
 
 
-    public PreBookingTransferRequest change(RequestId requestId, LocalDateTime from, LocalDateTime to,
+    public Either<ValidationErrors, PreBookingTransferRequest> change(RequestId requestId, LocalDateTime from, LocalDateTime to,
                                         RequestPurpose purpose, CarId carId, DriverId driverId) {
 
         PreBookingTransferRequest request = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);
 
-        State<PreBookingTransferRequest> result = assembler.configuration()
+        return assembler.configuration()
                 .recreate(request)
                 .changeContent(
                         new PreBookingTransferRequest(
-                                request.getRequestId(), request.getRequesterId(), from, to, purpose, carId, driverId));
-
-        return repository.save(result.getObject());
+                                request.getRequestId(), request.getRequesterId(), from, to, purpose, carId, driverId))
+                .map(state -> repository.save(state.getObject()));
     }
 
 
-    public Either<List<ValidationError>, PreBookingTransferRequest> changeStatus(RequestId requestId, ChangeCommand command) {
+    public Either<ValidationErrors, PreBookingTransferRequest> changeStatus(RequestId requestId, ChangeCommand command) {
 
         PreBookingTransferRequest request = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);

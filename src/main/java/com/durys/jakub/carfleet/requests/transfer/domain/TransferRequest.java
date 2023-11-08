@@ -49,26 +49,19 @@ public class TransferRequest extends BaseAggregateRoot implements Flowable<Trans
 
     private String state;
 
-    public TransferRequest(RequestId requestId, RequesterId requesterId,
-                           LocalDateTime from, LocalDateTime to, String purpose,
-                           String departure, String destination, CarType carType, String state) {
-        this(requestId, requesterId, from, to, purpose, departure, destination, carType, state,
-                ValidationErrorHandlers.throwingValidationErrorHandler());
-    }
 
-    public TransferRequest(RequestId requestId, RequesterId requesterId,
-                           LocalDateTime from, LocalDateTime to, String purpose,
-                           String departure, String destination, CarType carType) {
-        this(requestId, requesterId, from, to, purpose, departure, destination, carType, null,
-                ValidationErrorHandlers.throwingValidationErrorHandler());
+    public TransferRequest(RequestId requestId, RequesterId requesterId, LocalDateTime from, LocalDateTime to,
+                           String purpose, String departure, String destination, CarType carType) {
+        this(requestId, requesterId, from, to, purpose, departure, destination, carType, null);
     }
 
     public TransferRequest(RequestId requestId, RequesterId requesterId, LocalDateTime from, LocalDateTime to,
-                           String purpose, String departure, String destination, CarType carType, String state,
-                           ValidationErrorHandler handler) {
+                           String purpose, String departure, String destination, CarType carType, String state) {
+
+        test(from, to, purpose, departure, destination, carType, ValidationErrorHandlers.throwingValidationErrorHandler());
         this.requestId = requestId;
         this.requesterId = requesterId;
-        this.content = new RequestContent(from, to, purpose, departure, destination, carType, handler);
+        this.content = new RequestContent(from, to, purpose, departure, destination, carType);
         this.state = state;
         this.events = new HashSet<>();
     }

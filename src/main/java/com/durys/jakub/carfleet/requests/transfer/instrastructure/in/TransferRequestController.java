@@ -1,10 +1,11 @@
 package com.durys.jakub.carfleet.requests.transfer.instrastructure.in;
 
 import com.durys.jakub.carfleet.cars.domain.CarId;
-import com.durys.jakub.carfleet.common.errors.ValidationError;
-import com.durys.jakub.carfleet.ddd.AggregateId;
+import com.durys.jakub.carfleet.common.errors.ValidationErrors;
 import com.durys.jakub.carfleet.requests.transfer.application.TransferRequestService;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
+import com.durys.jakub.carfleet.requests.transfer.domain.command.ChangeTransferRequestContentCommand;
+import com.durys.jakub.carfleet.requests.transfer.domain.command.SubmitTransferRequestCommand;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.commands.AssignTransferCarCommand;
 import com.durys.jakub.carfleet.requests.transfer.instrastructure.in.model.SubmitTransferRequest;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
@@ -38,11 +39,12 @@ class TransferRequestController {
     @PostMapping
     ResponseEntity<RestResponse> submit(@RequestBody SubmitTransferRequest transferRequest) {
 
-        var response = transferRequestService.create(
-                new RequesterId(transferRequest.requesterId()),
-                transferRequest.from(), transferRequest.to(),
-                transferRequest.purpose(), transferRequest.departure(),
-                transferRequest.destination(), transferRequest.carType());
+        var response = transferRequestService.handle(
+                new SubmitTransferRequestCommand(
+                        new RequesterId(transferRequest.requesterId()),
+                        transferRequest.from(), transferRequest.to(),
+                        transferRequest.purpose(), transferRequest.departure(),
+                        transferRequest.destination(), transferRequest.carType()));
 
         if (response.isLeft()) {
             return ResponseEntity.ok(toResponse(null, response));
@@ -57,9 +59,10 @@ class TransferRequestController {
     @PatchMapping("/{requestId}")
     ResponseEntity<RestResponse> changeContent(@PathVariable UUID requestId, @RequestBody SubmitTransferRequest transferRequest) {
 
-        var response = transferRequestService.change(new RequestId(requestId), transferRequest.from(), transferRequest.to(),
-                transferRequest.purpose(), transferRequest.departure(),
-                transferRequest.destination(), transferRequest.carType());
+        var response = transferRequestService.change(
+                new ChangeTransferRequestContentCommand(
+                        new RequestId(requestId), transferRequest.from(), transferRequest.to(), transferRequest.purpose(),
+                        transferRequest.departure(), transferRequest.destination(), transferRequest.carType()));
 
         return response
                 .map(result ->
@@ -111,7 +114,7 @@ class TransferRequestController {
                         .accept(model.requestId().value(), UUID.randomUUID())).withRel("accept"));
     }
 
-    private static RestResponse toResponse(UUID resourceId, Either<List<ValidationError>, TransferRequest> result) {
+    private static RestResponse toResponse(UUID resourceId, Either<ValidationErrors, TransferRequest> result) {
         return result
                 .fold(
                     exceptions -> RestResponse.failure(resourceId, exceptions),

@@ -53,7 +53,7 @@ class DriverTransferRequestServiceTest {
         DriverTransferRequest driverTransferRequest = driverTransferRequestService
                 .create(requesterId, from, to, purpose, departure, destination);
 
-        assertEquals("NEW", driverTransferRequest.state());
+        assertEquals(NEW.name(), driverTransferRequest.state());
     }
 
     @Test
@@ -62,16 +62,16 @@ class DriverTransferRequestServiceTest {
         DriverTransferRequest result = driverTransferRequestService
                 .create(requesterId, from, to, purpose, departure, destination);
 
-        DriverTransferRequest driverTransferRequest = driverTransferRequestService.change(result.getRequestId(),
+        var response = driverTransferRequestService.change(result.getRequestId(),
                 from, to, purpose, departure, destination);
 
-        assertEquals(EDITED.name(), driverTransferRequest.state());
+        assertTrue(response.isRight());
+        assertEquals(EDITED.name(), response.get().state());
     }
 
     @Test
     void shouldSaveRequestWithDriverAndChangeStatusToAccepted() {
 
-        RequestId requestId = new RequestId(UUID.randomUUID());
         DriverId driverId = new DriverId(UUID.randomUUID());
         CarId carId = addCar();
 

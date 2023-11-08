@@ -14,10 +14,8 @@ public record TransferRequestAccepted(UUID id, Instant at, RequestId requestId, 
                                LocalDateTime from, LocalDateTime to, String departure,
                                String destination, CarId carId) implements DomainEvent {
 
-    public static TransferRequestAccepted from(TransferRequest request) {
-        return new TransferRequestAccepted(
-                UUID.randomUUID(), Instant.now(),
-                request.requestId(), request.requesterId(), request.transferFrom(),
+    public TransferRequestAccepted(TransferRequest request) {
+        this(UUID.randomUUID(), Instant.now(), request.requestId(), request.requesterId(), request.transferFrom(),
                 request.transferTo(), request.departure(), request.destination(), request.assignedCar());
     }
 }
