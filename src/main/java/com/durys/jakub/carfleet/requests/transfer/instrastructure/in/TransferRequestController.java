@@ -4,6 +4,7 @@ import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.common.errors.ValidationErrors;
 import com.durys.jakub.carfleet.requests.transfer.application.TransferRequestService;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
+import com.durys.jakub.carfleet.requests.transfer.domain.command.ChangeTransferRequestContentCommand;
 import com.durys.jakub.carfleet.requests.transfer.domain.command.SubmitTransferRequestCommand;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.commands.AssignTransferCarCommand;
 import com.durys.jakub.carfleet.requests.transfer.instrastructure.in.model.SubmitTransferRequest;
@@ -58,9 +59,10 @@ class TransferRequestController {
     @PatchMapping("/{requestId}")
     ResponseEntity<RestResponse> changeContent(@PathVariable UUID requestId, @RequestBody SubmitTransferRequest transferRequest) {
 
-        var response = transferRequestService.change(new RequestId(requestId), transferRequest.from(), transferRequest.to(),
-                transferRequest.purpose(), transferRequest.departure(),
-                transferRequest.destination(), transferRequest.carType());
+        var response = transferRequestService.change(
+                new ChangeTransferRequestContentCommand(
+                        new RequestId(requestId), transferRequest.from(), transferRequest.to(), transferRequest.purpose(),
+                        transferRequest.departure(), transferRequest.destination(), transferRequest.carType()));
 
         return response
                 .map(result ->

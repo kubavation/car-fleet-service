@@ -5,6 +5,7 @@ import com.durys.jakub.carfleet.common.errors.ValidationErrors;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestAssembler;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestRepository;
+import com.durys.jakub.carfleet.requests.transfer.domain.command.ChangeTransferRequestContentCommand;
 import com.durys.jakub.carfleet.requests.transfer.domain.command.SubmitTransferRequestCommand;
 import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
 import com.durys.jakub.carfleet.sharedkernel.identity.IdentityProvider;
@@ -48,15 +49,15 @@ public class TransferRequestService {
     }
 
 
-    public Either<ValidationErrors, TransferRequest> change(RequestId requestId, LocalDateTime from, LocalDateTime to,
-                                  String purpose, String departure, String destination, CarType carType) {
+    public Either<ValidationErrors, TransferRequest> change(ChangeTransferRequestContentCommand command) {
 
-        TransferRequest transferRequest = repository.load(requestId)
+        TransferRequest transferRequest = repository.load(command.requestId())
                 .orElseThrow(RuntimeException::new);
 
         var errorHandler = ValidationErrorHandlers.aggregatingValidationErrorHandler();
 
-        TransferRequest.test(from, to, purpose, departure, destination, carType, errorHandler);
+        TransferRequest.test(command.from(), command.to(), command.purpose(), command.departure(),
+                command.destination(), command.carType(), errorHandler);
 
         if (errorHandler.hasErrors()) {
             return Either.left(errorHandler.errors());
@@ -66,7 +67,8 @@ public class TransferRequestService {
                 .recreate(transferRequest)
                 .changeContent(
                         new TransferRequest(transferRequest.requestId(), transferRequest.requesterId(),
-                                from, to, purpose, departure, destination, carType, transferRequest.state()));
+                                command.from(), command.to(), command.purpose(), command.departure(),
+                                command.destination(), command.carType(), transferRequest.state()));
 
         return Either.right(repository.save(result.getObject()));
     }
