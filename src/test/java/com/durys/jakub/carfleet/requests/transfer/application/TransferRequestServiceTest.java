@@ -10,6 +10,8 @@ import com.durys.jakub.carfleet.cars.infrastructure.MockedCarsRepository;
 import com.durys.jakub.carfleet.common.errors.ValidationError;
 import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
 import com.durys.jakub.carfleet.requests.transfer.domain.command.SubmitTransferRequestCommand;
+import com.durys.jakub.carfleet.sharedkernel.identity.IdentityProvider;
+import com.durys.jakub.carfleet.sharedkernel.identity.UUIDIdentityProvider;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
@@ -33,9 +35,10 @@ class TransferRequestServiceTest {
     private final TransferRequestRepository transferRequestRepository = new InMemoryTransferRequestRepository();
     private final CarsRepository carsRepository = new MockedCarsRepository();
     private final TransferRequestAssembler assembler = new TransferRequestAssembler(carAvailabilityService, carsRepository);
+    private final IdentityProvider<UUID> identityProvider = new UUIDIdentityProvider();
 
     private final TransferRequestService transferRequestService
-            = new TransferRequestService(assembler, transferRequestRepository);
+            = new TransferRequestService(assembler, transferRequestRepository, identityProvider);
 
 
     @Test

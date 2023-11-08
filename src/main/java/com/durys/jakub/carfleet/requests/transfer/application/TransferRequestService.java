@@ -7,6 +7,7 @@ import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestAssemble
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequestRepository;
 import com.durys.jakub.carfleet.requests.transfer.domain.command.SubmitTransferRequestCommand;
 import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
+import com.durys.jakub.carfleet.sharedkernel.identity.IdentityProvider;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.state.ChangeCommand;
 import com.durys.jakub.carfleet.state.State;
@@ -23,8 +24,11 @@ public class TransferRequestService {
 
     private final TransferRequestAssembler assembler;
     private final TransferRequestRepository repository;
+    private final IdentityProvider<UUID> identityProvider;
 
     public Either<ValidationErrors, TransferRequest> handle(SubmitTransferRequestCommand command) {
+
+
 
         var errorHandler = ValidationErrorHandlers.aggregatingValidationErrorHandler();
 
@@ -35,9 +39,8 @@ public class TransferRequestService {
             return Either.left(errorHandler.errors());
         }
 
-        TransferRequest transferRequest = new TransferRequest(
-                new RequestId(UUID.randomUUID()), command.requesterId(),
-                command.from(), command.to(), command.purpose(),
+        TransferRequest transferRequest = new TransferRequest(new RequestId(identityProvider.generate()),
+                command.requesterId(), command.from(), command.to(), command.purpose(),
                 command.departure(), command.destination(), command.carType());
 
         State<TransferRequest> result = assembler.configuration()
