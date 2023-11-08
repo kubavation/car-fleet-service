@@ -13,7 +13,7 @@ class TransferRequestSubmittedEventHandler {
 
     @RabbitListener(queues = {"${queue.transfer-request-submission}"})
     public void handle(TransferRequestSubmitted event) {
-        transferRequestService.create(
+        transferRequestService.handle(
                 new SubmitTransferRequestCommand(event.requesterId(), event.from(),
                         event.to(), event.purpose(), event.departure(), event.destination(), event.carType()));
     }

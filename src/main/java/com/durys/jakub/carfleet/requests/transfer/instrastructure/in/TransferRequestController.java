@@ -1,9 +1,7 @@
 package com.durys.jakub.carfleet.requests.transfer.instrastructure.in;
 
 import com.durys.jakub.carfleet.cars.domain.CarId;
-import com.durys.jakub.carfleet.common.errors.ValidationError;
 import com.durys.jakub.carfleet.common.errors.ValidationErrors;
-import com.durys.jakub.carfleet.ddd.AggregateId;
 import com.durys.jakub.carfleet.requests.transfer.application.TransferRequestService;
 import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.command.SubmitTransferRequestCommand;
@@ -40,7 +38,7 @@ class TransferRequestController {
     @PostMapping
     ResponseEntity<RestResponse> submit(@RequestBody SubmitTransferRequest transferRequest) {
 
-        var response = transferRequestService.create(
+        var response = transferRequestService.handle(
                 new SubmitTransferRequestCommand(
                         new RequesterId(transferRequest.requesterId()),
                         transferRequest.from(), transferRequest.to(),

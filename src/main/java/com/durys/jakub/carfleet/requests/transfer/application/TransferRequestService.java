@@ -24,7 +24,7 @@ public class TransferRequestService {
     private final TransferRequestAssembler assembler;
     private final TransferRequestRepository repository;
 
-    public Either<ValidationErrors, TransferRequest> create(SubmitTransferRequestCommand command) {
+    public Either<ValidationErrors, TransferRequest> handle(SubmitTransferRequestCommand command) {
 
         var errorHandler = ValidationErrorHandlers.aggregatingValidationErrorHandler();
 
