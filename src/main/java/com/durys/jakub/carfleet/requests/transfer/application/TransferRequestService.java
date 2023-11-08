@@ -61,14 +61,14 @@ public class TransferRequestService {
             return Either.left(errorHandler.errors());
         }
 
-        State<TransferRequest> result = assembler.configuration()
+        return assembler.configuration()
                 .recreate(transferRequest)
                 .changeContent(
-                        new TransferRequest(transferRequest.requestId(), transferRequest.requesterId(),
+                        new TransferRequest(
+                                transferRequest.requestId(), transferRequest.requesterId(),
                                 command.from(), command.to(), command.purpose(), command.departure(),
-                                command.destination(), command.carType(), transferRequest.state()));
-
-        return Either.right(repository.save(result.getObject()));
+                                command.destination(), command.carType(), transferRequest.state()))
+                .map(state -> repository.save(state.getObject()));
     }
 
 

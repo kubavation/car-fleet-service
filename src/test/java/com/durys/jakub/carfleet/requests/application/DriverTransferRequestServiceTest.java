@@ -62,10 +62,11 @@ class DriverTransferRequestServiceTest {
         DriverTransferRequest result = driverTransferRequestService
                 .create(requesterId, from, to, purpose, departure, destination);
 
-        DriverTransferRequest driverTransferRequest = driverTransferRequestService.change(result.getRequestId(),
+        var response = driverTransferRequestService.change(result.getRequestId(),
                 from, to, purpose, departure, destination);
 
-        assertEquals(EDITED.name(), driverTransferRequest.state());
+        assertTrue(response.isRight());
+        assertEquals(EDITED.name(), response.get().state());
     }
 
     @Test

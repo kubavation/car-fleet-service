@@ -52,7 +52,7 @@ public class State<T extends Flowable<T>> {
     }
 
 
-    public State<T> changeContent(T content) {
+    public Either<ValidationErrors, State<T>> changeContent(T content) {
 
         StateTransition<T> contentChangedTransition = findContentChangedTransition(content.state());
 
@@ -63,8 +63,9 @@ public class State<T extends Flowable<T>> {
         //todo validation (predicates)
         State<T> state = contentChangedTransition.to();
         state.init(object);
-        this.object.setContent(content);
-        return state;
+        object.setContent(content);
+
+        return Either.right(state);
     }
 
     public String name() {

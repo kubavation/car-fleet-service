@@ -41,19 +41,18 @@ public class PreBookingTransferRequestService {
     }
 
 
-    public PreBookingTransferRequest change(RequestId requestId, LocalDateTime from, LocalDateTime to,
+    public Either<ValidationErrors, PreBookingTransferRequest> change(RequestId requestId, LocalDateTime from, LocalDateTime to,
                                         RequestPurpose purpose, CarId carId, DriverId driverId) {
 
         PreBookingTransferRequest request = repository.load(requestId)
                 .orElseThrow(RuntimeException::new);
 
-        State<PreBookingTransferRequest> result = assembler.configuration()
+        return assembler.configuration()
                 .recreate(request)
                 .changeContent(
                         new PreBookingTransferRequest(
-                                request.getRequestId(), request.getRequesterId(), from, to, purpose, carId, driverId));
-
-        return repository.save(result.getObject());
+                                request.getRequestId(), request.getRequesterId(), from, to, purpose, carId, driverId))
+                .map(state -> repository.save(state.getObject()));
     }
 
 
