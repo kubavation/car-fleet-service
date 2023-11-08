@@ -22,6 +22,10 @@ public class CarAvailablePredicate implements BiFunction<State<TransferRequest>,
 
         TransferRequest request = driverTransferRequestState.getObject();
 
+        if (request.assignedCar() == null) {
+            return PredicateResult.success();
+        }
+
         return PredicateResult.from(
                 carAvailabilityService.available(command.getCarId(), request.transferFrom(), request.transferTo()));
     }
