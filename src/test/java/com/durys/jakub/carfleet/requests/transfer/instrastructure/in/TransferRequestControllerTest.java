@@ -231,11 +231,33 @@ class TransferRequestControllerTest {
                 LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Purpose",
                 "Departure", "Destination", CarType.Passenger);
 
-        Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new AssignTransferCarCommand(new CarId(carId))))
+        Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(TransferRequest.Status.ACCEPTED)))
                 .thenReturn(Either.right(result));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .patch("/transfer-requests/%s/acceptation".formatted(requestId.toString()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    void assignCarToTransferRequest_shouldReturn200() throws Exception {
+
+        UUID requestId = UUID.randomUUID();
+        UUID carId = UUID.randomUUID();
+
+        var result = new TransferRequest(new RequestId(requestId),
+                new RequesterId(UUID.randomUUID()),
+                LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Purpose",
+                "Departure", "Destination", CarType.Passenger);
+
+        Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new AssignTransferCarCommand(new CarId(carId))))
+                .thenReturn(Either.right(result));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .patch("/transfer-requests/%s/assigned-car".formatted(requestId.toString()))
                         .param("assignedCarId", carId.toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -244,7 +266,7 @@ class TransferRequestControllerTest {
     }
 
     @Test
-    void acceptTransferRequest_shouldReturn200AndErrorDetails() throws Exception {
+    void assignCarToTransferRequest_shouldReturn200AndErrorDetails() throws Exception {
 
         UUID requestId = UUID.randomUUID();
         UUID carId = UUID.randomUUID();
@@ -259,8 +281,35 @@ class TransferRequestControllerTest {
 
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/transfer-requests/%s/acceptation".formatted(requestId.toString()))
+                        .patch("/transfer-requests/%s/assigned-car".formatted(requestId.toString()))
                         .param("assignedCarId", carId.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("Failure"))
+                .andExpect(jsonPath("$.additionalMessages")
+                        .value(containsInAnyOrder("Unexpected Exception 1", "Unexpected Exception 2")));
+
+    }
+
+
+
+    @Test
+    void acceptTransferRequest_shouldReturn200AndErrorDetails() throws Exception {
+
+        UUID requestId = UUID.randomUUID();
+
+        Mockito.when(transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(TransferRequest.Status.ACCEPTED)))
+                .thenReturn(Either.left(
+                        new ValidationErrors(
+                                List.of(
+                                        new ValidationError("Unexpected Exception 1"),
+                                        new ValidationError("Unexpected Exception 2")))
+                ));
+
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .patch("/transfer-requests/%s/acceptation".formatted(requestId.toString()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

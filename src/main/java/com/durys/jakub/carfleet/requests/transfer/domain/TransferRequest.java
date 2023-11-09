@@ -29,6 +29,7 @@ public class TransferRequest extends BaseAggregateRoot implements Flowable<Trans
     public enum Status {
         SUBMITTED,
         EDITED,
+        ASSIGNED,
         ACCEPTED,
         CANCELLED,
         REJECTED

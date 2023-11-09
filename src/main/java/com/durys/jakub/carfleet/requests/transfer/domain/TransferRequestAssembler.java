@@ -5,7 +5,7 @@ import com.durys.jakub.carfleet.cars.domain.CarsRepository;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.actions.AcceptTransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.actions.AssignTransferCar;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.predicates.CarAssignedPredicate;
-import com.durys.jakub.carfleet.requests.transfer.domain.state.predicates.CarAvailablePredicate;
+import com.durys.jakub.carfleet.requests.transfer.domain.state.predicates.CarValidPredicate;
 import com.durys.jakub.carfleet.state.Assembler;
 import com.durys.jakub.carfleet.state.StateBuilder;
 import com.durys.jakub.carfleet.state.StateConfig;
@@ -37,30 +37,29 @@ public class TransferRequestAssembler implements Assembler<TransferRequest> {
     public StateConfig<TransferRequest> assemble() {
         return StateBuilder.builderForClass(TransferRequest.class)
                 .beginWith(SUBMITTED)
-                .to(ACCEPTED)
-                    .check(new CarAssignedPredicate())
-                    .check(new CarAvailablePredicate(carAvailabilityService))
-                    .execute(new AcceptTransferRequest())
-                .and()
-                    .from(SUBMITTED)
-                    .whenContentChangesTo(EDITED)
-                    .check(new CarAvailablePredicate(carAvailabilityService))
+                .to(ASSIGNED)
+                    .check(new CarValidPredicate(carAvailabilityService, carsRepository))
                     .execute(new AssignTransferCar(carsRepository))
                 .and()
-                    .from(EDITED)
-                    .whenContentChangesTo(EDITED)
-                    .check(new CarAvailablePredicate(carAvailabilityService))
-                    .execute(new AssignTransferCar(carsRepository))
+                    .from(SUBMITTED).whenContentChangesTo(EDITED)
+                .and()
+                    .from(EDITED).whenContentChangesTo(EDITED)
                 .and()
                     .from(ACCEPTED).to(CANCELLED) //todo
                 .and()
-                .from(EDITED)
+                    .from(EDITED)
+                    .to(ASSIGNED)
+                    .check(new CarValidPredicate(carAvailabilityService, carsRepository))
+                    .execute(new AssignTransferCar(carsRepository))
+                .and()
+                    .from(ASSIGNED)
                     .to(ACCEPTED)
                     .check(new CarAssignedPredicate())
-                    .check(new CarAvailablePredicate(carAvailabilityService))
                     .execute(new AcceptTransferRequest())
                 .and()
                     .from(SUBMITTED).to(REJECTED)
+                .and()
+                    .from(SUBMITTED).to(CANCELLED)
                 .and()
                     .from(EDITED).to(REJECTED)
                 .and()
