@@ -1,11 +1,14 @@
 package com.durys.jakub.carfleet.transfers.domain;
 
 import com.durys.jakub.carfleet.cars.domain.CarId;
+import com.durys.jakub.carfleet.ddd.AggregateId;
+import com.durys.jakub.carfleet.ddd.BaseAggregateRoot;
 import com.durys.jakub.carfleet.drivers.domain.DriverId;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.state.Flowable;
 
-public class Transfer implements Flowable<Transfer> {
+public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
+
 
     public enum Type {
         Group, Single
@@ -67,4 +70,11 @@ public class Transfer implements Flowable<Transfer> {
     public void setContent(Transfer content) {
         //todo
     }
+
+
+    @Override
+    public AggregateId aggregateId() {
+        return new AggregateId(transferId.value());
+    }
+
 }
