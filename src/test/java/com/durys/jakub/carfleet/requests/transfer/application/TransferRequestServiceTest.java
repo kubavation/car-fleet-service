@@ -60,7 +60,7 @@ class TransferRequestServiceTest {
     }
 
     @Test
-    void shouldAcceptTransferRequest() {
+    void shouldAssignCarToTransferRequest() {
 
         RequestId requestId = addTransferRequest();
         CarId carId = addCar(CarType.Passenger);
@@ -70,7 +70,7 @@ class TransferRequestServiceTest {
         var response = transferRequestService.changeStatus(requestId, new AssignTransferCarCommand(carId));
 
         assertTrue(response.isRight());
-        assertEquals(TransferRequest.Status.ACCEPTED.name(), response.get().state());
+        assertEquals(TransferRequest.Status.ASSIGNED.name(), response.get().state());
         assertEquals(carId, response.get().assignedCar());
     }
 

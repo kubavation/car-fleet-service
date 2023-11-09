@@ -8,11 +8,13 @@ import com.durys.jakub.carfleet.cars.domain.basicinformation.FuelType;
 import com.durys.jakub.carfleet.cars.infrastructure.MockedCarsRepository;
 import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
 import com.durys.jakub.carfleet.events.Events;
+import com.durys.jakub.carfleet.requests.transfer.domain.TransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.command.SubmitTransferRequestCommand;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.commands.AssignTransferCarCommand;
 import com.durys.jakub.carfleet.sharedkernel.cars.CarType;
+import com.durys.jakub.carfleet.state.ChangeCommand;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
@@ -38,21 +40,22 @@ class TransferRequestServiceDomainEventsTest {
 
     @Test
     void shouldSendRequestAcceptedDomainEvent() {
-        RequestId requestId = addTransferRequest();
+        TransferRequest request = addTransferRequest();
         CarId carId = addCar(CarType.Passenger);
+        transferRequestService.changeStatus(request.requestId(), new AssignTransferCarCommand(carId));
 
-        transferRequestService.changeStatus(requestId, new AssignTransferCarCommand(carId));
+
+        transferRequestService.changeStatus(request.requestId(), new ChangeCommand(TransferRequest.Status.ACCEPTED));
 
         Mockito.verify(events, Mockito.times(1)).publish(Mockito.any());
     }
 
-    public RequestId addTransferRequest() {
-        var transferRequest = transferRequestService
+    public TransferRequest addTransferRequest() {
+        return transferRequestService
                 .handle(
                         new SubmitTransferRequestCommand(
                                 new RequesterId(UUID.randomUUID()), LocalDateTime.now(), LocalDateTime.now().plusDays(1),
                                 "test", "Warsaw",  "Krakow", CarType.Passenger)).get();
-        return transferRequest.requestId();
     }
 
     private CarId addCar(CarType carType) {
