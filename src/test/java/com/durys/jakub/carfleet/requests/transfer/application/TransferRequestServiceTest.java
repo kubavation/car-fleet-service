@@ -75,7 +75,7 @@ class TransferRequestServiceTest {
     }
 
     @Test
-    void shouldNotAcceptTransferRequest_whenAssignedCarIsNotOfRequestedType() {
+    void shouldNotAssignTransferRequest_whenAssignedCarIsNotOfRequestedType() {
 
         RequestId requestId = addTransferRequest();
         CarId carId = addCar(CarType.Bus);
@@ -86,6 +86,22 @@ class TransferRequestServiceTest {
                 = assertThrows(ValidationError.class, () -> transferRequestService.changeStatus(requestId, new AssignTransferCarCommand(carId)));
 
         assertEquals("Invalid assigned car type", validationException.getMessage());
+    }
+
+    @Test
+    void shouldAcceptCarToTransferRequest() {
+
+        RequestId requestId = addTransferRequest();
+        CarId carId = addCar(CarType.Passenger);
+        transferRequestService.changeStatus(requestId, new AssignTransferCarCommand(carId));
+
+        Mockito.when(carAvailabilityService.available(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
+
+
+        var response = transferRequestService.changeStatus(requestId, new ChangeCommand(TransferRequest.Status.ACCEPTED));
+
+        assertTrue(response.isRight());
+        assertEquals(TransferRequest.Status.ACCEPTED.name(), response.get().state());
     }
 
     @Test
