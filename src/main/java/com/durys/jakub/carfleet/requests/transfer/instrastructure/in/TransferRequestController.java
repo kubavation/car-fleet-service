@@ -90,11 +90,21 @@ class TransferRequestController {
                         .of(toResponse(requestId, result)));
     }
 
-    @PatchMapping("/{requestId}/acceptation")
-    ResponseEntity<EntityModel<RestResponse>> accept(@PathVariable UUID requestId, @RequestParam UUID assignedCarId) {
+    @PatchMapping("/{requestId}/assigned-car")
+    ResponseEntity<EntityModel<RestResponse>> assignCar(@PathVariable UUID requestId, @RequestParam UUID assignedCarId) {
 
         var result = transferRequestService.changeStatus(new RequestId(requestId),
                 new AssignTransferCarCommand(new CarId(assignedCarId)));
+
+        return ResponseEntity.ok()
+                .body(EntityModel
+                        .of(toResponse(requestId, result)));
+    }
+
+    @PatchMapping("/{requestId}/acceptation")
+    ResponseEntity<EntityModel<RestResponse>> accept(@PathVariable UUID requestId) {
+
+        var result = transferRequestService.changeStatus(new RequestId(requestId), new ChangeCommand(TransferRequest.Status.ACCEPTED));
 
         return ResponseEntity.ok()
                 .body(EntityModel
@@ -111,7 +121,9 @@ class TransferRequestController {
                 linkTo(methodOn(TransferRequestController.class)
                         .cancel(model.requestId().value())).withRel("cancel"),
                 linkTo(methodOn(TransferRequestController.class)
-                        .accept(model.requestId().value(), UUID.randomUUID())).withRel("accept"));
+                        .accept(model.requestId().value())).withRel("accept"),
+                linkTo(methodOn(TransferRequestController.class)
+                        .assignCar(model.requestId().value(), UUID.randomUUID())).withRel("assign-car"));
     }
 
     private static RestResponse toResponse(UUID resourceId, Either<ValidationErrors, TransferRequest> result) {
