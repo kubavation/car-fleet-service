@@ -48,9 +48,9 @@ public class TransferRequestAssembler implements Assembler<TransferRequest> {
                     .from(ACCEPTED).to(CANCELLED) //todo
                 .and()
                     .from(EDITED)
-                        .to(ASSIGNED)
-                        .check(new CarAvailablePredicate(carAvailabilityService))
-                        .execute(new AssignTransferCar(carsRepository))
+                    .to(ASSIGNED)
+                    .check(new CarAvailablePredicate(carAvailabilityService))
+                    .execute(new AssignTransferCar(carsRepository))
                 .and()
                     .from(ASSIGNED)
                     .to(ACCEPTED)
