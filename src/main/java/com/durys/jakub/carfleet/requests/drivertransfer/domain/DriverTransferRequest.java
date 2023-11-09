@@ -1,6 +1,8 @@
 package com.durys.jakub.carfleet.requests.drivertransfer.domain;
 
 import com.durys.jakub.carfleet.cars.domain.CarId;
+import com.durys.jakub.carfleet.ddd.AggregateId;
+import com.durys.jakub.carfleet.ddd.BaseAggregateRoot;
 import com.durys.jakub.carfleet.drivers.domain.DriverId;
 import com.durys.jakub.carfleet.state.Flowable;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
@@ -11,8 +13,7 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Data
-public class DriverTransferRequest implements Flowable<DriverTransferRequest> {
+public class DriverTransferRequest extends BaseAggregateRoot implements Flowable<DriverTransferRequest> {
 
     public enum Status {
         NEW,
@@ -21,7 +22,6 @@ public class DriverTransferRequest implements Flowable<DriverTransferRequest> {
         CANCELLED,
         REJECTED
     }
-
 
     private final RequestId requestId;
     private final RequesterId requesterId;
@@ -70,6 +70,11 @@ public class DriverTransferRequest implements Flowable<DriverTransferRequest> {
                 driverTransferRequest.content.getPurpose(),
                 driverTransferRequest.content.getDeparture(),
                 driverTransferRequest.content.getDestination());
+    }
+
+    @Override
+    public AggregateId aggregateId() {
+        return new AggregateId(requesterId.value());
     }
 
     public DriverId getDriverId() {
