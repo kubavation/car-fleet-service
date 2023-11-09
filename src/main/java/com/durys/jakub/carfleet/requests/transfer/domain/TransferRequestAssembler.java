@@ -5,7 +5,7 @@ import com.durys.jakub.carfleet.cars.domain.CarsRepository;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.actions.AcceptTransferRequest;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.actions.AssignTransferCar;
 import com.durys.jakub.carfleet.requests.transfer.domain.state.predicates.CarAssignedPredicate;
-import com.durys.jakub.carfleet.requests.transfer.domain.state.predicates.CarAvailablePredicate;
+import com.durys.jakub.carfleet.requests.transfer.domain.state.predicates.CarValidPredicate;
 import com.durys.jakub.carfleet.state.Assembler;
 import com.durys.jakub.carfleet.state.StateBuilder;
 import com.durys.jakub.carfleet.state.StateConfig;
@@ -38,7 +38,7 @@ public class TransferRequestAssembler implements Assembler<TransferRequest> {
         return StateBuilder.builderForClass(TransferRequest.class)
                 .beginWith(SUBMITTED)
                 .to(ASSIGNED)
-                    .check(new CarAvailablePredicate(carAvailabilityService))
+                    .check(new CarValidPredicate(carAvailabilityService, carsRepository))
                     .execute(new AssignTransferCar(carsRepository))
                 .and()
                     .from(SUBMITTED).whenContentChangesTo(EDITED)
@@ -49,7 +49,7 @@ public class TransferRequestAssembler implements Assembler<TransferRequest> {
                 .and()
                     .from(EDITED)
                     .to(ASSIGNED)
-                    .check(new CarAvailablePredicate(carAvailabilityService))
+                    .check(new CarValidPredicate(carAvailabilityService, carsRepository))
                     .execute(new AssignTransferCar(carsRepository))
                 .and()
                     .from(ASSIGNED)
