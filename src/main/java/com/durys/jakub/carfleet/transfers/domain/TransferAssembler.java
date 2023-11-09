@@ -3,10 +3,12 @@ package com.durys.jakub.carfleet.transfers.domain;
 import com.durys.jakub.carfleet.state.Assembler;
 import com.durys.jakub.carfleet.state.StateBuilder;
 import com.durys.jakub.carfleet.state.StateConfig;
+import org.springframework.stereotype.Component;
 
 import static com.durys.jakub.carfleet.transfers.domain.Transfer.State.*;
 
-class TransferAssembler implements Assembler<Transfer> {
+@Component
+public class TransferAssembler implements Assembler<Transfer> {
 
     private final StateConfig<Transfer> configuration;
 
