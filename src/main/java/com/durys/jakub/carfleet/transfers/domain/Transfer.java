@@ -9,13 +9,16 @@ import com.durys.jakub.carfleet.state.Flowable;
 
 public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
 
-
     public enum Type {
         Group, Single
     }
 
     public enum State {
-        OPEN, CLOSED, COMPLETED, ARCHIVED
+        OPEN,
+        CLOSED,
+        ACCEPTED,
+        COMPLETED,
+        ARCHIVED
     }
 
     private final TransferId transferId;
@@ -27,7 +30,6 @@ public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
 
     private final CarId carId;
     private final DriverId driverId;
-
 
     private String state;
 

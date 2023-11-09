@@ -3,21 +3,22 @@ package com.durys.jakub.carfleet.transfers.domain;
 import com.durys.jakub.carfleet.common.errors.ValidationError;
 import com.durys.jakub.carfleet.common.errors.ValidationErrorHandler;
 import com.durys.jakub.carfleet.common.errors.ValidationErrorHandlers;
+import jakarta.persistence.Embeddable;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Embeddable
+@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 class TransferPeriod {
 
     private final LocalDateTime from;
     private final LocalDateTime to;
 
     TransferPeriod(LocalDateTime from, LocalDateTime to) {
-        this(from, to, ValidationErrorHandlers.throwingValidationErrorHandler());
-    }
-
-    TransferPeriod(LocalDateTime from, LocalDateTime to, ValidationErrorHandler errorHandler) {
-        test(from, to, errorHandler);
+        test(from, to, ValidationErrorHandlers.throwingValidationErrorHandler());
         this.from = from;
         this.to = to;
     }

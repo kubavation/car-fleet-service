@@ -1,6 +1,14 @@
 package com.durys.jakub.carfleet.transfers.domain;
 
-class TransferNumber {
+import jakarta.persistence.Embeddable;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+
+@Embeddable
+@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
+class TransferNumber implements Serializable {
 
     private final String value;
 
