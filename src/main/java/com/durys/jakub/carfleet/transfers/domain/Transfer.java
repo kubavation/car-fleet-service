@@ -6,7 +6,13 @@ import com.durys.jakub.carfleet.ddd.BaseAggregateRoot;
 import com.durys.jakub.carfleet.drivers.domain.DriverId;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.state.Flowable;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@Table(name = "TRANSFER")
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
 
     public enum Type {
@@ -21,7 +27,13 @@ public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
         ARCHIVED
     }
 
+    @EmbeddedId
+    @AttributeOverride(name = "value", column = @Column(name = "ID"))
     private final TransferId transferId;
+
+    @Embedded
+    @AttributeOverride(name = "destination", column = @Column(name = "name"))
+    private final Destination destination;
     private final TransferPath path;
     private final TransferNumber transferNumber;
     private final TransferPeriod period;
