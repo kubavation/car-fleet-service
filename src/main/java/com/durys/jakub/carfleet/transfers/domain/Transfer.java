@@ -31,7 +31,9 @@ public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
     @AttributeOverride(name = "value", column = @Column(name = "ID"))
     private final TransferId transferId;
 
-    
+    @Embedded
+    @AttributeOverride(name = "destination", column = @Column(name = "name"))
+    private final Destination destination;
     private final TransferPath path;
     private final TransferNumber transferNumber;
     private final TransferPeriod period;
