@@ -15,7 +15,7 @@ public class TransferFactory {
     public static Transfer single(RequesterId requesterId, String destination, LocalDateTime from, LocalDateTime to, CarId carId) {
 
         return new Transfer(new TransferId(UUID.randomUUID()),
-                new Destination(destination), new TransferPeriod(from, to),
+                new Destination(destination), new Period(from, to),
                 Transfer.Type.Single, carId, new DriverId(requesterId.value()));
     }
 

@@ -12,7 +12,7 @@ class Number implements Serializable {
 
     private final String value;
 
-    Number(Destination destination, Transfer.Type transferType, TransferPeriod period) {
+    Number(Destination destination, Transfer.Type transferType, Period period) {
         this("%s-%s_%s".formatted(destination.name(), transferType.name(), period.from().toLocalDate()));
     }
 

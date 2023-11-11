@@ -38,10 +38,10 @@ public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "TRANSFER_NUMBER"))
-    private final Number transferNumber;
+    private final Number number;
 
     @Embedded
-    private final TransferPeriod period;
+    private final Period period;
 
     @Enumerated(EnumType.STRING)
     private final Type type;
@@ -57,21 +57,21 @@ public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
     private String state;
 
     public Transfer(TransferId transferId, Destination destination, Number number,
-             TransferPeriod period, Type type, CarId carId, DriverId driverId, String state) {
+                    Period period, Type type, CarId carId, DriverId driverId, String state) {
         this.transferId = transferId;
         this.path = new Path(destination);
-        this.transferNumber = number;
+        this.number = number;
         this.period = period;
         this.type = type;
         this.carId = carId;
         this.driverId = driverId;
         this.state = state;
     }
-    public Transfer(TransferId transferId, Destination destination, TransferPeriod period, Type type, CarId carId, DriverId driverId) {
+    public Transfer(TransferId transferId, Destination destination, Period period, Type type, CarId carId, DriverId driverId) {
         this.transferId = transferId;
         this.path = new Path(destination);
         this.period = period;
-        this.transferNumber = new Number(destination, type, period);
+        this.number = new Number(destination, type, period);
         this.type = type;
         this.carId = carId;
         this.driverId = driverId;
