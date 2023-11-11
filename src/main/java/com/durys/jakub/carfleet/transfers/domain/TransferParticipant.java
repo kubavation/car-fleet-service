@@ -19,6 +19,10 @@ class TransferParticipant {
         this.id = id;
     }
 
+    TransferParticipant(ParticipantId participantId, RequestId registrationSource) {
+        this.id = new TransferParticipantId(participantId, registrationSource);
+    }
+
     ParticipantId participantId() {
         return id.participantId();
     }

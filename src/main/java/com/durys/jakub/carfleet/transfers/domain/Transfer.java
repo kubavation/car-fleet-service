@@ -40,7 +40,7 @@ public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
 
     @OneToMany
     @JoinColumn(name = "TRANSFER_ID")
-    private final Set<TransferStop> stops;
+    private final Set<TransferStop> stops = new HashSet<>();
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "TRANSFER_NUMBER"))
@@ -72,7 +72,6 @@ public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
         this.carId = carId;
         this.driverId = driverId;
         this.state = state;
-        this.stops = new HashSet<>();
     }
     public Transfer(TransferId transferId, Destination destination, TransferPeriod period, Type type, CarId carId, DriverId driverId) {
         this.transferId = transferId;
@@ -82,33 +81,33 @@ public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
         this.type = type;
         this.carId = carId;
         this.driverId = driverId;
-        this.stops = new HashSet<>();
     }
 
 
-//    void addParticipant(ParticipantId participantId, String place, RequestId registrationSource) {
-//
-//        TransferStop transferStop = stops.stream()
-//                .filter(stop -> stop.place().equals(place))
-//                .findFirst()
-//                .orElse(new TransferStop(place, new HashSet<>()));
-//
-//        transferStop.addParticipant(new TransferParticipant(participantId, registrationSource));
-//        stops.add(transferStop);
-//    }
-//
-//    void removeParticipant(ParticipantId participantId, String place, RequestId registrationSource) {
-//
-//        stops.stream()
-//                .filter(stop -> stop.place().equals(place))
-//                .findAny()
-//                .ifPresent(stop -> {
-//                    stop.remove(new TransferParticipant(participantId, registrationSource));
-//                    if (stop.participants().isEmpty()) {
-//                        stops.remove(stop);
-//                    }
-//                });
-//    }
+    void addParticipant(ParticipantId participantId, String place, RequestId registrationSource) {
+
+        TransferStop transferStop = stops.stream()
+                .filter(stop -> stop.place().equals(place))
+                .findFirst()
+                .orElse(new TransferStop(place, new HashSet<>()));
+
+        transferStop.addParticipant(new TransferParticipant(participantId, registrationSource));
+        stops.add(transferStop);
+    }
+
+    void removeParticipant(ParticipantId participantId, String place, RequestId registrationSource) {
+
+        stops.stream()
+                .filter(stop -> stop.place().equals(place))
+                .findAny()
+                .ifPresent(stop -> {
+                    stop.remove(new TransferParticipant(participantId, registrationSource));
+                    if (stop.participants().isEmpty()) {
+                        stops.remove(stop);
+                    }
+                });
+    }
+
     @Override
     public void setState(String state) {
         this.state = state;
@@ -133,6 +132,10 @@ public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
     @Override
     public AggregateId aggregateId() {
         return new AggregateId(transferId.value());
+    }
+
+    Set<TransferStop> stops() {
+        return stops;
     }
 
 }
