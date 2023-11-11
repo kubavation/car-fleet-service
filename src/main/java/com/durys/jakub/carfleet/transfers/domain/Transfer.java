@@ -90,7 +90,7 @@ public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
     void addParticipant(ParticipantId participantId, String place, RequestId registrationSource) {
 
         Stop stop = path.stops().stream()
-                .filter(stop -> stop.place().equals(place))
+                .filter(s -> s.place().equals(place))
                 .findFirst()
                 .orElse(new Stop(place, new HashSet<>()));
 
