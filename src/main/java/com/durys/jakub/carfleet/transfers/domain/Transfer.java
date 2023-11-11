@@ -10,6 +10,9 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Table(name = "TRANSFER")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
@@ -35,7 +38,9 @@ public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
     @AttributeOverride(name = "destination", column = @Column(name = "NAME"))
     private final Destination destination;
 
-    private final TransferPath path;
+    @OneToMany
+    @JoinColumn(name = "TRANSFER_ID")
+    private final Set<TransferStop> stops;
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "TRANSFER_NUMBER"))
@@ -67,6 +72,7 @@ public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
         this.carId = carId;
         this.driverId = driverId;
         this.state = state;
+        this.stops = new HashSet<>();
     }
     public Transfer(TransferId transferId, Destination destination, TransferNumber transferNumber,
                     TransferPeriod period, Type type, CarId carId, DriverId driverId) {
@@ -77,17 +83,33 @@ public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
         this.type = type;
         this.carId = carId;
         this.driverId = driverId;
+        this.stops = new HashSet<>();
     }
 
 
-    public void addParticipant(ParticipantId participantId, String place, RequestId registrationSource) {
-        path.addParticipant(participantId, place, registrationSource);
-    }
-
-    public void removeParticipant(ParticipantId participantId, String place, RequestId registrationSource) {
-        path.removeParticipant(participantId, place, registrationSource);
-    }
-
+//    void addParticipant(ParticipantId participantId, String place, RequestId registrationSource) {
+//
+//        TransferStop transferStop = stops.stream()
+//                .filter(stop -> stop.place().equals(place))
+//                .findFirst()
+//                .orElse(new TransferStop(place, new HashSet<>()));
+//
+//        transferStop.addParticipant(new TransferParticipant(participantId, registrationSource));
+//        stops.add(transferStop);
+//    }
+//
+//    void removeParticipant(ParticipantId participantId, String place, RequestId registrationSource) {
+//
+//        stops.stream()
+//                .filter(stop -> stop.place().equals(place))
+//                .findAny()
+//                .ifPresent(stop -> {
+//                    stop.remove(new TransferParticipant(participantId, registrationSource));
+//                    if (stop.participants().isEmpty()) {
+//                        stops.remove(stop);
+//                    }
+//                });
+//    }
     @Override
     public void setState(String state) {
         this.state = state;

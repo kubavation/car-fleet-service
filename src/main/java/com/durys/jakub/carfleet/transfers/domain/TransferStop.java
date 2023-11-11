@@ -1,7 +1,6 @@
 package com.durys.jakub.carfleet.transfers.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
+@Table(name = "TRANSFER_STOP")
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 class TransferStop {
 
@@ -17,6 +17,9 @@ class TransferStop {
     private final UUID id;
 
     private final String place;
+
+    @OneToMany
+    @JoinColumn(name = "TRANSFER_STOP_ID")
     private final Set<TransferParticipant> participants;
 
     TransferStop(String place, Set<TransferParticipant> participants) {
@@ -54,11 +57,5 @@ class TransferStop {
         return participants;
     }
 
-    @Override
-    public String toString() {
-        return "TransferStop[" +
-                "place=" + place + ", " +
-                "participants=" + participants + ']';
-    }
 
 }
