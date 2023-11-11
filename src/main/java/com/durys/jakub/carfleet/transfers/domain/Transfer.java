@@ -10,7 +10,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Table(name = "TRANSFER")
@@ -117,4 +116,7 @@ public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
         return path.stops();
     }
 
+    public TransferId transferId() {
+        return transferId;
+    }
 }
