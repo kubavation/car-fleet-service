@@ -17,9 +17,9 @@ class TransferRequestAcceptedEventHandler {
     @RabbitListener(queues = "todo")
     void handle(TransferRequestAccepted request) {
 
-        Transfer transfer = TransferFactory.singleTransfer(request.requesterId(), request.requestId(),
-                request.departure(), request.destination(), request.from(), request.to(), request.carId());
+        Transfer transfer = TransferFactory.single(request.requesterId(),
+                request.destination(), request.from(), request.to(), request.carId());
 
-        transferRepository.save(transfer);
+       transferRepository.save(transfer);
     }
 }
