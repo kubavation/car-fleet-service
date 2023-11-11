@@ -1,6 +1,8 @@
 package com.durys.jakub.carfleet.transfers.domain;
 
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import lombok.AccessLevel;
@@ -13,8 +15,11 @@ import java.util.Objects;
 class TransferParticipant {
 
     @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "PARTICIPANT_ID"))
     private final ParticipantId participantId;
+
     @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "REGISTRATION_SOURCE_ID"))
     private final RequestId registrationSource;
 
     TransferParticipant(ParticipantId participantId, RequestId registrationSource) {

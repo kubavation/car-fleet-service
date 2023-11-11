@@ -32,28 +32,51 @@ public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
     private final TransferId transferId;
 
     @Embedded
-    @AttributeOverride(name = "destination", column = @Column(name = "name"))
+    @AttributeOverride(name = "destination", column = @Column(name = "NAME"))
     private final Destination destination;
+
     private final TransferPath path;
+
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "TRANSFER_NUMBER"))
     private final TransferNumber transferNumber;
+
+    @Embedded
     private final TransferPeriod period;
 
+    @Enumerated(EnumType.STRING)
     private final Type type;
 
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "CAR_ID"))
     private final CarId carId;
+
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "DRIVER_ID"))
     private final DriverId driverId;
 
     private String state;
 
-    public Transfer(TransferId transferId, TransferPath transferPath,
-                    TransferPeriod period, CarId carId, DriverId driverId, Type type) {
+    public Transfer(TransferId transferId, Destination destination, TransferNumber transferNumber,
+             TransferPeriod period, Type type, CarId carId, DriverId driverId, String state) {
         this.transferId = transferId;
-        this.path = transferPath;
+        this.destination = destination;
+        this.transferNumber = transferNumber;
         this.period = period;
+        this.type = type;
         this.carId = carId;
         this.driverId = driverId;
+        this.state = state;
+    }
+    public Transfer(TransferId transferId, Destination destination, TransferNumber transferNumber,
+                    TransferPeriod period, Type type, CarId carId, DriverId driverId) {
+        this.transferId = transferId;
+        this.destination = destination;
+        this.transferNumber = transferNumber;
+        this.period = period;
         this.type = type;
-        this.transferNumber = new TransferNumber(transferPath, type, period);
+        this.carId = carId;
+        this.driverId = driverId;
     }
 
 

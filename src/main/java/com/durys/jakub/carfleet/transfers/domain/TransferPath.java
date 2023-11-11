@@ -1,24 +1,27 @@
 package com.durys.jakub.carfleet.transfers.domain;
 
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
+@Table(name = "TRANSFER_PATH")
+@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 class TransferPath {
-
-    private final String destination;
 
     private final Set<TransferStop> stops;
 
-    public TransferPath(String to, Set<TransferStop> stops) {
-        this.destination = to;
+    public TransferPath(Set<TransferStop> stops) {
         this.stops = stops;
     }
 
     public TransferPath(String from, String to, TransferParticipant participant) {
-        this.destination = to;
         this.stops = new HashSet<>(Arrays.asList(new TransferStop(from, Set.of(participant))));
     }
 

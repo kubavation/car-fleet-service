@@ -1,9 +1,29 @@
 package com.durys.jakub.carfleet.transfers.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
-record TransferStop(String place, Set<TransferParticipant> participants) {
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
+class TransferStop {
+
+    @Id
+    private final UUID id;
+
+    private final String place;
+    private final Set<TransferParticipant> participants;
+
+    TransferStop(String place, Set<TransferParticipant> participants) {
+        this.id = UUID.randomUUID();
+        this.place = place;
+        this.participants = participants;
+    }
 
     public void addParticipant(TransferParticipant participant) {
         participants.add(participant);
@@ -25,4 +45,20 @@ record TransferStop(String place, Set<TransferParticipant> participants) {
     public int hashCode() {
         return Objects.hash(place);
     }
+
+    public String place() {
+        return place;
+    }
+
+    public Set<TransferParticipant> participants() {
+        return participants;
+    }
+
+    @Override
+    public String toString() {
+        return "TransferStop[" +
+                "place=" + place + ", " +
+                "participants=" + participants + ']';
+    }
+
 }

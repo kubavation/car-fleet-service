@@ -1,6 +1,13 @@
 package com.durys.jakub.carfleet.transfers.domain;
 
+import jakarta.persistence.Embeddable;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 import java.util.UUID;
 
-public record ParticipantId(UUID value) {
+@Embeddable
+@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
+public record ParticipantId(UUID value) implements Serializable {
 }
