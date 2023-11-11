@@ -74,12 +74,11 @@ public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
         this.state = state;
         this.stops = new HashSet<>();
     }
-    public Transfer(TransferId transferId, Destination destination, TransferNumber transferNumber,
-                    TransferPeriod period, Type type, CarId carId, DriverId driverId) {
+    public Transfer(TransferId transferId, Destination destination, TransferPeriod period, Type type, CarId carId, DriverId driverId) {
         this.transferId = transferId;
         this.destination = destination;
-        this.transferNumber = transferNumber;
         this.period = period;
+        this.transferNumber = new TransferNumber(destination, type, period);
         this.type = type;
         this.carId = carId;
         this.driverId = driverId;
