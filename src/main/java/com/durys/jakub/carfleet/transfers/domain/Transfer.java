@@ -34,14 +34,6 @@ public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
     @AttributeOverride(name = "value", column = @Column(name = "ID"))
     private final TransferId transferId;
 
-//    @Embedded
-//    @AttributeOverride(name = "destination", column = @Column(name = "NAME"))
-//    private final Destination destination;
-//
-//    @OneToMany
-//    @JoinColumn(name = "TRANSFER_ID")
-//    private final Set<TransferStop> stops = new HashSet<>();
-
     @Embedded
     private Path path;
 
@@ -88,27 +80,11 @@ public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
 
 
     void addParticipant(ParticipantId participantId, String place, RequestId registrationSource) {
-
-        Stop stop = path.stops().stream()
-                .filter(s -> s.place().equals(place))
-                .findFirst()
-                .orElse(new Stop(place, new HashSet<>()));
-
-        stop.addParticipant(new TransferParticipant(participantId, registrationSource));
-        path.stops().add(stop);
+        path.addParticipant(participantId, place, registrationSource);
     }
 
     void removeParticipant(ParticipantId participantId, String place, RequestId registrationSource) {
-
-        path.stops().stream()
-                .filter(stop -> stop.place().equals(place))
-                .findAny()
-                .ifPresent(stop -> {
-                    stop.remove(new TransferParticipant(participantId, registrationSource));
-                    if (stop.participants().isEmpty()) {
-                        path.stops().remove(stop);
-                    }
-                });
+        path.removeParticipant(participantId, place, registrationSource);
     }
 
     @Override

@@ -28,11 +28,12 @@ class Stop {
         this.participants = participants;
     }
 
+
     public void addParticipant(TransferParticipant participant) {
         participants.add(participant);
     }
 
-    public void remove(TransferParticipant participant) {
+    public void removeParticipant(TransferParticipant participant) {
         participants.removeIf(transferParticipant -> transferParticipant.participantId().equals(participant.participantId()));
     }
 
