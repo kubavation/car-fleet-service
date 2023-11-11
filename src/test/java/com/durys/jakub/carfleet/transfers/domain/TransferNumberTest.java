@@ -12,14 +12,14 @@ class TransferNumberTest {
     @Test
     void shouldCreateCorrectTransferNumber() {
 
-        TransferPath transferPath = new TransferPath("Warsaw", Set.of());
+        Destination destination = new Destination("Warsaw");
         TransferPeriod period = new TransferPeriod(
                 LocalDate.of(2023, 1, 1).atStartOfDay(),
                 LocalDate.of(2023, 1, 2).atStartOfDay()
         );
         Transfer.Type tranferType = Transfer.Type.Group;
 
-        TransferNumber transferNumber = new TransferNumber(transferPath, tranferType, period);
+        TransferNumber transferNumber = new TransferNumber(destination, tranferType, period);
 
         assertEquals("Warsaw-Group_2023-01-01", transferNumber.value());
     }
