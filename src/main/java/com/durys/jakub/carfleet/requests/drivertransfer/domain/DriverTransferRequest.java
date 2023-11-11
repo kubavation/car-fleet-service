@@ -10,9 +10,11 @@ import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import com.durys.jakub.carfleet.requests.vo.RequestContent;
 import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
 import lombok.Data;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Getter
 public class DriverTransferRequest extends BaseAggregateRoot implements Flowable<DriverTransferRequest> {
 
     public enum Status {

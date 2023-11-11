@@ -22,7 +22,6 @@ public class TransferApplicationService {
     @Transactional
     public void create(RequesterId requesterId, RequestId requestId, String place,
                        String destination, LocalDateTime from, LocalDateTime to, CarId carId) {
-
         Transfer transfer = TransferFactory.singleTransfer(requesterId, requestId, place, destination, from, to, carId);
 
     }

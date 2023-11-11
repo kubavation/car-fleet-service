@@ -10,6 +10,8 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Table(name = "TRANSFER")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
@@ -32,36 +34,55 @@ public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
     private final TransferId transferId;
 
     @Embedded
-    @AttributeOverride(name = "destination", column = @Column(name = "name"))
-    private final Destination destination;
-    private final TransferPath path;
-    private final TransferNumber transferNumber;
-    private final TransferPeriod period;
+    private Path path;
 
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "TRANSFER_NUMBER"))
+    private final Number number;
+
+    @Embedded
+    private final Period period;
+
+    @Enumerated(EnumType.STRING)
     private final Type type;
 
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "CAR_ID"))
     private final CarId carId;
+
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "DRIVER_ID"))
     private final DriverId driverId;
 
     private String state;
 
-    public Transfer(TransferId transferId, TransferPath transferPath,
-                    TransferPeriod period, CarId carId, DriverId driverId, Type type) {
+    public Transfer(TransferId transferId, Destination destination, Number number,
+                    Period period, Type type, CarId carId, DriverId driverId, String state) {
         this.transferId = transferId;
-        this.path = transferPath;
+        this.path = new Path(destination);
+        this.number = number;
         this.period = period;
+        this.type = type;
         this.carId = carId;
         this.driverId = driverId;
+        this.state = state;
+    }
+    public Transfer(TransferId transferId, Destination destination, Period period, Type type, CarId carId, DriverId driverId) {
+        this.transferId = transferId;
+        this.path = new Path(destination);
+        this.period = period;
+        this.number = new Number(destination, type, period);
         this.type = type;
-        this.transferNumber = new TransferNumber(transferPath, type, period);
+        this.carId = carId;
+        this.driverId = driverId;
     }
 
 
-    public void addParticipant(ParticipantId participantId, String place, RequestId registrationSource) {
+    void addParticipant(ParticipantId participantId, String place, RequestId registrationSource) {
         path.addParticipant(participantId, place, registrationSource);
     }
 
-    public void removeParticipant(ParticipantId participantId, String place, RequestId registrationSource) {
+    void removeParticipant(ParticipantId participantId, String place, RequestId registrationSource) {
         path.removeParticipant(participantId, place, registrationSource);
     }
 
@@ -91,4 +112,11 @@ public class Transfer extends BaseAggregateRoot implements Flowable<Transfer> {
         return new AggregateId(transferId.value());
     }
 
+    Set<Stop> stops() {
+        return path.stops();
+    }
+
+    public TransferId transferId() {
+        return transferId;
+    }
 }

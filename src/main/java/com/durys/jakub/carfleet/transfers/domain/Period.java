@@ -12,12 +12,12 @@ import java.util.Objects;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
-class TransferPeriod {
+class Period {
 
     private final LocalDateTime from;
     private final LocalDateTime to;
 
-    TransferPeriod(LocalDateTime from, LocalDateTime to) {
+    Period(LocalDateTime from, LocalDateTime to) {
         test(from, to, ValidationErrorHandlers.throwingValidationErrorHandler());
         this.from = from;
         this.to = to;

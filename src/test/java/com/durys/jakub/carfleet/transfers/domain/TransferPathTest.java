@@ -1,8 +1,11 @@
 package com.durys.jakub.carfleet.transfers.domain;
 
+import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
+import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,12 +19,14 @@ class TransferPathTest {
         String place = "Krakow";
         RequestId requestId = new RequestId(UUID.randomUUID());
 
-        TransferPath transferPath = new TransferPath("Warsaw", new HashSet<>());
+        Transfer transfer = TransferFactory.single(new RequesterId(UUID.randomUUID()),"Warsaw",
+                LocalDateTime.now(), LocalDateTime.now().plusDays(1), new CarId(UUID.randomUUID()));
 
-        transferPath.addParticipant(participantId, place, requestId);
 
-        assertEquals(1, transferPath.getStops().size());
-        assertEquals("Krakow", transferPath.getStops().iterator().next().place());
+        transfer.addParticipant(participantId, place, requestId);
+
+        assertEquals(1, transfer.stops().size());
+        assertEquals("Krakow", transfer.stops().iterator().next().place());
     }
 
     @Test
@@ -31,20 +36,14 @@ class TransferPathTest {
         String place = "Krakow";
         RequestId requestId = new RequestId(UUID.randomUUID());
 
-        TransferPath transferPath = new TransferPath("Warsaw", new HashSet<>(
-                Arrays.asList(new TransferStop("Krakow",
-                    new HashSet<>(
-                            Arrays.asList(new TransferParticipant(
-                                    new ParticipantId(UUID.randomUUID()),
-                                    new RequestId(UUID.randomUUID())))
-                    )
-                )
-        )));
+        Transfer transfer = TransferFactory.single(new RequesterId(UUID.randomUUID()), "Warsaw",
+                LocalDateTime.now(), LocalDateTime.now().plusDays(1), new CarId(UUID.randomUUID()));
 
-        transferPath.addParticipant(participantId, place, requestId);
+        transfer.addParticipant(new ParticipantId(UUID.randomUUID()), "Krakow", new RequestId(UUID.randomUUID()));
+        transfer.addParticipant(participantId, place, requestId);
 
-        assertEquals(1, transferPath.getStops().size());
-        assertEquals(2, transferPath.getStops().iterator().next().participants().size());
+        assertEquals(1, transfer.stops().size());
+        assertEquals(2, transfer.stops().iterator().next().participants().size());
     }
 
     @Test
@@ -54,25 +53,15 @@ class TransferPathTest {
         String place = "Krakow";
         RequestId requestId = new RequestId(UUID.randomUUID());
 
-        TransferPath transferPath = new TransferPath("Warsaw", new HashSet<>(
-                Arrays.asList(new TransferStop("Krakow",
-                                new HashSet<>(
-                                        Arrays.asList(
-                                                new TransferParticipant(
-                                                    new ParticipantId(UUID.randomUUID()),
-                                                    new RequestId(UUID.randomUUID())),
-                                                new TransferParticipant(
-                                                    participantId, requestId)
+        Transfer transfer = TransferFactory.single(new RequesterId(UUID.randomUUID()), "Warsaw",
+                LocalDateTime.now(), LocalDateTime.now().plusDays(1), new CarId(UUID.randomUUID()));
+        transfer.addParticipant(participantId, "Krakow", new RequestId(UUID.randomUUID()));
+        transfer.addParticipant(new ParticipantId(UUID.randomUUID()), "Lodz", new RequestId(UUID.randomUUID()));
 
-                                        )
-                                )
-                        )
-                )));
+        transfer.removeParticipant(participantId, place, requestId);
 
-        transferPath.removeParticipant(participantId, place, requestId);
-
-        assertEquals(1, transferPath.getStops().size());
-        assertEquals(1, transferPath.getStops().iterator().next().participants().size());
+        assertEquals(1, transfer.stops().size());
+        assertEquals(1, transfer.stops().iterator().next().participants().size());
     }
 
     @Test
@@ -82,21 +71,13 @@ class TransferPathTest {
         String place = "Krakow";
         RequestId requestId = new RequestId(UUID.randomUUID());
 
-        TransferPath transferPath = new TransferPath("Warsaw", new HashSet<>(
-                Arrays.asList(new TransferStop("Krakow",
-                                new HashSet<>(
-                                        Arrays.asList(
-                                                new TransferParticipant(
-                                                        participantId, requestId)
+        Transfer transfer = TransferFactory.single(new RequesterId(UUID.randomUUID()),"Warsaw",
+                LocalDateTime.now(), LocalDateTime.now().plusDays(1), new CarId(UUID.randomUUID()));
+        transfer.addParticipant(participantId, place, new RequestId(UUID.randomUUID()));
 
-                                        )
-                                )
-                        )
-                )));
+        transfer.removeParticipant(participantId, place, requestId);
 
-        transferPath.removeParticipant(participantId, place, requestId);
-
-        assertEquals(0, transferPath.getStops().size());
+        assertEquals(0, transfer.stops().size());
     }
 
 }
