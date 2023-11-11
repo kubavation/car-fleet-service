@@ -12,8 +12,8 @@ class TransferNumber implements Serializable {
 
     private final String value;
 
-    TransferNumber(TransferPath transferPath, Transfer.Type transferType, TransferPeriod period) {
-        this("%s-%s_%s".formatted(transferPath.to(), transferType.name(), period.from().toLocalDate()));
+    TransferNumber(Destination destination, Transfer.Type transferType, TransferPeriod period) {
+        this("%s-%s_%s".formatted(destination.name(), transferType.name(), period.from().toLocalDate()));
     }
 
     TransferNumber(String value) {
