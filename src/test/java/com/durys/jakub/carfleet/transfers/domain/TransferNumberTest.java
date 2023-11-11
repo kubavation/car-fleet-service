@@ -3,7 +3,6 @@ package com.durys.jakub.carfleet.transfers.domain;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -19,9 +18,9 @@ class TransferNumberTest {
         );
         Transfer.Type tranferType = Transfer.Type.Group;
 
-        TransferNumber transferNumber = new TransferNumber(destination, tranferType, period);
+        Number number = new Number(destination, tranferType, period);
 
-        assertEquals("Warsaw-Group_2023-01-01", transferNumber.value());
+        assertEquals("Warsaw-Group_2023-01-01", number.value());
     }
 
 }

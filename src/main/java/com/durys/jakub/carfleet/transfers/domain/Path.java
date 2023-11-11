@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
-class TransferPath {
+class Path {
 
     @Embedded
     @AttributeOverride(name = "name", column = @Column(name = "DESTINATION"))
@@ -17,14 +17,14 @@ class TransferPath {
 
     @OneToMany
     @JoinColumn(name = "TRANSFER_ID")
-    private final Set<TransferStop> stops;
+    private final Set<Stop> stops;
 
-    TransferPath(Destination destination, Set<TransferStop> stops) {
+    Path(Destination destination, Set<Stop> stops) {
         this.destination = destination;
         this.stops = stops;
     }
 
-    TransferPath(Destination destination) {
+    Path(Destination destination) {
         this.destination = destination;
         this.stops = new HashSet<>();
     }
@@ -33,7 +33,7 @@ class TransferPath {
         return destination;
     }
 
-    Set<TransferStop> stops() {
+    Set<Stop> stops() {
         return stops;
     }
 }

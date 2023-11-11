@@ -8,15 +8,15 @@ import java.io.Serializable;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
-class TransferNumber implements Serializable {
+class Number implements Serializable {
 
     private final String value;
 
-    TransferNumber(Destination destination, Transfer.Type transferType, TransferPeriod period) {
+    Number(Destination destination, Transfer.Type transferType, TransferPeriod period) {
         this("%s-%s_%s".formatted(destination.name(), transferType.name(), period.from().toLocalDate()));
     }
 
-    TransferNumber(String value) {
+    Number(String value) {
         this.value = value;
     }
 

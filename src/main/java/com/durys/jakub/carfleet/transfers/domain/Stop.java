@@ -11,7 +11,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "TRANSFER_STOP")
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
-class TransferStop {
+class Stop {
 
     @Id
     private final UUID id;
@@ -22,7 +22,7 @@ class TransferStop {
     @JoinColumn(name = "TRANSFER_STOP_ID")
     private final Set<TransferParticipant> participants;
 
-    TransferStop(String place, Set<TransferParticipant> participants) {
+    Stop(String place, Set<TransferParticipant> participants) {
         this.id = UUID.randomUUID();
         this.place = place;
         this.participants = participants;
@@ -40,7 +40,7 @@ class TransferStop {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TransferStop that = (TransferStop) o;
+        Stop that = (Stop) o;
         return Objects.equals(place, that.place);
     }
 
