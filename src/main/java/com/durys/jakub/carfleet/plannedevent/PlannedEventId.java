@@ -1,4 +1,4 @@
-package com.durys.jakub.carfleet.plannedevent.domain;
+package com.durys.jakub.carfleet.plannedevent;
 
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
