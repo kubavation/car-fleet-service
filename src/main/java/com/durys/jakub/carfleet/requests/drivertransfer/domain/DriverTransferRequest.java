@@ -4,17 +4,19 @@ import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.ddd.AggregateId;
 import com.durys.jakub.carfleet.ddd.BaseAggregateRoot;
 import com.durys.jakub.carfleet.drivers.domain.DriverId;
+import com.durys.jakub.carfleet.plannedevent.PlannedEvent;
 import com.durys.jakub.carfleet.state.Flowable;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
-import com.durys.jakub.carfleet.requests.vo.RequestContent;
-import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
-import lombok.Data;
-import lombok.Getter;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.UUID;
 
-@Getter
+@Entity
+@Table(name = "DRIVER_TRANSFER_REQUEST")
+@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 public class DriverTransferRequest extends BaseAggregateRoot implements Flowable<DriverTransferRequest> {
 
     public enum Status {
@@ -25,29 +27,42 @@ public class DriverTransferRequest extends BaseAggregateRoot implements Flowable
         REJECTED
     }
 
+    @EmbeddedId
+    @AttributeOverride(name = "value", column = @Column(name = "ID"))
     private final RequestId requestId;
+
+    @AttributeOverride(name = "value", column = @Column(name = "REQUESTER_ID"))
     private final RequesterId requesterId;
+
+    @Embedded
     private RequestContent content;
 
     private String state;
 
+    @AttributeOverride(name = "value", column = @Column(name = "ASSIGNED_DRIVER_ID"))
     private DriverId driverId;
+    @AttributeOverride(name = "value", column = @Column(name = "ASSIGNED_CAR_ID"))
     private CarId carId;
 
     public DriverTransferRequest(RequestId requestId, RequesterId requesterId,
-                                 LocalDateTime from, LocalDateTime to, RequestPurpose purpose, String departure,
-                                 String destination) {
-        this(requestId, requesterId, from, to, purpose, departure, destination, Status.NEW.name());
+                          PlannedEvent event, String departure, DriverId driverId, CarId carId, String state) {
+        this.requestId = requestId;
+        this.requesterId = requesterId;
+        this.content = new RequestContent(event, departure);
+        this.driverId = driverId;
+        this.carId = carId;
+        this.state = state;
     }
 
     public DriverTransferRequest(RequestId requestId, RequesterId requesterId,
-                                 LocalDateTime from, LocalDateTime to, RequestPurpose purpose,
-                                 String departure, String destination, String state) {
-        this.requestId = requestId;
-        this.requesterId = requesterId;
-        this.content = new RequestContent(from, to, purpose, departure, destination);
-        this.state = state;
+                          PlannedEvent event, String departure, DriverId driverId, CarId carId) {
+        this(requestId, requesterId, event, departure, driverId, carId, Status.NEW.name());
     }
+
+    public DriverTransferRequest(RequesterId requesterId, PlannedEvent event, String departure) {
+        this(new RequestId(UUID.randomUUID()), requesterId, event, departure, null, null);
+    }
+
 
     @Override
     public String state() {
@@ -67,11 +82,8 @@ public class DriverTransferRequest extends BaseAggregateRoot implements Flowable
     @Override
     public void setContent(DriverTransferRequest driverTransferRequest) {
         this.content = new RequestContent(
-                driverTransferRequest.content.getFrom(),
-                driverTransferRequest.content.getTo(),
-                driverTransferRequest.content.getPurpose(),
-                driverTransferRequest.content.getDeparture(),
-                driverTransferRequest.content.getDestination());
+                driverTransferRequest.content.plannedEvent(),
+                driverTransferRequest.content.departure());
     }
 
     @Override
@@ -97,5 +109,13 @@ public class DriverTransferRequest extends BaseAggregateRoot implements Flowable
 
     public RequestContent getContent() {
         return content;
+    }
+
+    public RequestId requestId() {
+        return requestId;
+    }
+
+    public RequesterId requesterId() {
+        return requesterId;
     }
 }
