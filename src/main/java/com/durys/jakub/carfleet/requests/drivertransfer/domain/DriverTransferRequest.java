@@ -4,15 +4,12 @@ import com.durys.jakub.carfleet.cars.domain.CarId;
 import com.durys.jakub.carfleet.ddd.AggregateId;
 import com.durys.jakub.carfleet.ddd.BaseAggregateRoot;
 import com.durys.jakub.carfleet.drivers.domain.DriverId;
+import com.durys.jakub.carfleet.plannedevent.PlannedEvent;
 import com.durys.jakub.carfleet.state.Flowable;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
-import com.durys.jakub.carfleet.requests.vo.RequestContent;
-import com.durys.jakub.carfleet.requests.vo.RequestPurpose;
-import lombok.Data;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
 
 @Getter
 public class DriverTransferRequest extends BaseAggregateRoot implements Flowable<DriverTransferRequest> {
@@ -34,20 +31,21 @@ public class DriverTransferRequest extends BaseAggregateRoot implements Flowable
     private DriverId driverId;
     private CarId carId;
 
-    public DriverTransferRequest(RequestId requestId, RequesterId requesterId,
-                                 LocalDateTime from, LocalDateTime to, RequestPurpose purpose, String departure,
-                                 String destination) {
-        this(requestId, requesterId, from, to, purpose, departure, destination, Status.NEW.name());
-    }
-
-    public DriverTransferRequest(RequestId requestId, RequesterId requesterId,
-                                 LocalDateTime from, LocalDateTime to, RequestPurpose purpose,
-                                 String departure, String destination, String state) {
+    DriverTransferRequest(RequestId requestId, RequesterId requesterId,
+                          PlannedEvent event, String departure, DriverId driverId, CarId carId, String state) {
         this.requestId = requestId;
         this.requesterId = requesterId;
-        this.content = new RequestContent(from, to, purpose, departure, destination);
+        this.content = new RequestContent(event, departure);
+        this.driverId = driverId;
+        this.carId = carId;
         this.state = state;
     }
+
+    DriverTransferRequest(RequestId requestId, RequesterId requesterId,
+                          PlannedEvent event, String departure, DriverId driverId, CarId carId) {
+        this(requestId, requesterId, event, departure, driverId, carId, Status.NEW.name());
+    }
+
 
     @Override
     public String state() {
@@ -67,11 +65,8 @@ public class DriverTransferRequest extends BaseAggregateRoot implements Flowable
     @Override
     public void setContent(DriverTransferRequest driverTransferRequest) {
         this.content = new RequestContent(
-                driverTransferRequest.content.getFrom(),
-                driverTransferRequest.content.getTo(),
-                driverTransferRequest.content.getPurpose(),
-                driverTransferRequest.content.getDeparture(),
-                driverTransferRequest.content.getDestination());
+                driverTransferRequest.content.plannedEvent(),
+                driverTransferRequest.content.departure());
     }
 
     @Override
