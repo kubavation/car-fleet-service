@@ -12,6 +12,8 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "DRIVER_TRANSFER_REQUEST")
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
@@ -42,7 +44,7 @@ public class DriverTransferRequest extends BaseAggregateRoot implements Flowable
     @AttributeOverride(name = "value", column = @Column(name = "ASSIGNED_CAR_ID"))
     private CarId carId;
 
-    DriverTransferRequest(RequestId requestId, RequesterId requesterId,
+    public DriverTransferRequest(RequestId requestId, RequesterId requesterId,
                           PlannedEvent event, String departure, DriverId driverId, CarId carId, String state) {
         this.requestId = requestId;
         this.requesterId = requesterId;
@@ -52,9 +54,13 @@ public class DriverTransferRequest extends BaseAggregateRoot implements Flowable
         this.state = state;
     }
 
-    DriverTransferRequest(RequestId requestId, RequesterId requesterId,
+    public DriverTransferRequest(RequestId requestId, RequesterId requesterId,
                           PlannedEvent event, String departure, DriverId driverId, CarId carId) {
         this(requestId, requesterId, event, departure, driverId, carId, Status.NEW.name());
+    }
+
+    public DriverTransferRequest(RequesterId requesterId, PlannedEvent event, String departure) {
+        this(new RequestId(UUID.randomUUID()), requesterId, event, departure, null, null);
     }
 
 
@@ -107,5 +113,9 @@ public class DriverTransferRequest extends BaseAggregateRoot implements Flowable
 
     public RequestId requestId() {
         return requestId;
+    }
+
+    public RequesterId requesterId() {
+        return requesterId;
     }
 }
