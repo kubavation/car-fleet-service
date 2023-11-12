@@ -1,4 +1,4 @@
-package com.durys.jakub.carfleet.plannedevent;
+package com.durys.jakub.carfleet.plannedevent.domain;
 
 import java.time.LocalDate;
 import java.util.UUID;
