@@ -8,10 +8,13 @@ import com.durys.jakub.carfleet.plannedevent.PlannedEvent;
 import com.durys.jakub.carfleet.state.Flowable;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequestId;
 import com.durys.jakub.carfleet.sharedkernel.requests.RequesterId;
-import lombok.Getter;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-
-@Getter
+@Entity
+@Table(name = "DRIVER_TRANSFER_REQUEST")
+@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 public class DriverTransferRequest extends BaseAggregateRoot implements Flowable<DriverTransferRequest> {
 
     public enum Status {
@@ -22,13 +25,21 @@ public class DriverTransferRequest extends BaseAggregateRoot implements Flowable
         REJECTED
     }
 
+    @EmbeddedId
+    @AttributeOverride(name = "value", column = @Column(name = "ID"))
     private final RequestId requestId;
+
+    @AttributeOverride(name = "value", column = @Column(name = "REQUESTER_ID"))
     private final RequesterId requesterId;
+
+    @Embedded
     private RequestContent content;
 
     private String state;
 
+    @AttributeOverride(name = "value", column = @Column(name = "ASSIGNED_DRIVER_ID"))
     private DriverId driverId;
+    @AttributeOverride(name = "value", column = @Column(name = "ASSIGNED_CAR_ID"))
     private CarId carId;
 
     DriverTransferRequest(RequestId requestId, RequesterId requesterId,
@@ -92,5 +103,9 @@ public class DriverTransferRequest extends BaseAggregateRoot implements Flowable
 
     public RequestContent getContent() {
         return content;
+    }
+
+    public RequestId requestId() {
+        return requestId;
     }
 }

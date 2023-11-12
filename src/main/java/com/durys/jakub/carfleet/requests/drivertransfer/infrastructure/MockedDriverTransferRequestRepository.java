@@ -19,7 +19,7 @@ public class MockedDriverTransferRequestRepository implements DriverTransferRequ
 
     @Override
     public DriverTransferRequest save(DriverTransferRequest request) {
-        DB.put(request.getRequestId(), request);
-        return load(request.getRequestId()).get();
+        DB.put(request.requestId(), request);
+        return load(request.requestId()).get();
     }
 }
